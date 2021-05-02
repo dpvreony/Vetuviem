@@ -1,5 +1,5 @@
 # Vetuviem
-Vetuvium is a DSL to support View to View Model binding (MVVM -> V2VM -> Ve-Tu-Viem).
+Vetuvium is a DSL to support View to View Model binding (MVVM -> V2VM -> Ve-Tu-Viem) aimed at offering a structure to get more re-usability out of ReactiveUI.
 
 ## Mission Statement
 * To give a mechanism to reduce the amount of boiler plate code being produced, by allowing some of the ReactiveUI specific logic to be hidden away
