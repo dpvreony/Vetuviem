@@ -8,6 +8,7 @@ WinForms | System.Windows.Forms.Control | Not Supported yet
 WinUI | Microsoft.UI.Xaml.UIElement | Not Supported yet
 WPF | System.Windows.UIElement | Alpha
 Xamarin Forms | ? | Not Supported yet
+Blazor | Microsoft.AspNetCore.Components.IComponent | Not Supported yet
 
 ## Getting started
 
