@@ -5,6 +5,8 @@ using ICSharpCode.Decompiler.TypeSystem;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Pharmacist.Core.BindingModels;
+using Pharmacist.Core.Generation;
 using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
@@ -26,7 +28,6 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
                 foreach (var orderedTypeDeclaration in orderedTypeDeclarations)
                 {
-#error need to change this to take the name from the platform handler.
                     members.Add(GenerateClass("System.Windows.UIElement", orderedTypeDeclaration));
                 }
 

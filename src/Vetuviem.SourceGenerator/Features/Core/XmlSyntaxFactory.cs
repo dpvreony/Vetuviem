@@ -6,6 +6,7 @@ using System.Text;
 using ICSharpCode.Decompiler.TypeSystem;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Pharmacist.Core.Generation;
 
 namespace Vetuviem.SourceGenerator.Features.Core
 {

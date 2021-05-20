@@ -12,8 +12,6 @@ using System.Text;
 using ICSharpCode.Decompiler.TypeSystem;
 using ICSharpCode.Decompiler.TypeSystem.Implementation;
 
-using Splat;
-
 namespace Pharmacist.Core.Generation
 {
     /// <summary>
@@ -132,7 +130,7 @@ namespace Pharmacist.Core.Generation
             // Find the EventArgs type parameter of the event via digging around via reflection
             if (!eventDetails.CanAdd || !eventDetails.CanRemove)
             {
-                LogHost.Default.Debug($"Type for {eventDetails.DeclaringType.FullName} is not valid");
+                // LogHost.Default.Debug($"Type for {eventDetails.DeclaringType.FullName} is not valid");
                 return null;
             }
 
@@ -140,7 +138,7 @@ namespace Pharmacist.Core.Generation
 
             if (type == null)
             {
-                LogHost.Default.Debug($"Type for {eventDetails.DeclaringType.FullName} is not valid");
+                // LogHost.Default.Debug($"Type for {eventDetails.DeclaringType.FullName} is not valid");
                 return null;
             }
 
