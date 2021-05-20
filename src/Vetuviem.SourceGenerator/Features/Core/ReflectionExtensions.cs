@@ -96,7 +96,7 @@ namespace Pharmacist.Core.Generation
         /// </summary>
         /// <param name="compilation">The compilation to get the type definitions from.</param>
         /// <returns>The list of type definitions.</returns>
-        public static IEnumerable<ITypeDefinition> GetPublicTypeClassesWithDerivedType(this ICompilation compilation)
+        public static IEnumerable<ITypeDefinition> GetPublicTypeClassesWithDerivedType(this ICompilation compilation, string baseControlTypeFullName)
         {
             return _publicNonGenericTypeMapping.GetOrAdd(
                 compilation,
@@ -106,7 +106,7 @@ namespace Pharmacist.Core.Generation
                     var typeDefinitions = comp.GetAllTypeDefinitions().ToArray();
                     foreach (var item in typeDefinitions)
                     {
-                        if (item.Accessibility != Accessibility.Public || !HasDeclaringType(item, "System.Windows.UIElement"))
+                        if (item.Accessibility != Accessibility.Public || !HasDeclaringType(item, baseControlTypeFullName))
                         {
                             continue;
                         }
