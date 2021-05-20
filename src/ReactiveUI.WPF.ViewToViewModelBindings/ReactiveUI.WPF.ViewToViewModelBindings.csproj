@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>True</DebugSymbols>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ReactiveUI.WPF.VetuViemGenerator\ReactiveUI.WPF.VetuViemGenerator.csproj" OutputItemType="Analyzer" />
+  </ItemGroup>
+</Project>

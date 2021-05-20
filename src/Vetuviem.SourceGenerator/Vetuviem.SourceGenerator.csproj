@@ -2,14 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <DebugSymbols>True</DebugSymbols>
     <LangVersion>9</LangVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ICSharpCode.Decompiler" Version="5.0.2.5153" />
+    <PackageReference Include="ICSharpCode.Decompiler" Version="5.0.2.5153" PrivateAssets="none" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="none" />
   </ItemGroup>
 
