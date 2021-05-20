@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -9,13 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
+    <ProjectReference Include="..\Vetuviem.SourceGenerator\Vetuviem.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="true" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Vetuviem.SourceGenerator\Vetuviem.SourceGenerator.csproj" IncludeRuntimeDependency="false" />
+    <Analyzer Include="$(ProjectDir)..\Vetuviem.SourceGenerator\bin\$(Configuration)\netstandard2.0\Vetuviem.SourceGenerator.dll" />
   </ItemGroup>
-
   <!-- Below is the logic for putting this project into reactiveui and using a nuget reference -->
 
   <!--

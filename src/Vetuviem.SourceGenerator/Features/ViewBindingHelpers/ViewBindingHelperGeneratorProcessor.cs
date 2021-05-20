@@ -7,7 +7,7 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
     {
         public override NamespaceDeclarationSyntax GenerateObjects(NamespaceDeclarationSyntax namespaceDeclaration)
         {
-            throw new NotImplementedException();
+            return namespaceDeclaration;
         }
     }
 }

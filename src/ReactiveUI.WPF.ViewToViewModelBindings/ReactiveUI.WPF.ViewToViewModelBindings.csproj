@@ -6,6 +6,7 @@
     <DebugType>full</DebugType>
     <DebugSymbols>True</DebugSymbols>
     <UseWPF>true</UseWPF>
+    <!--<WarningsAsErrors>8032,8785</WarningsAsErrors>-->
   </PropertyGroup>
 
   <ItemGroup>
