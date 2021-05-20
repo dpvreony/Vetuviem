@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
@@ -6,7 +6,13 @@
     <DebugType>full</DebugType>
     <DebugSymbols>True</DebugSymbols>
     <UseWPF>true</UseWPF>
+    <!--
+    If you're seeing CS8032 warnings, it can be because the upstream source generator dll has been rebuilt or you've changed the
+    target frameworks in this project. Visual Studio seems to have a cache that invalidates. Reloading Visual Studio can
+    solve the issue.
+    -->
     <!--<WarningsAsErrors>8032,8785</WarningsAsErrors>-->
+    <TreatWarningsAsErrors />
   </PropertyGroup>
 
   <ItemGroup>
