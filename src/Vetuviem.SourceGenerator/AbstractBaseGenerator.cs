@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Threading;
 using Microsoft.CodeAnalysis;
@@ -57,11 +58,27 @@ namespace Vetuviem.SourceGenerator
             var namespaceName = GetNamespace();
 
             var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(namespaceName));
+            var compilation = context.Compilation;
 
-            var references = context.Compilation.References;
-            foreach (var metadataReference in references)
+            // we won't want to run this in the source generator
+            // we want to build a support tool that can use this to double check what we build into the generator.
+            // i.e. this work gets done at compile time.
+            var trustedAssembliesPaths = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator);
+            foreach (string trustedAssembliesPath in trustedAssembliesPaths)
             {
-                InfoDiagnostic(metadataReference.Display);
+                var metadataReference = MetadataReference.CreateFromFile(trustedAssembliesPath);
+                var assemblySymbol = compilation.GetAssemblyOrModuleSymbol(metadataReference);
+                var a = assemblySymbol.ContainingAssembly;
+                var typeNames = a.TypeNames;
+
+                //compilation = compilation.AddReferences(metadataReference);
+            }
+
+
+            var references = compilation.References;
+            foreach (var mr in references)
+            {
+                context.ReportDiagnostic(InfoDiagnostic(mr.Display));
             }
 
             var generatorProcessor = new TGeneratorProcessor();
