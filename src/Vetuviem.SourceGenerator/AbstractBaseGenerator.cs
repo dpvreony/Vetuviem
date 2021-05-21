@@ -58,6 +58,12 @@ namespace Vetuviem.SourceGenerator
 
             var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(namespaceName));
 
+            var references = context.Compilation.References;
+            foreach (var metadataReference in references)
+            {
+                InfoDiagnostic(metadataReference.Display);
+            }
+
             var generatorProcessor = new TGeneratorProcessor();
 
             var result = generatorProcessor.GenerateObjects(namespaceDeclaration);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dhgms.Nucleotide.UnitTests.Generators;
 
 namespace Vetuviem.UnitTests.SourceGenerator
 {
@@ -11,5 +12,11 @@ namespace Vetuviem.UnitTests.SourceGenerator
     /// </summary>
     public static class ViewBindingHelperGeneratorTests
     {
+#if TBC
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<>
+        {
+
+        }
+#endif
     }
 }

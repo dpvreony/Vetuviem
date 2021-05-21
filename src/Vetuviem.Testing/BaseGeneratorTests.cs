@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.Extensions.Logging;
 using Vetuviem.SourceGenerator;
 using Xunit;
 using Xunit.Abstractions;
@@ -18,7 +19,7 @@ namespace Dhgms.Nucleotide.UnitTests.Generators
     [ExcludeFromCodeCoverage]
     public class BaseGeneratorTests
     {
-        public abstract class BaseGenerateAsyncMethod<TGenerator, TGeneratorProcessor> : Foundatio.Xunit.TestWithLoggingBase
+        public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor> : Foundatio.Xunit.TestWithLoggingBase
             where TGenerator : AbstractBaseGenerator<TGeneratorProcessor>
             where TGeneratorProcessor : AbstractGeneratorProcessor, new()
         {
@@ -60,9 +61,16 @@ namespace Dhgms.Nucleotide.UnitTests.Generators
                     comp,
                     out var generatorDiags,
                     instance);
+
+                _logger.LogInformation($"Generator Diagnostic count : {generatorDiags.Length}");
+
+                foreach (var generatorDiag in generatorDiags)
+                {
+                    _logger.LogInformation(generatorDiag.ToString());
+                }
             }
 
-            protected BaseGenerateAsyncMethod(ITestOutputHelper output) : base(output)
+            protected BaseExecuteMethod(ITestOutputHelper output) : base(output)
             {
             }
         }
