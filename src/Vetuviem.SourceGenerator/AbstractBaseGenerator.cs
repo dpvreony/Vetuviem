@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using Microsoft.CodeAnalysis;
@@ -66,9 +67,28 @@ namespace Vetuviem.SourceGenerator
             // we want to build a support tool that can use this to double check what we build into the generator.
             // i.e. this work gets done at compile time.
             var trustedAssembliesPaths = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator);
+
+            var assembliesOfInterest = new[]
+            {
+                "PresentationCore.dll",
+                "PresentationFramework.dll",
+                "PresentationFramework.Aero.dll",
+                "PresentationFramework.Aero2.dll",
+                "PresentationFramework.AeroLite.dll",
+                "PresentationFramework.Classic.dll",
+                "PresentationFramework.Luna.dll",
+                "PresentationFramework.Royale.dll",
+                "PresentationFramework-SystemCore.dll",
+                "PresentationFramework-SystemData.dll",
+                "PresentationFramework-SystemDrawing.dll",
+                "PresentationFramework-SystemXml.dll",
+                "PresentationFramework-SystemXmlLinq.dll",
+                "PresentationFrameworkUI.dll",
+            };
+
             foreach (string trustedAssembliesPath in trustedAssembliesPaths)
             {
-                if (!trustedAssembliesPath.EndsWith("PresentationCore.dll", StringComparison.Ordinal))
+                if (assembliesOfInterest.All(assemblyOfInterest => !trustedAssembliesPath.EndsWith(assemblyOfInterest, StringComparison.Ordinal)))
                 {
                     continue;
                 }
@@ -77,7 +97,10 @@ namespace Vetuviem.SourceGenerator
                 compilation = compilation.AddReferences(metadataReference);
             }
 
-            var typeOfInterest = GetUiTypes(context, compilation);
+            var typeOfInterest = GetUiTypes(
+                context,
+                compilation,
+                assembliesOfInterest);
 
             var generatorProcessor = new TGeneratorProcessor();
 
@@ -86,12 +109,13 @@ namespace Vetuviem.SourceGenerator
             return result;
         }
 
-        private string GetUiTypes(GeneratorExecutionContext context, Compilation compilation)
+        private string GetUiTypes(GeneratorExecutionContext context,
+            Compilation compilation, string[] assembliesOfInterest)
         {
             var metadataReferences = compilation.References;
             foreach (var mr in metadataReferences)
             {
-                if (!mr.Display.EndsWith("PresentationCore.dll", StringComparison.Ordinal))
+                if (assembliesOfInterest.All(assemblyOfInterest => !mr.Display.EndsWith(assemblyOfInterest, StringComparison.Ordinal)))
                 {
                     continue;
                 }
@@ -120,13 +144,19 @@ namespace Vetuviem.SourceGenerator
             {
                 var fullName = namedTypeSymbol.GetFullName();
 
-                if (fullName.Equals("global::System.Windows.UIElement", StringComparison.Ordinal))
+                var desiredBaseType = "global::System.Windows.UIElement";
+
+                // check if we inherit from our desired element.
+                if (HasDesiredBaseType(desiredBaseType, namedTypeSymbol))
+                {
+                    return;
+                }
+
+                if (fullName.Equals(desiredBaseType, StringComparison.Ordinal))
                 {
                     context.ReportDiagnostic(InfoDiagnostic("Matched UiElement"));
                     return;
                 }
-
-                // check if we inherit from our desired element.
             }
 
             var namespaceSymbols = namespaceSymbol.GetNamespaceMembers();
@@ -137,6 +167,29 @@ namespace Vetuviem.SourceGenerator
                     context,
                     nestedNamespaceSymbol);
             }
+        }
+
+        private bool HasDesiredBaseType(string desiredBaseType, INamedTypeSymbol namedTypeSymbol)
+        {
+            var baseType = namedTypeSymbol.BaseType;
+
+            while (baseType != null)
+            {
+                var baseTypeFullName = baseType.GetFullName();
+                if (baseTypeFullName.Equals(desiredBaseType, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+
+                if (baseTypeFullName.Equals("global::System.Object", StringComparison.Ordinal))
+                {
+                    return false;
+                }
+
+                baseType = baseType.BaseType;
+            }
+
+            return false;
         }
 
         protected abstract string GetNamespace();
