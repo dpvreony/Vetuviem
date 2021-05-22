@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Vetuviem.SourceGenerator.Features.Core;
 using Vetuviem.SourceGenerator.GeneratorProcessors;
 
 namespace Vetuviem.SourceGenerator
@@ -66,26 +68,75 @@ namespace Vetuviem.SourceGenerator
             var trustedAssembliesPaths = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator);
             foreach (string trustedAssembliesPath in trustedAssembliesPaths)
             {
+                if (!trustedAssembliesPath.EndsWith("PresentationCore.dll", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
                 var metadataReference = MetadataReference.CreateFromFile(trustedAssembliesPath);
-                var assemblySymbol = compilation.GetAssemblyOrModuleSymbol(metadataReference);
-                var a = assemblySymbol.ContainingAssembly;
-                var typeNames = a.TypeNames;
-
-                //compilation = compilation.AddReferences(metadataReference);
+                compilation = compilation.AddReferences(metadataReference);
             }
 
-
-            var references = compilation.References;
-            foreach (var mr in references)
-            {
-                context.ReportDiagnostic(InfoDiagnostic(mr.Display));
-            }
+            var typeOfInterest = GetUiTypes(context, compilation);
 
             var generatorProcessor = new TGeneratorProcessor();
 
             var result = generatorProcessor.GenerateObjects(namespaceDeclaration);
 
             return result;
+        }
+
+        private string GetUiTypes(GeneratorExecutionContext context, Compilation compilation)
+        {
+            var metadataReferences = compilation.References;
+            foreach (var mr in metadataReferences)
+            {
+                if (!mr.Display.EndsWith("PresentationCore.dll", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                var assemblySymbol = compilation.GetAssemblyOrModuleSymbol(mr) as IAssemblySymbol;
+
+                if (assemblySymbol == null)
+                {
+                    continue;
+                }
+
+                var globalNamespace = assemblySymbol.GlobalNamespace;
+                CheckNamespaceForUiTypes(context, globalNamespace);
+            }
+
+            return null;
+        }
+
+        private void CheckNamespaceForUiTypes(
+            GeneratorExecutionContext context,
+            INamespaceSymbol namespaceSymbol)
+        {
+            var namedTypeSymbols = namespaceSymbol.GetTypeMembers();
+
+            foreach (var namedTypeSymbol in namedTypeSymbols)
+            {
+                var fullName = namedTypeSymbol.GetFullName();
+
+                if (fullName.Equals("global::System.Windows.UIElement", StringComparison.Ordinal))
+                {
+                    context.ReportDiagnostic(InfoDiagnostic("Matched UiElement"));
+                    return;
+                }
+
+                // check if we inherit from our desired element.
+            }
+
+            var namespaceSymbols = namespaceSymbol.GetNamespaceMembers();
+
+            foreach (var nestedNamespaceSymbol in namespaceSymbols)
+            {
+                CheckNamespaceForUiTypes(
+                    context,
+                    nestedNamespaceSymbol);
+            }
         }
 
         protected abstract string GetNamespace();
