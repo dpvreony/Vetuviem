@@ -50,16 +50,22 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             }
 
             var globalNamespace = assemblySymbol.GlobalNamespace;
-            var nestedDeclarationSyntax = CheckNamespaceForUiTypes(
-                globalNamespace,
-                reportDiagnosticAction,
-                baseUiElement);
 
-            if (nestedDeclarationSyntax != null)
+            // we skip building the global namespace as gives an empty name
+            foreach (var namespaceMember in globalNamespace.GetNamespaceMembers())
             {
-                namespaceDeclaration = namespaceDeclaration
-                    .AddMembers(nestedDeclarationSyntax);
+                var nestedDeclarationSyntax = CheckNamespaceForUiTypes(
+                    namespaceMember,
+                    reportDiagnosticAction,
+                    baseUiElement);
+
+                if (nestedDeclarationSyntax != null)
+                {
+                    namespaceDeclaration = namespaceDeclaration
+                        .AddMembers(nestedDeclarationSyntax);
+                }
             }
+
 
             /*
             var typesInAssembly = assemblySymbol.get;
