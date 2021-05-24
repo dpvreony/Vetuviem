@@ -13,6 +13,10 @@
     -->
     <!--<WarningsAsErrors>8032,8785</WarningsAsErrors>-->
     <TreatWarningsAsErrors />
+    <!--
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+-->
   </PropertyGroup>
 
   <ItemGroup>

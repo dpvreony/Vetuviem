@@ -21,30 +21,49 @@ namespace Vetuviem.SourceGenerator
 
         public void Execute(GeneratorExecutionContext context)
         {
-            context.ReportDiagnostic(InfoDiagnostic(typeof(TGeneratorProcessor).ToString()));
+            try
+            {
+                context.ReportDiagnostic(ReportDiagnostics.StartingSourceGenerator());
 
-            var memberDeclarationSyntax = GenerateAsync(context, CancellationToken.None);
+                var memberDeclarationSyntax = GenerateAsync(context, CancellationToken.None);
 
-            var parseOptions = context.ParseOptions;
+                var parseOptions = context.ParseOptions;
 
-            var cu = SyntaxFactory.CompilationUnit()
-                .AddMembers(memberDeclarationSyntax)
-                .NormalizeWhitespace();
+                var cu = SyntaxFactory.CompilationUnit()
+                    .AddMembers(memberDeclarationSyntax)
+                    .NormalizeWhitespace();
 
-            var feature = typeof(TGeneratorProcessor).ToString();
-            var guid = Guid.NewGuid();
+                var feature = typeof(TGeneratorProcessor).ToString();
+                var guid = Guid.NewGuid();
 
-            var sourceText = SyntaxFactory.SyntaxTree(
-                cu,
-                parseOptions,
-                encoding: Encoding.UTF8)
-                .GetText();
+                var sourceText = SyntaxFactory.SyntaxTree(
+                        cu,
+                        parseOptions,
+                        encoding: Encoding.UTF8)
+                    .GetText();
 
-            var hintName = $"{feature}.{guid}.g.cs";
+                //var logRoot = SyntaxFactory.CompilationUnit();
 
-            context.AddSource(
-                hintName,
-                sourceText);
+                //var logFileSourceText = SyntaxFactory.SyntaxTree(
+                //        logRoot,
+                //        parseOptions,
+                //        encoding: Encoding.UTF8)
+                //    .GetText();
+
+                // var logFileHintName = $"{feature}.{guid}.g.log.txt";
+                var hintName = $"{feature}.{guid}.g.cs";
+
+                // context.AddSource(logFileHintName, logFileSourceText);
+
+                context.AddSource(
+                    hintName,
+                    sourceText);
+            }
+            catch (Exception e)
+            {
+                context.ReportDiagnostic(ReportDiagnostics.UnhandledException(e));
+                //throw;
+            }
         }
 
         /// <summary>
@@ -61,12 +80,19 @@ namespace Vetuviem.SourceGenerator
             var namespaceName = GetNamespace();
 
             var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(namespaceName));
+
             var compilation = context.Compilation;
 
-            // we won't want to run this in the source generator
-            // we want to build a support tool that can use this to double check what we build into the generator.
-            // i.e. this work gets done at compile time.
-            var trustedAssembliesPaths = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator);
+            // we work on assumption we have the references already in the build chain
+            var trustedAssembliesPaths = GetPlatformAssemblyPaths(context);
+            if (trustedAssembliesPaths == null || trustedAssembliesPaths.Length == 0)
+            {
+                // we don't have the assemblies
+                // we can fall back to searching for the reference assemblies path
+                // or trigger nuget
+                // for now we drop out
+                return namespaceDeclaration;
+            }
 
             var assembliesOfInterest = new[]
             {
@@ -86,6 +112,24 @@ namespace Vetuviem.SourceGenerator
                 "PresentationFrameworkUI.dll",
             };
 
+            var referencesOfInterest = GetReferencesOfInterest(
+                compilation.References,
+                assembliesOfInterest).ToArray();
+            if (referencesOfInterest.Length != assembliesOfInterest.Length)
+            {
+                // not got the expected count back, drop out.
+                context.ReportDiagnostic(ReportDiagnostics.ReferencesOfInterestCountMismatch(assembliesOfInterest.Length, referencesOfInterest.Length));
+                return namespaceDeclaration;
+            }
+
+            /*
+            var missingAssemblies = assembliesOfInterest.ToList();
+
+            foreach (MetadataReference metadataReference in references)
+            {
+            }
+
+
             foreach (string trustedAssembliesPath in trustedAssembliesPaths)
             {
                 if (assembliesOfInterest.All(assemblyOfInterest => !trustedAssembliesPath.EndsWith(assemblyOfInterest, StringComparison.Ordinal)))
@@ -96,21 +140,48 @@ namespace Vetuviem.SourceGenerator
                 var metadataReference = MetadataReference.CreateFromFile(trustedAssembliesPath);
                 compilation = compilation.AddReferences(metadataReference);
             }
-
-            var typeOfInterest = GetUiTypes(
-                context,
-                compilation,
-                assembliesOfInterest);
+            */
 
             var generatorProcessor = new TGeneratorProcessor();
 
-            var result = generatorProcessor.GenerateObjects(namespaceDeclaration);
+            var result = generatorProcessor.GenerateObjects(
+                namespaceDeclaration,
+                referencesOfInterest);
 
             return result;
         }
 
-        private string GetUiTypes(GeneratorExecutionContext context,
-            Compilation compilation, string[] assembliesOfInterest)
+        private static IEnumerable<MetadataReference> GetReferencesOfInterest(
+            IEnumerable<MetadataReference> compilationReferences,
+            string[] assembliesOfInterest)
+        {
+            foreach (var compilationReference in compilationReferences)
+            {
+                if (assembliesOfInterest.Any(
+                    assemblyOfInterest => compilationReference.Display != null
+                                          && compilationReference.Display.EndsWith(
+                                              assemblyOfInterest,
+                                              StringComparison.Ordinal)))
+                {
+                    yield return compilationReference;
+                }
+            }
+        }
+
+        private static string[] GetPlatformAssemblyPaths(GeneratorExecutionContext context)
+        {
+            if (AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") is string trustedPlatformAssemblies)
+            {
+                return trustedPlatformAssemblies.Split(Path.PathSeparator);
+            }
+
+            return null;
+        }
+
+        private string[] GetUiTypes(
+            GeneratorExecutionContext context,
+            Compilation compilation,
+            string[] assembliesOfInterest)
         {
             var metadataReferences = compilation.References;
             foreach (var mr in metadataReferences)
@@ -154,7 +225,7 @@ namespace Vetuviem.SourceGenerator
 
                 if (fullName.Equals(desiredBaseType, StringComparison.Ordinal))
                 {
-                    context.ReportDiagnostic(InfoDiagnostic("Matched UiElement"));
+                    context.ReportDiagnostic(ReportDiagnostics.MatchedBaseUiElement(desiredBaseType));
                     return;
                 }
             }
@@ -193,18 +264,5 @@ namespace Vetuviem.SourceGenerator
         }
 
         protected abstract string GetNamespace();
-
-        private static Diagnostic InfoDiagnostic(string message)
-        {
-            return Diagnostic.Create(
-                "VET-I0001",
-                "Vetuviem Generation",
-                message,
-                DiagnosticSeverity.Info,
-                DiagnosticSeverity.Info,
-                true,
-                1,
-                "Model Generation");
-        }
     }
 }
