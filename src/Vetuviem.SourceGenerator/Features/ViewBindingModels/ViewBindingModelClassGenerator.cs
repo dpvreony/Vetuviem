@@ -59,7 +59,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             {
                 var baseClass = namedTypeSymbol.BaseType;
 
-                var baseViewBindingModelClassName = $"global::ReactiveUI.ViewBindingModels.{baseClass.GetFullName()}ViewBindingModel<TView, TViewModel>";
+                var baseViewBindingModelClassName = $"global::ReactiveUI.ViewBindingModels.{baseClass.GetFullName().Replace("global::", string.Empty)}ViewBindingModel<TView, TViewModel>";
                 var baseTypeNode =
                     SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(baseViewBindingModelClassName));
 #pragma warning disable SA1129 // Do not use default value type constructor

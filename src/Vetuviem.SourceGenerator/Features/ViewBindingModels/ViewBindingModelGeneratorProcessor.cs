@@ -21,7 +21,7 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
 
             foreach (var metadataReference in assembliesOfInterest)
             {
-                CheckAssemblyForUiTypes(
+                namespaceDeclaration = CheckAssemblyForUiTypes(
                     namespaceDeclaration,
                     metadataReference,
                     compilation,
@@ -32,7 +32,7 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             return namespaceDeclaration;
         }
 
-        private void CheckAssemblyForUiTypes(
+        private NamespaceDeclarationSyntax CheckAssemblyForUiTypes(
             NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference metadataReference,
             Compilation compilation,
@@ -46,11 +46,20 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             if (assemblySymbol == null)
             {
                 reportDiagnosticAction(ReportDiagnostics.MetadataReferenceNotAssemblySymbol(metadataReference));
-                return;
+                return namespaceDeclaration;
             }
 
             var globalNamespace = assemblySymbol.GlobalNamespace;
-            CheckNamespaceForUiTypes(globalNamespace, reportDiagnosticAction, baseUiElement);
+            var nestedDeclarationSyntax = CheckNamespaceForUiTypes(
+                globalNamespace,
+                reportDiagnosticAction,
+                baseUiElement);
+
+            if (nestedDeclarationSyntax != null)
+            {
+                namespaceDeclaration = namespaceDeclaration
+                    .AddMembers(nestedDeclarationSyntax);
+            }
 
             /*
             var typesInAssembly = assemblySymbol.get;
@@ -62,6 +71,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     reportDiagnosticAction);
             }
             */
+
+            return namespaceDeclaration;
         }
 
         private ClassDeclarationSyntax CheckTypeForUiType(
@@ -87,7 +98,7 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             return null;
         }
 
-        private void CheckNamespaceForUiTypes(
+        private NamespaceDeclarationSyntax CheckNamespaceForUiTypes(
             INamespaceSymbol namespaceSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement)
@@ -96,7 +107,7 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
 
             var namedTypeSymbols = namespaceSymbol.GetTypeMembers();
 
-            var nestedMembers = new SyntaxList<MemberDeclarationSyntax>();
+            var nestedMembers = new List<MemberDeclarationSyntax>(namedTypeSymbols.Length);
 
             foreach (var namedTypeSymbol in namedTypeSymbols)
             {
@@ -130,8 +141,10 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             {
                 var identifier = SyntaxFactory.IdentifierName(namespaceSymbol.Name);
 
+                var membersToAdd = new SyntaxList<MemberDeclarationSyntax>(nestedMembers);
+
                 return SyntaxFactory.NamespaceDeclaration(identifier)
-                    .WithMembers(nestedMembers);
+                    .WithMembers(membersToAdd);
             }
 
             return null;

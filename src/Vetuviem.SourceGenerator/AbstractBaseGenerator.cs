@@ -51,7 +51,7 @@ namespace Vetuviem.SourceGenerator
                 //    .GetText();
 
                 // var logFileHintName = $"{feature}.{guid}.g.log.txt";
-                var hintName = $"{feature}.{guid}.g.cs";
+                var hintName = $"{feature}.g.cs";
 
                 // context.AddSource(logFileHintName, logFileSourceText);
 
@@ -83,33 +83,33 @@ namespace Vetuviem.SourceGenerator
 
             var compilation = context.Compilation;
 
-            // we work on assumption we have the references already in the build chain
-            var trustedAssembliesPaths = GetPlatformAssemblyPaths(context);
-            if (trustedAssembliesPaths == null || trustedAssembliesPaths.Length == 0)
-            {
-                // we don't have the assemblies
-                // we can fall back to searching for the reference assemblies path
-                // or trigger nuget
-                // for now we drop out
-                return namespaceDeclaration;
-            }
+            //// we work on assumption we have the references already in the build chain
+            //var trustedAssembliesPaths = GetPlatformAssemblyPaths(context);
+            //if (trustedAssembliesPaths == null || trustedAssembliesPaths.Length == 0)
+            //{
+            //    // we don't have the assemblies
+            //    // we can fall back to searching for the reference assemblies path
+            //    // or trigger nuget
+            //    // for now we drop out
+            //    return namespaceDeclaration;
+            //}
 
             var assembliesOfInterest = new[]
             {
-                //"PresentationCore.dll",
-                "PresentationFramework.dll",/*
+                "PresentationCore.dll",
+                "PresentationFramework.dll",
                 "PresentationFramework.Aero.dll",
                 "PresentationFramework.Aero2.dll",
                 "PresentationFramework.AeroLite.dll",
                 "PresentationFramework.Classic.dll",
                 "PresentationFramework.Luna.dll",
                 "PresentationFramework.Royale.dll",
-                "PresentationFramework-SystemCore.dll",
-                "PresentationFramework-SystemData.dll",
-                "PresentationFramework-SystemDrawing.dll",
-                "PresentationFramework-SystemXml.dll",
-                "PresentationFramework-SystemXmlLinq.dll",
-                "PresentationUI.dll",*/
+                //"PresentationFramework-SystemCore.dll",
+                //"PresentationFramework-SystemData.dll",
+                //"PresentationFramework-SystemDrawing.dll",
+                //"PresentationFramework-SystemXml.dll",
+                //"PresentationFramework-SystemXmlLinq.dll",
+                "PresentationUI.dll",
             };
 
             var referencesOfInterest = GetReferencesOfInterest(
