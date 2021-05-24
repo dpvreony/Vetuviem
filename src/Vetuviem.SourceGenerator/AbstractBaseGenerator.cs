@@ -146,7 +146,9 @@ namespace Vetuviem.SourceGenerator
 
             var result = generatorProcessor.GenerateObjects(
                 namespaceDeclaration,
-                referencesOfInterest);
+                referencesOfInterest,
+                compilation,
+                context.ReportDiagnostic);
 
             return result;
         }
@@ -176,91 +178,6 @@ namespace Vetuviem.SourceGenerator
             }
 
             return null;
-        }
-
-        private string[] GetUiTypes(
-            GeneratorExecutionContext context,
-            Compilation compilation,
-            string[] assembliesOfInterest)
-        {
-            var metadataReferences = compilation.References;
-            foreach (var mr in metadataReferences)
-            {
-                if (assembliesOfInterest.All(assemblyOfInterest => !mr.Display.EndsWith(assemblyOfInterest, StringComparison.Ordinal)))
-                {
-                    continue;
-                }
-
-                var assemblySymbol = compilation.GetAssemblyOrModuleSymbol(mr) as IAssemblySymbol;
-
-                if (assemblySymbol == null)
-                {
-                    continue;
-                }
-
-                var globalNamespace = assemblySymbol.GlobalNamespace;
-                CheckNamespaceForUiTypes(context, globalNamespace);
-            }
-
-            return null;
-        }
-
-        private void CheckNamespaceForUiTypes(
-            GeneratorExecutionContext context,
-            INamespaceSymbol namespaceSymbol)
-        {
-            var namedTypeSymbols = namespaceSymbol.GetTypeMembers();
-
-            foreach (var namedTypeSymbol in namedTypeSymbols)
-            {
-                var fullName = namedTypeSymbol.GetFullName();
-
-                var desiredBaseType = "global::System.Windows.UIElement";
-
-                // check if we inherit from our desired element.
-                if (HasDesiredBaseType(desiredBaseType, namedTypeSymbol))
-                {
-                    return;
-                }
-
-                if (fullName.Equals(desiredBaseType, StringComparison.Ordinal))
-                {
-                    context.ReportDiagnostic(ReportDiagnostics.MatchedBaseUiElement(desiredBaseType));
-                    return;
-                }
-            }
-
-            var namespaceSymbols = namespaceSymbol.GetNamespaceMembers();
-
-            foreach (var nestedNamespaceSymbol in namespaceSymbols)
-            {
-                CheckNamespaceForUiTypes(
-                    context,
-                    nestedNamespaceSymbol);
-            }
-        }
-
-        private bool HasDesiredBaseType(string desiredBaseType, INamedTypeSymbol namedTypeSymbol)
-        {
-            var baseType = namedTypeSymbol.BaseType;
-
-            while (baseType != null)
-            {
-                var baseTypeFullName = baseType.GetFullName();
-                if (baseTypeFullName.Equals(desiredBaseType, StringComparison.Ordinal))
-                {
-                    return true;
-                }
-
-                if (baseTypeFullName.Equals("global::System.Object", StringComparison.Ordinal))
-                {
-                    return false;
-                }
-
-                baseType = baseType.BaseType;
-            }
-
-            return false;
         }
 
         protected abstract string GetNamespace();

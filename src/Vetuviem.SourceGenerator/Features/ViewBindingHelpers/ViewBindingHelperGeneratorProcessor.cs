@@ -8,7 +8,9 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
     {
         public override NamespaceDeclarationSyntax GenerateObjects(
             NamespaceDeclarationSyntax namespaceDeclaration,
-            MetadataReference[] assembliesOfInterest)
+            MetadataReference[] assembliesOfInterest,
+            Compilation generatorExecutionContext,
+            Action<Diagnostic> reportDiagnosticAction)
         {
             return namespaceDeclaration;
         }

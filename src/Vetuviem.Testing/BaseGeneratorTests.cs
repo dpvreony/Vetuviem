@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -29,10 +30,10 @@ namespace Dhgms.Nucleotide.UnitTests.Generators
 
             protected abstract Func<TGenerator> GetFactory();
 
-            private static Compilation CreateCompilation(string source) => CSharpCompilation.Create(
+            private static Compilation CreateCompilation(string source, IEnumerable<MetadataReference> reference) => CSharpCompilation.Create(
                 assemblyName: "compilation",
                 syntaxTrees: new[] { CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Preview)) },
-                references: new[] { MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location) },
+                references: reference,
                 options: new CSharpCompilationOptions(OutputKind.ConsoleApplication)
             );
 
@@ -56,7 +57,16 @@ namespace Dhgms.Nucleotide.UnitTests.Generators
                 var factory = GetFactory();
 
                 var instance = factory();
-                var comp = CreateCompilation(string.Empty);
+
+                var references = new List<MetadataReference>
+                {
+                    MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location)
+                };
+
+                AddReferenceAssemblies(references);
+
+                var comp = CreateCompilation(string.Empty, references);
+
                 var newComp = RunGenerators(
                     comp,
                     out var generatorDiags,
@@ -68,6 +78,26 @@ namespace Dhgms.Nucleotide.UnitTests.Generators
                 {
                     _logger.LogInformation(generatorDiag.ToString());
                 }
+            }
+
+            private void AddReferenceAssemblies(List<MetadataReference> metadataReferences)
+            {
+                var trustedAssembliesPaths = GetPlatformAssemblyPaths();
+                foreach (string trustedAssembliesPath in trustedAssembliesPaths)
+                {
+                    var metadataReference = MetadataReference.CreateFromFile(trustedAssembliesPath);
+                    metadataReferences.Add(metadataReference);
+                }
+            }
+
+            private static string[] GetPlatformAssemblyPaths()
+            {
+                if (AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") is string trustedPlatformAssemblies)
+                {
+                    return trustedPlatformAssemblies.Split(Path.PathSeparator);
+                }
+
+                return null;
             }
 
             protected BaseExecuteMethod(ITestOutputHelper output) : base(output)
