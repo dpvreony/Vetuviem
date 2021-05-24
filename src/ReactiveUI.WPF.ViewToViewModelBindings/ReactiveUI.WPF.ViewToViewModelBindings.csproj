@@ -25,5 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ReactiveUI.WPF.VetuViemGenerator\ReactiveUI.WPF.VetuViemGenerator.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
 </Project>

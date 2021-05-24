@@ -41,7 +41,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
                 var summary = XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
                     "Gets or sets the binding logic for {0}",
-                    $"global::{fullName}.{prop.Name}");
+                    $"{fullName}.{prop.Name}");
 
                 var propertySymbol = prop as IPropertySymbol;
                 var propSyntax = GetPropertyDeclaration(propertySymbol, accessorList, summary);
@@ -61,7 +61,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
             var returnType = prop.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 
-            var type = SyntaxFactory.ParseTypeName($"ReactiveUI.Core.ViewBindingModels.I{bindingType}WayBind<TViewModel, {returnType}>");
+            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.I{bindingType}WayBind<TViewModel, {returnType}>");
 
             var result = SyntaxFactory.PropertyDeclaration(type, prop.Name)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));

@@ -31,7 +31,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 #pragma warning disable SA1129 // Do not use default value type constructor
             var viewConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
-            var viewForConstraint = SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("ReactiveUI.IViewFor<TViewModel>"));
+            var viewForConstraint = SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("global::ReactiveUI.IViewFor<TViewModel>"));
 
             viewConstraints = viewConstraints
                 .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint))
@@ -40,7 +40,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 SyntaxFactory.IdentifierName("TView"),
                 viewConstraints);
 
-            var reactiveObjectInterfaceConstraint = SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("ReactiveUI.IReactiveObject"));
+            var reactiveObjectInterfaceConstraint = SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("global::ReactiveUI.IReactiveObject"));
 #pragma warning disable SA1129 // Do not use default value type constructor
             var viewModelConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
@@ -59,7 +59,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             {
                 var baseClass = namedTypeSymbol.BaseType;
 
-                var baseViewBindingModelClassName = $"global::ReactiveUI.ViewBindingModels.{baseClass.GetFullName().Replace("global::", string.Empty)}ViewBindingModel<TView, TViewModel>";
+                var baseViewBindingModelClassName = $"global::ReactiveUI.WPF.ViewBindingModels.{baseClass.GetFullName().Replace("global::", string.Empty)}ViewBindingModel<TView, TViewModel>";
                 var baseTypeNode =
                     SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(baseViewBindingModelClassName));
 #pragma warning disable SA1129 // Do not use default value type constructor
@@ -79,7 +79,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 .WithConstraintClauses(constraintClauses)
                 .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
                     "A class that contains View Bindings for the {0} control.",
-                    $"global::{controlClassFullName}"))
+                    controlClassFullName))
                 .WithMembers(properties);
         }
     }
