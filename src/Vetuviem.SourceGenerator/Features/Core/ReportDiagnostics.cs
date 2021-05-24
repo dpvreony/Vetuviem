@@ -5,11 +5,32 @@ namespace Vetuviem.SourceGenerator.Features.Core
 {
     public static class ReportDiagnostics
     {
+        public static Diagnostic HasDesiredBaseType(string desiredBaseType, INamedTypeSymbol namedTypeSymbol)
+        {
+            return InfoDiagnostic(
+                ReportDiagnosticIds.HasDesiredBaseType,
+                $"{namedTypeSymbol.GetFullName()} has desired base type {desiredBaseType}");
+        }
+
         public static Diagnostic StartingSourceGenerator()
         {
             return InfoDiagnostic(
                 ReportDiagnosticIds.StartingSourceGenerator,
                 $"Starting Source Generator");
+        }
+
+        public static Diagnostic StartingScanOfAssembly(MetadataReference metadataReference)
+        {
+            return InfoDiagnostic(
+                ReportDiagnosticIds.StartingScanOfAssembly,
+                $"Starting Scan Of Namespace: {metadataReference.Display}");
+        }
+
+        public static Diagnostic StartingScanOfNamespace(INamespaceSymbol namespaceSymbol)
+        {
+            return InfoDiagnostic(
+                ReportDiagnosticIds.StartingScanOfNamespace,
+                $"Starting Scan Of Namespace: {namespaceSymbol}");
         }
 
         public static Diagnostic ReferencesOfInterestCountMismatch(int expected, int actual)
@@ -31,6 +52,20 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return ErrorDiagnostic(
                 ReportDiagnosticIds.UnhandledException,
                 exception.ToString());
+        }
+
+        public static Diagnostic MetadataReferenceNotAssemblySymbol(MetadataReference metadataReference)
+        {
+            return ErrorDiagnostic(
+                ReportDiagnosticIds.MetadataReferenceNotAssemblySymbol,
+                $"Metadata Reference Not Assembly Symbol {metadataReference.Display}");
+        }
+
+        public static Diagnostic StartingCheckOfType(string fullName)
+        {
+            return InfoDiagnostic(
+                ReportDiagnosticIds.MetadataReferenceNotAssemblySymbol,
+                $"Starting Check Of Type {fullName}");
         }
 
         private static Diagnostic InfoDiagnostic(

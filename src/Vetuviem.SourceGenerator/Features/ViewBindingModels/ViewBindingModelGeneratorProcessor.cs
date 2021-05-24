@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Vetuviem.SourceGenerator.Features.Core;
+using Vetuviem.SourceGenerator.Features.ViewBindingModels;
 
 namespace Vetuviem.SourceGenerator.GeneratorProcessors
 {
@@ -14,48 +17,71 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             Compilation compilation,
             Action<Diagnostic> reportDiagnosticAction)
         {
+            var desiredBaseType = "global::System.Windows.UIElement";
+
             foreach (var metadataReference in assembliesOfInterest)
             {
-                GenerateClassesForAssembly(
+                CheckAssemblyForUiTypes(
                     namespaceDeclaration,
                     metadataReference,
                     compilation,
-                    reportDiagnosticAction);
+                    reportDiagnosticAction,
+                    desiredBaseType);
             }
 
             return namespaceDeclaration;
         }
 
-        private void GenerateClassesForAssembly(
+        private void CheckAssemblyForUiTypes(
             NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference metadataReference,
             Compilation compilation,
-            Action<Diagnostic> reportDiagnosticAction)
+            Action<Diagnostic> reportDiagnosticAction,
+            string baseUiElement)
         {
+            reportDiagnosticAction(ReportDiagnostics.StartingScanOfAssembly(metadataReference));
+
             var assemblySymbol = compilation.GetAssemblyOrModuleSymbol(metadataReference) as IAssemblySymbol;
 
             if (assemblySymbol == null)
             {
+                reportDiagnosticAction(ReportDiagnostics.MetadataReferenceNotAssemblySymbol(metadataReference));
                 return;
             }
 
             var globalNamespace = assemblySymbol.GlobalNamespace;
-            CheckNamespaceForUiTypes(globalNamespace, reportDiagnosticAction);
+            CheckNamespaceForUiTypes(globalNamespace, reportDiagnosticAction, baseUiElement);
+
+            /*
+            var typesInAssembly = assemblySymbol.get;
+            foreach (string currentType in typesInAssembly)
+            {
+                CheckTypeForUiType(
+                    assemblySymbol,
+                    currentType,
+                    reportDiagnosticAction);
+            }
+            */
         }
 
-        private string[] GetUiTypes(
-            GeneratorExecutionContext context,
-            Compilation compilation,
-            string[] assembliesOfInterest)
+        private ClassDeclarationSyntax CheckTypeForUiType(
+            INamedTypeSymbol namedTypeSymbol,
+            Action<Diagnostic> reportDiagnosticAction,
+            string baseUiElement)
         {
-            var metadataReferences = compilation.References;
-            foreach (var mr in metadataReferences)
-            {
-                if (assembliesOfInterest.All(assemblyOfInterest => !mr.Display.EndsWith(assemblyOfInterest, StringComparison.Ordinal)))
-                {
-                    continue;
-                }
+            var fullName = namedTypeSymbol.GetFullName();
 
+            // check if we inherit from our desired element.
+            if (HasDesiredBaseType(baseUiElement, namedTypeSymbol))
+            {
+                reportDiagnosticAction(ReportDiagnostics.HasDesiredBaseType(baseUiElement, namedTypeSymbol));
+                return ViewBindingModelClassGenerator.GenerateClass(namedTypeSymbol, baseUiElement);
+            }
+
+            if (fullName.Equals(baseUiElement, StringComparison.Ordinal))
+            {
+                reportDiagnosticAction(ReportDiagnostics.MatchedBaseUiElement(baseUiElement));
+                return ViewBindingModelClassGenerator.GenerateClass(namedTypeSymbol, baseUiElement);
             }
 
             return null;
@@ -63,37 +89,52 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
 
         private void CheckNamespaceForUiTypes(
             INamespaceSymbol namespaceSymbol,
-            Action<Diagnostic> reportDiagnosticAction)
+            Action<Diagnostic> reportDiagnosticAction,
+            string baseUiElement)
         {
+            reportDiagnosticAction(ReportDiagnostics.StartingScanOfNamespace(namespaceSymbol));
+
             var namedTypeSymbols = namespaceSymbol.GetTypeMembers();
+
+            var nestedMembers = new SyntaxList<MemberDeclarationSyntax>();
 
             foreach (var namedTypeSymbol in namedTypeSymbols)
             {
-                var fullName = namedTypeSymbol.GetFullName();
+                var classDeclaration = CheckTypeForUiType(
+                    namedTypeSymbol,
+                    reportDiagnosticAction,
+                    baseUiElement);
 
-                var desiredBaseType = "global::System.Windows.UIElement";
-
-                // check if we inherit from our desired element.
-                if (HasDesiredBaseType(desiredBaseType, namedTypeSymbol))
+                if (classDeclaration != null)
                 {
-                    return;
-                }
-
-                if (fullName.Equals(desiredBaseType, StringComparison.Ordinal))
-                {
-                    reportDiagnosticAction(ReportDiagnostics.MatchedBaseUiElement(desiredBaseType));
-                    return;
+                    nestedMembers.Add(classDeclaration);
                 }
             }
 
-            var namespaceSymbols = namespaceSymbol.GetNamespaceMembers();
+            var nestedSymbols = namespaceSymbol.GetNamespaceMembers();
 
-            foreach (var nestedNamespaceSymbol in namespaceSymbols)
+            foreach (var nestedNamespaceSymbol in nestedSymbols)
             {
-                CheckNamespaceForUiTypes(
+                var nestedNamespace = CheckNamespaceForUiTypes(
                     nestedNamespaceSymbol,
-                    reportDiagnosticAction);
+                    reportDiagnosticAction,
+                    baseUiElement);
+
+                if (nestedNamespace != null)
+                {
+                    nestedMembers.Add(nestedNamespace);
+                }
             }
+
+            if (nestedMembers.Count > 0)
+            {
+                var identifier = SyntaxFactory.IdentifierName(namespaceSymbol.Name);
+
+                return SyntaxFactory.NamespaceDeclaration(identifier)
+                    .WithMembers(nestedMembers);
+            }
+
+            return null;
         }
 
         private bool HasDesiredBaseType(string desiredBaseType, INamedTypeSymbol namedTypeSymbol)

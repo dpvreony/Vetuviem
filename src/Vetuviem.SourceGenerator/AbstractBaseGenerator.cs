@@ -96,8 +96,8 @@ namespace Vetuviem.SourceGenerator
 
             var assembliesOfInterest = new[]
             {
-                "PresentationCore.dll",
-                "PresentationFramework.dll",
+                //"PresentationCore.dll",
+                "PresentationFramework.dll",/*
                 "PresentationFramework.Aero.dll",
                 "PresentationFramework.Aero2.dll",
                 "PresentationFramework.AeroLite.dll",
@@ -109,7 +109,7 @@ namespace Vetuviem.SourceGenerator
                 "PresentationFramework-SystemDrawing.dll",
                 "PresentationFramework-SystemXml.dll",
                 "PresentationFramework-SystemXmlLinq.dll",
-                "PresentationFrameworkUI.dll",
+                "PresentationUI.dll",*/
             };
 
             var referencesOfInterest = GetReferencesOfInterest(
