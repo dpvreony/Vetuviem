@@ -18,6 +18,7 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             Action<Diagnostic> reportDiagnosticAction)
         {
             var desiredBaseType = "global::System.Windows.UIElement";
+            var previouslyGeneratedClasses = new List<string>();
 
             foreach (var metadataReference in assembliesOfInterest)
             {
@@ -26,7 +27,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     metadataReference,
                     compilation,
                     reportDiagnosticAction,
-                    desiredBaseType);
+                    desiredBaseType,
+                    previouslyGeneratedClasses);
             }
 
             return namespaceDeclaration;
@@ -37,7 +39,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             MetadataReference metadataReference,
             Compilation compilation,
             Action<Diagnostic> reportDiagnosticAction,
-            string baseUiElement)
+            string baseUiElement,
+            IList<string> previouslyGeneratedClasses)
         {
             reportDiagnosticAction(ReportDiagnostics.StartingScanOfAssembly(metadataReference));
 
@@ -57,7 +60,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                 var nestedDeclarationSyntax = CheckNamespaceForUiTypes(
                     namespaceMember,
                     reportDiagnosticAction,
-                    baseUiElement);
+                    baseUiElement,
+                    previouslyGeneratedClasses);
 
                 if (nestedDeclarationSyntax != null)
                 {
@@ -84,30 +88,46 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
         private ClassDeclarationSyntax CheckTypeForUiType(
             INamedTypeSymbol namedTypeSymbol,
             Action<Diagnostic> reportDiagnosticAction,
-            string baseUiElement)
+            string baseUiElement,
+            IList<string> previouslyGeneratedClasses)
         {
             var fullName = namedTypeSymbol.GetFullName();
 
-            // check if we inherit from our desired element.
-            if (HasDesiredBaseType(baseUiElement, namedTypeSymbol))
+            try
             {
-                reportDiagnosticAction(ReportDiagnostics.HasDesiredBaseType(baseUiElement, namedTypeSymbol));
-                return ViewBindingModelClassGenerator.GenerateClass(namedTypeSymbol, baseUiElement);
+                // this is in a try catch block because roslyn sometimes throws a null ref exception.
+                var accessibility = namedTypeSymbol.DeclaredAccessibility;
+                if (accessibility != Accessibility.Public)
+                {
+                    return null;
+                }
+            }
+            catch
+            {
+                return null;
             }
 
-            if (fullName.Equals(baseUiElement, StringComparison.Ordinal))
+            // ensure we inherit from our desired element.
+            if (namedTypeSymbol.IsSealed ||
+                namedTypeSymbol.IsStatic ||
+                (!HasDesiredBaseType(baseUiElement, namedTypeSymbol) &&
+                !fullName.Equals(baseUiElement, StringComparison.Ordinal)) ||
+                previouslyGeneratedClasses.Any(pgc => pgc.Equals(fullName)))
             {
-                reportDiagnosticAction(ReportDiagnostics.MatchedBaseUiElement(baseUiElement));
-                return ViewBindingModelClassGenerator.GenerateClass(namedTypeSymbol, baseUiElement);
+                return null;
             }
 
-            return null;
+            previouslyGeneratedClasses.Add(fullName);
+            reportDiagnosticAction(ReportDiagnostics.HasDesiredBaseType(baseUiElement, namedTypeSymbol));
+            return ViewBindingModelClassGenerator.GenerateClass(namedTypeSymbol, baseUiElement);
+
         }
 
         private NamespaceDeclarationSyntax CheckNamespaceForUiTypes(
             INamespaceSymbol namespaceSymbol,
             Action<Diagnostic> reportDiagnosticAction,
-            string baseUiElement)
+            string baseUiElement,
+            IList<string> previouslyGeneratedClasses)
         {
             reportDiagnosticAction(ReportDiagnostics.StartingScanOfNamespace(namespaceSymbol));
 
@@ -120,7 +140,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                 var classDeclaration = CheckTypeForUiType(
                     namedTypeSymbol,
                     reportDiagnosticAction,
-                    baseUiElement);
+                    baseUiElement,
+                    previouslyGeneratedClasses);
 
                 if (classDeclaration != null)
                 {
@@ -135,7 +156,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                 var nestedNamespace = CheckNamespaceForUiTypes(
                     nestedNamespaceSymbol,
                     reportDiagnosticAction,
-                    baseUiElement);
+                    baseUiElement,
+                    previouslyGeneratedClasses);
 
                 if (nestedNamespace != null)
                 {
@@ -145,7 +167,7 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
 
             if (nestedMembers.Count > 0)
             {
-                var identifier = SyntaxFactory.IdentifierName(namespaceSymbol.Name);
+                var identifier = SyntaxFactory.IdentifierName($"For{namespaceSymbol.Name}");
 
                 var membersToAdd = new SyntaxList<MemberDeclarationSyntax>(nestedMembers);
 

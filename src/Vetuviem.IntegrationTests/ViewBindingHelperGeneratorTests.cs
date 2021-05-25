@@ -11,16 +11,16 @@ namespace Vetuviem.IntegrationTests
     /// </summary>
     public static class ViewBindingHelperGeneratorTests
     {
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WpfViewBindingModelGenerator, ViewBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WpfViewBindingHelperGenerator, ViewBindingHelperGeneratorProcessor>
         {
             public ExecuteMethod(ITestOutputHelper output)
                 : base(output)
             {
             }
 
-            protected override Func<WpfViewBindingModelGenerator> GetFactory()
+            protected override Func<WpfViewBindingHelperGenerator> GetFactory()
             {
-                return () => new WpfViewBindingModelGenerator();
+                return () => new WpfViewBindingHelperGenerator();
             }
         }
     }
