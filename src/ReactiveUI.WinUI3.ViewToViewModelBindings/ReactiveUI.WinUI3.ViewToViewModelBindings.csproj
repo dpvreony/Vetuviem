@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
     <LangVersion>9</LangVersion>
@@ -15,7 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReactiveUI.WPF.VetuViemGenerator\ReactiveUI.WPF.VetuViemGenerator.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\ReactiveUI.WinUI3.VetuViemGenerator\ReactiveUI.WinUI3.VetuViemGenerator.csproj" OutputItemType="Analyzer" />
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
+
 </Project>

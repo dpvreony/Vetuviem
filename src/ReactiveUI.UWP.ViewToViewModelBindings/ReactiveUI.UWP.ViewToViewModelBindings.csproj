@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>uap10.0.16299</TargetFramework>
     <LangVersion>9</LangVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>True</DebugSymbols>
-    <UseWPF>true</UseWPF>
     <!--
     If you're seeing CS8032 warnings, it can be because the upstream source generator dll has been rebuilt or you've changed the
     target frameworks in this project. Visual Studio seems to have a cache that invalidates. Reloading Visual Studio can
@@ -15,7 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReactiveUI.WPF.VetuViemGenerator\ReactiveUI.WPF.VetuViemGenerator.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\ReactiveUI.UWP.VetuViemGenerator\ReactiveUI.UWP.VetuViemGenerator.csproj" OutputItemType="Analyzer" />
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
+
 </Project>
