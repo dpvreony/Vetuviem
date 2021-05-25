@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ICSharpCode.Decompiler.TypeSystem;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Pharmacist.Core.BindingModels;
-using Pharmacist.Core.Generation;
 using Vetuviem.SourceGenerator.Features.Core;
 using ISymbol = Microsoft.CodeAnalysis.ISymbol;
 using SymbolKind = Microsoft.CodeAnalysis.SymbolKind;

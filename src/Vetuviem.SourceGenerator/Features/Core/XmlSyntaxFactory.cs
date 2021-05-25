@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using ICSharpCode.Decompiler.TypeSystem;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Pharmacist.Core.Generation;
 
 namespace Vetuviem.SourceGenerator.Features.Core
 {
@@ -29,20 +26,6 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// Gets a inheritdoc leading trivia comment.
         /// </summary>
         public static SyntaxTriviaList InheritdocSyntax { get; }
-
-        /// <summary>
-        /// Generates a summary comment for a method.
-        /// </summary>
-        /// <param name="summaryText">The text of the summary.</param>
-        /// <param name="parameterFormat">The format of each parameter. This is for a string format.</param>
-        /// <param name="entity">The method entity to construct the comment for.</param>
-        /// <returns>The syntax trivia of the comment.</returns>
-        public static SyntaxTriviaList GenerateSummaryComment(string summaryText, string parameterFormat, IMethod entity)
-        {
-            var parameters = entity.Parameters.Select(x => (x.Name, string.Format(CultureInfo.InvariantCulture, parameterFormat, x.Name)));
-
-            return GenerateSummaryComment(summaryText, parameters);
-        }
 
         /// <summary>
         /// Generates a summary comment which includes a see also text.
@@ -158,52 +141,6 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
             sb.Append("/// <returns>").Append(returnValueText).AppendLine("</returns>");
             return SyntaxFactory.ParseLeadingTrivia(sb.ToString());
-        }
-
-        /// <summary>
-        /// Converts the type into a format that can be used in XML documentation.
-        /// </summary>
-        /// <param name="currentType">The type to convert.</param>
-        /// <returns>A XML friendly version of the type.</returns>
-        public static string ConvertToDocument(this IType currentType)
-        {
-            return currentType.GenerateFullGenericName().Replace("<", "{").Replace(">", "}");
-        }
-
-        /// <summary>
-        /// Converts the method into a format that can be used in XML documentation.
-        /// </summary>
-        /// <param name="method">The method to convert.</param>
-        /// <returns>A XML friendly version of the method.</returns>
-        public static string ConvertToDocument(this IMethod method)
-        {
-            var stringBuilder = new StringBuilder(method.DeclaringType.ConvertToDocument() + "." + method.Name).Append("(");
-
-            for (var i = 0; i < method.Parameters.Count; ++i)
-            {
-                var parameter = method.Parameters[i];
-
-                if (i != 0)
-                {
-                    stringBuilder.Append(", ");
-                }
-
-                stringBuilder.Append(parameter.Type.ConvertToDocument());
-            }
-
-            stringBuilder.Append(")");
-
-            return stringBuilder.ToString();
-        }
-
-        /// <summary>
-        /// Converts the event into a format that can be used in XML documentation.
-        /// </summary>
-        /// <param name="eventDetails">The event to convert.</param>
-        /// <returns>A XML friendly version of the event.</returns>
-        public static string ConvertToDocument(this IEvent eventDetails)
-        {
-            return eventDetails.DeclaringType.ConvertToDocument() + "." + eventDetails.Name;
         }
     }
 }
