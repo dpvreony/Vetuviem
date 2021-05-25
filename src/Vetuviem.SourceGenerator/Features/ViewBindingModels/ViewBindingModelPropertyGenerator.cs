@@ -26,6 +26,17 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
             foreach (var prop in properties)
             {
+                var propertySymbol = prop as IPropertySymbol;
+
+                if (propertySymbol == null
+                    || propertySymbol.IsIndexer
+                    || propertySymbol.IsOverride
+                    || propertySymbol.DeclaredAccessibility != Accessibility.Public
+                    || propertySymbol.ExplicitInterfaceImplementations.Any())
+                {
+                    continue;
+                }
+
                 var accessorList = new[]
                 {
                     SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
@@ -40,7 +51,6 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                     "Gets or sets the binding logic for {0}",
                     $"{fullName}.{prop.Name}");
 
-                var propertySymbol = prop as IPropertySymbol;
                 var propSyntax = GetPropertyDeclaration(propertySymbol, accessorList, summary);
 
                 nodes.Add(propSyntax);

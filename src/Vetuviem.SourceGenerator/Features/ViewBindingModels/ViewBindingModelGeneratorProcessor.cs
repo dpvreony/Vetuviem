@@ -167,7 +167,7 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
 
             if (nestedMembers.Count > 0)
             {
-                var identifier = SyntaxFactory.IdentifierName($"For{namespaceSymbol.Name}");
+                var identifier = SyntaxFactory.IdentifierName(namespaceSymbol.Name);
 
                 var membersToAdd = new SyntaxList<MemberDeclarationSyntax>(nestedMembers);
 
