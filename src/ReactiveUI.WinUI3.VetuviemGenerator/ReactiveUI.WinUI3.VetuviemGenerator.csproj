@@ -28,4 +28,18 @@
   </Target>
   -->
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.5.7" PrivateAssets="all" ReferenceOutputAssembly="true" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+  </PropertyGroup>
+
+  <Target Name="GetDependencyTargetPaths">
+    <ItemGroup>
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_ProjectReunion_WinUI)\lib\net5.0-windows10.0.18362.0\Microsoft.WinUI.dll" IncludeRuntimeDependency="false" />
+    </ItemGroup>
+  </Target>
+
 </Project>
