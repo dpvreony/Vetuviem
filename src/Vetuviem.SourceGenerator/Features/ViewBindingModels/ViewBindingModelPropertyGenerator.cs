@@ -23,6 +23,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 .GetMembers()
                 .Where(x => x.Kind == SymbolKind.Property)
                 .ToArray();
+
             var nodes = new List<MemberDeclarationSyntax>(properties.Length);
 
             foreach (var prop in properties)
@@ -100,11 +101,14 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             IPropertySymbol prop,
             string desiredCommandInterface)
         {
-            var propType = prop.Type;
-            var isCommand = propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface));
-            if (isCommand)
+            if (!string.IsNullOrWhiteSpace(desiredCommandInterface))
             {
-                return "ICommandBinding";
+                var propType = prop.Type;
+                var isCommand = propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface));
+                if (isCommand)
+                {
+                    return "ICommandBinding";
+                }
             }
 
             var bindingType = prop.IsReadOnly ? "One" : "OneOrTwo";
