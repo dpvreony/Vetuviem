@@ -80,25 +80,7 @@ namespace Dhgms.Nucleotide.UnitTests.Generators
                 }
             }
 
-            private void AddReferenceAssemblies(List<MetadataReference> metadataReferences)
-            {
-                var trustedAssembliesPaths = GetPlatformAssemblyPaths();
-                foreach (string trustedAssembliesPath in trustedAssembliesPaths)
-                {
-                    var metadataReference = MetadataReference.CreateFromFile(trustedAssembliesPath);
-                    metadataReferences.Add(metadataReference);
-                }
-            }
-
-            private static string[] GetPlatformAssemblyPaths()
-            {
-                if (AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") is string trustedPlatformAssemblies)
-                {
-                    return trustedPlatformAssemblies.Split(Path.PathSeparator);
-                }
-
-                return null;
-            }
+            protected abstract void AddReferenceAssemblies(List<MetadataReference> metadataReferences);
 
             protected BaseExecuteMethod(ITestOutputHelper output) : base(output)
             {

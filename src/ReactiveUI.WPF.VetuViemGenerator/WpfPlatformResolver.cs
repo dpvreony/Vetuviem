@@ -23,7 +23,7 @@ namespace ReactiveUI.WPF.VetuviemGenerator
 
         public string GetBaseUiElement()
         {
-            return "System.Windows.UIElement";
+            return "global::System.Windows.UIElement";
         }
 
         public string GetCommandInterface()

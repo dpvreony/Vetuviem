@@ -6,7 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ReactiveUI.Blazor.VetuviemGenerator\ReactiveUI.Blazor.VetuviemGenerator.csproj" />
+    <ProjectReference Include="..\ReactiveUI.Maui.VetuviemGenerator\ReactiveUI.Maui.VetuviemGenerator.csproj" />
+    <ProjectReference Include="..\ReactiveUI.UWP.VetuviemGenerator\ReactiveUI.UWP.VetuviemGenerator.csproj" />
+    <ProjectReference Include="..\ReactiveUI.Winforms.VetuviemGenerator\ReactiveUI.Winforms.VetuviemGenerator.csproj" />
+    <ProjectReference Include="..\ReactiveUI.WinUI3.VetuviemGenerator\ReactiveUI.WinUI3.VetuviemGenerator.csproj" />
     <ProjectReference Include="..\ReactiveUI.WPF.VetuViemGenerator\ReactiveUI.WPF.VetuviemGenerator.csproj" />
+    <ProjectReference Include="..\ReactiveUI.XamForms.VetuViemGenerator\ReactiveUI.XamForms.VetuViemGenerator.csproj" />
     <ProjectReference Include="..\Vetuviem.Testing\Vetuviem.Testing.csproj" />
   </ItemGroup>
 

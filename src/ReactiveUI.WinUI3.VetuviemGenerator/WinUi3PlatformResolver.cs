@@ -14,12 +14,12 @@ namespace ReactiveUI.WinUI3.VetuviemGenerator
 
         public string GetBaseUiElement()
         {
-            return "Microsoft.WinUI.Xaml.UIElement";
+            return "global::Microsoft.UI.Xaml.UIElement";
         }
 
         public string GetCommandInterface()
         {
-            return "System.Windows.Input.ICommand";
+            return "global::System.Windows.Input.ICommand";
         }
     }
 }
