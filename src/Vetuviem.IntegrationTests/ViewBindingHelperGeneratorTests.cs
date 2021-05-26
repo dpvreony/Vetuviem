@@ -1,6 +1,6 @@
 ﻿using System;
 using Dhgms.Nucleotide.UnitTests.Generators;
-using ReactiveUI.WPF.ViewToViewModelBindings;
+using ReactiveUI.WPF.VetuviemGenerator;
 using Vetuviem.SourceGenerator.GeneratorProcessors;
 using Xunit.Abstractions;
 

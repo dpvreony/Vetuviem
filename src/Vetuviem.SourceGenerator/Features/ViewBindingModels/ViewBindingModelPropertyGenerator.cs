@@ -16,7 +16,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
     public static class ViewBindingModelPropertyGenerator
     {
         public static SyntaxList<MemberDeclarationSyntax> GetProperties(
-            INamedTypeSymbol namedTypeSymbol)
+            INamedTypeSymbol namedTypeSymbol,
+            string desiredCommandInterface)
         {
             var properties = namedTypeSymbol
                 .GetMembers()
@@ -51,7 +52,11 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                     "Gets or sets the binding logic for {0}",
                     $"{fullName}.{prop.Name}");
 
-                var propSyntax = GetPropertyDeclaration(propertySymbol, accessorList, summary);
+                var propSyntax = GetPropertyDeclaration(
+                    propertySymbol,
+                    accessorList,
+                    summary,
+                    desiredCommandInterface);
 
                 nodes.Add(propSyntax);
             }
@@ -62,14 +67,15 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         private static PropertyDeclarationSyntax GetPropertyDeclaration(
             IPropertySymbol prop,
             AccessorDeclarationSyntax[] accessorList,
-            IEnumerable<SyntaxTrivia> summary)
+            IEnumerable<SyntaxTrivia> summary,
+            string desiredCommandInterface)
         {
-            TypeSyntax type = GetBindingTypeSyntax(prop);
+            TypeSyntax type = GetBindingTypeSyntax(prop, desiredCommandInterface);
 
-            var result = SyntaxFactory.PropertyDeclaration(type, prop.Name)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
-
-            result = result
+            var result = SyntaxFactory.PropertyDeclaration(
+                    type,
+                    prop.Name)
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
                 .WithAccessorList(
                     SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)))
                 .WithLeadingTrivia(summary);
@@ -77,19 +83,25 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             return result;
         }
 
-        private static TypeSyntax GetBindingTypeSyntax(IPropertySymbol prop)
+        private static TypeSyntax GetBindingTypeSyntax(
+            IPropertySymbol prop,
+            string desiredCommandInterface)
         {
-            string bindingName = GetBindingInterfaceName(prop);
+            string bindingName = GetBindingInterfaceName(
+                prop,
+                desiredCommandInterface);
 
             var returnType = prop.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.{bindingName}<TViewModel, {returnType}>");
             return type;
         }
 
-        private static string GetBindingInterfaceName(IPropertySymbol prop)
+        private static string GetBindingInterfaceName(
+            IPropertySymbol prop,
+            string desiredCommandInterface)
         {
             var propType = prop.Type;
-            var isCommand = propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals("global::System.Windows.Input.ICommand"));
+            var isCommand = propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface));
             if (isCommand)
             {
                 return "ICommandBinding";

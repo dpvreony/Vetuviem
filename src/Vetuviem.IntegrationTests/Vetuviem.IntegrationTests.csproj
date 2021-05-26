@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReactiveUI.WPF.VetuViemGenerator\ReactiveUI.WPF.VetuViemGenerator.csproj" />
+    <ProjectReference Include="..\ReactiveUI.WPF.VetuViemGenerator\ReactiveUI.WPF.VetuviemGenerator.csproj" />
     <ProjectReference Include="..\Vetuviem.Testing\Vetuviem.Testing.csproj" />
   </ItemGroup>
 

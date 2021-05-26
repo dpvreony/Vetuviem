@@ -10,6 +10,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
         public abstract NamespaceDeclarationSyntax GenerateObjects(NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference[] assembliesOfInterest,
             Compilation generatorExecutionContext,
-            Action<Diagnostic> reportDiagnosticAction);
+            Action<Diagnostic> reportDiagnosticAction,
+            string desiredBaseType,
+            string desiredCommandInterface);
     }
 }

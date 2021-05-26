@@ -1,12 +1,15 @@
-﻿using System;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Vetuviem.SourceGenerator;
+using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.WPF.ViewToViewModelBindings
+namespace ReactiveUI.WPF.VetuviemGenerator
 {
     [Generator]
     public sealed class WpfViewBindingHelperGenerator : AbstractViewBindingHelperGenerator
     {
-        public string UiBaseType => "System.Windows.UIElement";
+        protected override IPlatformResolver GetPlatformResolver()
+        {
+            return new WpfPlatformResolver();
+        }
     }
 }

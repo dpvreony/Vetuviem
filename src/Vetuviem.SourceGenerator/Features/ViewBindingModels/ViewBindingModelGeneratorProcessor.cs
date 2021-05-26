@@ -15,9 +15,10 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference[] assembliesOfInterest,
             Compilation compilation,
-            Action<Diagnostic> reportDiagnosticAction)
+            Action<Diagnostic> reportDiagnosticAction,
+            string desiredBaseType,
+            string desiredCommandInterface)
         {
-            var desiredBaseType = "global::System.Windows.UIElement";
             var previouslyGeneratedClasses = new List<string>();
 
             foreach (var metadataReference in assembliesOfInterest)
@@ -28,7 +29,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     compilation,
                     reportDiagnosticAction,
                     desiredBaseType,
-                    previouslyGeneratedClasses);
+                    previouslyGeneratedClasses,
+                    desiredCommandInterface);
             }
 
             return namespaceDeclaration;
@@ -40,7 +42,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             Compilation compilation,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
-            IList<string> previouslyGeneratedClasses)
+            IList<string> previouslyGeneratedClasses,
+            string desiredCommandInterface)
         {
             reportDiagnosticAction(ReportDiagnostics.StartingScanOfAssembly(metadataReference));
 
@@ -61,7 +64,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     namespaceMember,
                     reportDiagnosticAction,
                     baseUiElement,
-                    previouslyGeneratedClasses);
+                    previouslyGeneratedClasses,
+                    desiredCommandInterface);
 
                 if (nestedDeclarationSyntax != null)
                 {
@@ -89,7 +93,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             INamedTypeSymbol namedTypeSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
-            IList<string> previouslyGeneratedClasses)
+            IList<string> previouslyGeneratedClasses,
+            string desiredCommandInterface)
         {
             var fullName = namedTypeSymbol.GetFullName();
 
@@ -119,7 +124,10 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
 
             previouslyGeneratedClasses.Add(fullName);
             reportDiagnosticAction(ReportDiagnostics.HasDesiredBaseType(baseUiElement, namedTypeSymbol));
-            return ViewBindingModelClassGenerator.GenerateClass(namedTypeSymbol, baseUiElement);
+            return ViewBindingModelClassGenerator.GenerateClass(
+                namedTypeSymbol,
+                baseUiElement,
+                desiredCommandInterface);
 
         }
 
@@ -127,7 +135,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             INamespaceSymbol namespaceSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
-            IList<string> previouslyGeneratedClasses)
+            IList<string> previouslyGeneratedClasses,
+            string desiredCommandInterface)
         {
             reportDiagnosticAction(ReportDiagnostics.StartingScanOfNamespace(namespaceSymbol));
 
@@ -141,7 +150,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     namedTypeSymbol,
                     reportDiagnosticAction,
                     baseUiElement,
-                    previouslyGeneratedClasses);
+                    previouslyGeneratedClasses,
+                    desiredCommandInterface);
 
                 if (classDeclaration != null)
                 {
@@ -157,7 +167,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     nestedNamespaceSymbol,
                     reportDiagnosticAction,
                     baseUiElement,
-                    previouslyGeneratedClasses);
+                    previouslyGeneratedClasses,
+                    desiredCommandInterface);
 
                 if (nestedNamespace != null)
                 {

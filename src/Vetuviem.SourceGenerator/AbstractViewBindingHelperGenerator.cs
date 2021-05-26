@@ -7,7 +7,7 @@ using Vetuviem.SourceGenerator.GeneratorProcessors;
 
 namespace Vetuviem.SourceGenerator
 {
-    public class AbstractViewBindingHelperGenerator : AbstractBaseGenerator<ViewBindingHelperGeneratorProcessor>
+    public abstract class AbstractViewBindingHelperGenerator : AbstractBaseGenerator<ViewBindingHelperGeneratorProcessor>
     {
         protected override string GetNamespace() => "ReactiveUI.WPF.ViewToViewModelBindingHelpers";
     }

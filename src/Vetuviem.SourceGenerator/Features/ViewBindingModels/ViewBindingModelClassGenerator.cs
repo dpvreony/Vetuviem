@@ -10,7 +10,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
     {
         public static ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,
-            string baseUiElement)
+            string baseUiElement,
+            string desiredCommandInterface)
         {
             var typeParameterList = GetTypeParameterListSyntax();
 
@@ -28,7 +29,9 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 controlClassFullName,
                 classDeclaration);
 
-            var properties = ViewBindingModelPropertyGenerator.GetProperties(namedTypeSymbol);
+            var properties = ViewBindingModelPropertyGenerator.GetProperties(
+                namedTypeSymbol,
+                desiredCommandInterface);
 
             return classDeclaration
                 .WithModifiers(modifiers)

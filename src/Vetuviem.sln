@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vetuviem.SourceGenerator", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.WPF.ViewToViewModelBindings", "ReactiveUI.WPF.ViewToViewModelBindings\ReactiveUI.WPF.ViewToViewModelBindings.csproj", "{E5F6A988-6C79-4969-BD13-3EF97B3D792E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.WPF.VetuViemGenerator", "ReactiveUI.WPF.VetuViemGenerator\ReactiveUI.WPF.VetuViemGenerator.csproj", "{F9D2C512-8E4B-4992-A043-2EB1A11C985B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.WPF.VetuviemGenerator", "ReactiveUI.WPF.VetuViemGenerator\ReactiveUI.WPF.VetuviemGenerator.csproj", "{F9D2C512-8E4B-4992-A043-2EB1A11C985B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vetuviem.Testing", "Vetuviem.Testing\Vetuviem.Testing.csproj", "{5B08D59B-BAB8-4A3B-B26C-524B2A6D0D03}"
 EndProject
@@ -33,17 +33,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.Winforms.ViewToV
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.UWP.ViewToViewModelBindings", "ReactiveUI.UWP.ViewToViewModelBindings\ReactiveUI.UWP.ViewToViewModelBindings.csproj", "{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveUI.XamForms.ViewToViewModelBindings", "ReactiveUI.XamForms.ViewToViewModelBindings\ReactiveUI.XamForms.ViewToViewModelBindings.csproj", "{A1DC18AD-A81D-4026-9684-DD8C277DD1C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.XamForms.ViewToViewModelBindings", "ReactiveUI.XamForms.ViewToViewModelBindings\ReactiveUI.XamForms.ViewToViewModelBindings.csproj", "{A1DC18AD-A81D-4026-9684-DD8C277DD1C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveUI.XamForms.VetuViemGenerator", "ReactiveUI.XamForms.VetuViemGenerator\ReactiveUI.XamForms.VetuViemGenerator.csproj", "{3A16502E-66DF-43D8-877B-C948671CC53C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.XamForms.VetuViemGenerator", "ReactiveUI.XamForms.VetuViemGenerator\ReactiveUI.XamForms.VetuViemGenerator.csproj", "{3A16502E-66DF-43D8-877B-C948671CC53C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveUI.Maui.ViewToViewModelBindings", "ReactiveUI.Maui.ViewToViewModelBindings\ReactiveUI.Maui.ViewToViewModelBindings.csproj", "{15274B47-731E-4352-9CBD-2639C548D9A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.Maui.ViewToViewModelBindings", "ReactiveUI.Maui.ViewToViewModelBindings\ReactiveUI.Maui.ViewToViewModelBindings.csproj", "{15274B47-731E-4352-9CBD-2639C548D9A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveUI.Maui.VetuviemGenerator", "ReactiveUI.Maui.VetuviemGenerator\ReactiveUI.Maui.VetuviemGenerator.csproj", "{CC036434-6E29-4FDF-BF47-10589D9F6847}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.Maui.VetuviemGenerator", "ReactiveUI.Maui.VetuviemGenerator\ReactiveUI.Maui.VetuviemGenerator.csproj", "{CC036434-6E29-4FDF-BF47-10589D9F6847}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveUI.WinUI3.VetuviemGenerator", "ReactiveUI.WinUI3.VetuviemGenerator\ReactiveUI.WinUI3.VetuviemGenerator.csproj", "{BBE4966F-761D-4E88-8AC0-D48DE02F3018}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.WinUI3.VetuviemGenerator", "ReactiveUI.WinUI3.VetuviemGenerator\ReactiveUI.WinUI3.VetuviemGenerator.csproj", "{BBE4966F-761D-4E88-8AC0-D48DE02F3018}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveUI.WinUI3.ViewToViewModelBindings", "ReactiveUI.WinUI3.ViewToViewModelBindings\ReactiveUI.WinUI3.ViewToViewModelBindings.csproj", "{3AA61E19-4EC3-4B5E-B7DB-3AB65F931F6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.WinUI3.ViewToViewModelBindings", "ReactiveUI.WinUI3.ViewToViewModelBindings\ReactiveUI.WinUI3.ViewToViewModelBindings.csproj", "{3AA61E19-4EC3-4B5E-B7DB-3AB65F931F6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
