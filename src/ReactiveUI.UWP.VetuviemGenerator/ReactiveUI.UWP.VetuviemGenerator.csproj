@@ -14,6 +14,7 @@
   <ItemGroup>
     <Analyzer Include="$(ProjectDir)..\Vetuviem.SourceGenerator\bin\$(Configuration)\netstandard2.0\Vetuviem.SourceGenerator.dll" />
   </ItemGroup>
+
   <!-- Below is the logic for putting this project into reactiveui and using a nuget reference -->
 
   <!--
