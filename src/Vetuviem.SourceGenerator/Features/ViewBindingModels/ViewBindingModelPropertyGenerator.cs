@@ -64,11 +64,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             AccessorDeclarationSyntax[] accessorList,
             IEnumerable<SyntaxTrivia> summary)
         {
-            var bindingType = prop.IsReadOnly ? "One" : "OneOrTwo";
-
-            var returnType = prop.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-
-            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.I{bindingType}WayBind<TViewModel, {returnType}>");
+            TypeSyntax type = GetBindingTypeSyntax(prop);
 
             var result = SyntaxFactory.PropertyDeclaration(type, prop.Name)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
@@ -81,9 +77,27 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             return result;
         }
 
-        public static SyntaxList<MemberDeclarationSyntax> GetProperties()
+        private static TypeSyntax GetBindingTypeSyntax(IPropertySymbol prop)
         {
-            throw new NotImplementedException();
+            string bindingName = GetBindingInterfaceName(prop);
+
+            var returnType = prop.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.{bindingName}<TViewModel, {returnType}>");
+            return type;
+        }
+
+        private static string GetBindingInterfaceName(IPropertySymbol prop)
+        {
+            var propType = prop.Type;
+            var isCommand = propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals("global::System.Windows.Input.ICommand"));
+            if (isCommand)
+            {
+                return "ICommandBinding";
+            }
+
+            var bindingType = prop.IsReadOnly ? "One" : "OneOrTwo";
+
+            return $"I{bindingType}WayBind";
         }
     }
 }
