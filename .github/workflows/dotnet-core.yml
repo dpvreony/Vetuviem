@@ -83,8 +83,7 @@ jobs:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Produce Nuget Packages
-      run: |
-        dotnet pack ${{ env.solutionpath }} --configuration Release --no-build /bl:artifacts\\binlog\\pack.binlog --nologo /p:PackageOutputPath=..\..\artifacts\nuget /p:ContinuousIntegrationBuild=true
+      run: msbuild /t:pack /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release /p:PackageOutputPath=..\..\artifacts\nuget /p:ContinuousIntegrationBuild=true
 
     - name: List outdated packages
       run: |
