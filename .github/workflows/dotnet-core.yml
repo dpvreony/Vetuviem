@@ -35,6 +35,9 @@ jobs:
       with:
         dotnet-version: 5.0.x
 
+    - name: Add MSBuild to PATH
+      uses: glennawatson/setup-msbuild@v1.0.3
+
     - name: NBGV
       id: nbgv
       uses: dotnet/nbgv@master
@@ -64,8 +67,7 @@ jobs:
         dotnet restore ${{ env.solutionpath }} /bl:artifacts\\binlog\\restore.binlog
 
     - name: Run Build
-      run: |
-        dotnet build ${{ env.solutionpath }} --configuration Release --no-restore /bl:artifacts\\binlog\\build.binlog /p:ContinuousIntegrationBuild=true
+      run: msbuild /t:build /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release
 
     - name: Run Unit Tests
       run: |
