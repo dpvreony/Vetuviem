@@ -68,6 +68,20 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 $"Starting Check Of Type {fullName}");
         }
 
+        public static Diagnostic NoAssemblyOrModuleSybmol(MetadataReference metadataReference)
+        {
+            return ErrorDiagnostic(
+                ReportDiagnosticIds.NoAssemblyOrModuleSybmol,
+                $"No Assembly or Module Symbol: {metadataReference.Display}");
+        }
+
+        public static Diagnostic NoGlobalNamespaceInAssemblyOrModule(MetadataReference metadataReference)
+        {
+            return ErrorDiagnostic(
+                ReportDiagnosticIds.NoGlobalNamespaceInAssemblyOrModule,
+                $"No global namespace in Assembly or Module Symbol: {metadataReference.Display}");
+        }
+
         private static Diagnostic InfoDiagnostic(
             string id,
             string message)

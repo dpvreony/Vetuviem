@@ -10,5 +10,7 @@
         public static string StartingScanOfNamespace => "VET-006";
         public static string MetadataReferenceNotAssemblySymbol => "VET-007";
         public static string StartingScanOfAssembly => "VET-008";
+        public static string NoAssemblyOrModuleSybmol => "VET-009";
+        public static string NoGlobalNamespaceInAssemblyOrModule => "VET-010";
     }
 }

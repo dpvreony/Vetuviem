@@ -47,15 +47,20 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
         {
             reportDiagnosticAction(ReportDiagnostics.StartingScanOfAssembly(metadataReference));
 
-            var assemblySymbol = compilation.GetAssemblyOrModuleSymbol(metadataReference) as IAssemblySymbol;
+            var assemblyOrModuleSymbol = compilation.GetAssemblyOrModuleSymbol(metadataReference);
 
-            if (assemblySymbol == null)
+            if (assemblyOrModuleSymbol == null)
             {
-                reportDiagnosticAction(ReportDiagnostics.MetadataReferenceNotAssemblySymbol(metadataReference));
+                reportDiagnosticAction(ReportDiagnostics.NoAssemblyOrModuleSybmol(metadataReference));
                 return namespaceDeclaration;
             }
 
-            var globalNamespace = assemblySymbol.GlobalNamespace;
+            var globalNamespace = GetGlobalNamespace(assemblyOrModuleSymbol);
+            if (globalNamespace == null)
+            {
+                reportDiagnosticAction(ReportDiagnostics.NoGlobalNamespaceInAssemblyOrModule(metadataReference));
+                return namespaceDeclaration;
+            }
 
             // we skip building the global namespace as gives an empty name
             foreach (var namespaceMember in globalNamespace.GetNamespaceMembers())
@@ -87,6 +92,19 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             */
 
             return namespaceDeclaration;
+        }
+
+        private INamespaceSymbol GetGlobalNamespace(ISymbol assemblyOrModuleSymbol)
+        {
+            switch (assemblyOrModuleSymbol)
+            {
+                case IAssemblySymbol assemblySymbol:
+                    return assemblySymbol.GlobalNamespace;
+                case IModuleSymbol moduleSymbol:
+                    return moduleSymbol.GlobalNamespace;
+                default:
+                    return null;
+            }
         }
 
         private ClassDeclarationSyntax CheckTypeForUiType(
