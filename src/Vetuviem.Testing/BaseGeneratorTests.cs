@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Extensions.Logging;
@@ -24,35 +22,15 @@ namespace Dhgms.Nucleotide.UnitTests.Generators
             where TGenerator : AbstractBaseGenerator<TGeneratorProcessor>
             where TGeneratorProcessor : AbstractGeneratorProcessor, new()
         {
-            internal const string DefaultFilePathPrefix = "Test";
-            internal const string CSharpDefaultFileExt = "cs";
-            internal const string TestProjectName = "TestProject";
-
-            protected abstract Func<TGenerator> GetFactory();
-
-            private static Compilation CreateCompilation(string source, IEnumerable<MetadataReference> reference) => CSharpCompilation.Create(
-                assemblyName: "compilation",
-                syntaxTrees: new[] { CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Preview)) },
-                references: reference,
-                options: new CSharpCompilationOptions(OutputKind.ConsoleApplication)
-            );
-
-            private static GeneratorDriver CreateDriver(Compilation compilation, params ISourceGenerator[] generators) => CSharpGeneratorDriver.Create(
-                generators: ImmutableArray.Create(generators),
-                additionalTexts: ImmutableArray<AdditionalText>.Empty,
-                parseOptions: (CSharpParseOptions)compilation.SyntaxTrees.First().Options,
-                optionsProvider: null
-            );
-
-            private static Compilation RunGenerators(Compilation compilation, out ImmutableArray<Diagnostic> diagnostics, params ISourceGenerator[] generators)
+            protected BaseExecuteMethod(ITestOutputHelper output) : base(output)
             {
-                CreateDriver(compilation, generators).RunGeneratorsAndUpdateCompilation(compilation, out var updatedCompilation, out diagnostics);
-                return updatedCompilation;
             }
 
-
+            /// <summary>
+            /// Test to ensure code is generated with no errors in the diagnostic handler.
+            /// </summary>
             [Fact]
-            public async Task GeneratesCode()
+            public void GeneratesCode()
             {
                 var factory = GetFactory();
 
@@ -74,16 +52,40 @@ namespace Dhgms.Nucleotide.UnitTests.Generators
 
                 _logger.LogInformation($"Generator Diagnostic count : {generatorDiags.Length}");
 
+                var hasErrors = false;
                 foreach (var generatorDiag in generatorDiags)
                 {
                     _logger.LogInformation(generatorDiag.ToString());
+
+                    hasErrors |= generatorDiag.Severity == DiagnosticSeverity.Error;
                 }
+
+                Assert.False(hasErrors);
             }
 
             protected abstract void AddReferenceAssemblies(List<MetadataReference> metadataReferences);
 
-            protected BaseExecuteMethod(ITestOutputHelper output) : base(output)
+
+            protected abstract Func<TGenerator> GetFactory();
+
+            private static Compilation CreateCompilation(string source, IEnumerable<MetadataReference> reference) => CSharpCompilation.Create(
+                assemblyName: "compilation",
+                syntaxTrees: new[] { CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Preview)) },
+                references: reference,
+                options: new CSharpCompilationOptions(OutputKind.ConsoleApplication)
+            );
+
+            private static GeneratorDriver CreateDriver(Compilation compilation, params ISourceGenerator[] generators) => CSharpGeneratorDriver.Create(
+                generators: ImmutableArray.Create(generators),
+                additionalTexts: ImmutableArray<AdditionalText>.Empty,
+                parseOptions: (CSharpParseOptions)compilation.SyntaxTrees.First().Options,
+                optionsProvider: null
+            );
+
+            private static Compilation RunGenerators(Compilation compilation, out ImmutableArray<Diagnostic> diagnostics, params ISourceGenerator[] generators)
             {
+                CreateDriver(compilation, generators).RunGeneratorsAndUpdateCompilation(compilation, out var updatedCompilation, out diagnostics);
+                return updatedCompilation;
             }
         }
     }
