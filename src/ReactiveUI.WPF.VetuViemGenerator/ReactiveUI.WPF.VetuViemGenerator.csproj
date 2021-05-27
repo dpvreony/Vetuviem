@@ -6,6 +6,7 @@
     <DebugType>full</DebugType>
     <DebugSymbols>True</DebugSymbols>
     <DevelopmentDependency>true</DevelopmentDependency>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
