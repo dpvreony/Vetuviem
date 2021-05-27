@@ -14,10 +14,12 @@
     <TreatWarningsAsErrors />
   </PropertyGroup>
 
+  <!--
   <ItemGroup>
     <ProjectReference Include="..\ReactiveUI.UWP.VetuViemGenerator\ReactiveUI.UWP.VetuViemGenerator.csproj" OutputItemType="Analyzer" />
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
+  -->
 
   <ItemGroup>
     <Reference Include="Windows, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
