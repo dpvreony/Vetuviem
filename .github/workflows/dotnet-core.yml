@@ -84,6 +84,7 @@ jobs:
 
     - name: Produce Nuget Packages
       run: msbuild /t:pack /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release /p:PackageOutputPath=..\..\artifacts\nuget /p:ContinuousIntegrationBuild=true
+      working-directory: src
 
     - name: List outdated packages
       run: |
