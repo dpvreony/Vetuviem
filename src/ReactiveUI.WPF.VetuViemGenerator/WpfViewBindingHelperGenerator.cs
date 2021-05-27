@@ -7,6 +7,11 @@ namespace ReactiveUI.WPF.VetuviemGenerator
     [Generator]
     public sealed class WpfViewBindingHelperGenerator : AbstractViewBindingHelperGenerator
     {
+        protected override MetadataReference CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest)
+        {
+            return null;
+        }
+
         protected override IPlatformResolver GetPlatformResolver()
         {
             return new WpfPlatformResolver();

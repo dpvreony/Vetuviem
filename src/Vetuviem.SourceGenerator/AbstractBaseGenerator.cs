@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -150,22 +151,35 @@ namespace Vetuviem.SourceGenerator
         /// <returns>Platform specific resolver.</returns>
         protected abstract IPlatformResolver GetPlatformResolver();
 
-        private static IEnumerable<MetadataReference> GetReferencesOfInterest(
+        private IEnumerable<MetadataReference> GetReferencesOfInterest(
             IEnumerable<MetadataReference> compilationReferences,
             string[] assembliesOfInterest)
         {
-            foreach (var compilationReference in compilationReferences)
+            var compilationReferenceArray = compilationReferences.ToImmutableArray();
+
+            foreach (var assemblyOfInterest in assembliesOfInterest)
             {
-                if (assembliesOfInterest.Any(
-                    assemblyOfInterest => compilationReference.Display != null
-                                          && compilationReference.Display.EndsWith(
+                var match = compilationReferenceArray.FirstOrDefault(
+                    metaDataRef => metaDataRef.Display != null
+                                          && metaDataRef.Display.EndsWith(
                                               assemblyOfInterest,
-                                              StringComparison.Ordinal)))
+                                              StringComparison.Ordinal));
+                if (match != null)
                 {
-                    yield return compilationReference;
+                    yield return match;
+                }
+                else
+                {
+                    var itemToAdd = CheckIfShouldAddMissingAssemblyReference(assemblyOfInterest);
+                    if (itemToAdd != null)
+                    {
+                        yield return itemToAdd;
+                    }
                 }
             }
         }
+
+        protected abstract MetadataReference CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest);
 
         private static string[] GetPlatformAssemblyPaths(GeneratorExecutionContext context)
         {
