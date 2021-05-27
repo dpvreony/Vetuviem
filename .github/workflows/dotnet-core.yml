@@ -68,6 +68,7 @@ jobs:
 
     - name: Run Build
       run: msbuild /t:build /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release
+      working-directory: src
 
     - name: Run Unit Tests
       run: |
