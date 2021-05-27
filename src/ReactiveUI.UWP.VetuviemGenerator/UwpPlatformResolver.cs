@@ -2,8 +2,12 @@
 
 namespace ReactiveUI.UWP.VetuviemGenerator
 {
+    /// <summary>
+    /// UI Platform resolver for UWP.
+    /// </summary>
     public sealed class UwpPlatformResolver : IPlatformResolver
     {
+        /// <inheritdoc />
         public string[] GetAssemblyNames()
         {
             return new[]
@@ -12,11 +16,13 @@ namespace ReactiveUI.UWP.VetuviemGenerator
             };
         }
 
+        /// <inheritdoc />
         public string GetBaseUiElement()
         {
             return "global::Windows.UI.Xaml.UIElement";
         }
 
+        /// <inheritdoc />
         public string GetCommandInterface()
         {
             return "global::Windows.UI.Xaml.Input.ICommand";

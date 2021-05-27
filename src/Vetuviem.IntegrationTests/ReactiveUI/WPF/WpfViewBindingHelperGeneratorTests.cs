@@ -1,26 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Dhgms.Nucleotide.UnitTests.Generators;
 using Microsoft.CodeAnalysis;
 using ReactiveUI.WPF.VetuviemGenerator;
 using Vetuviem.SourceGenerator.GeneratorProcessors;
+using Vetuviem.Testing;
 using Xunit.Abstractions;
 
-namespace Vetuviem.IntegrationTests
+namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
 {
     /// <summary>
     /// Unit Tests for the ViewBinding Helper Source Generator.
     /// </summary>
     public static class WpfViewBindingHelperGeneratorTests
     {
+        /// <inheritdoc />
         public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WpfViewBindingHelperGenerator, ViewBindingHelperGeneratorProcessor>
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
+            /// </summary>
+            /// <param name="output">Test Output Helper.</param>
             public ExecuteMethod(ITestOutputHelper output)
                 : base(output)
             {
             }
 
+            /// <inheritdoc />
             protected override void AddReferenceAssemblies(List<MetadataReference> metadataReferences)
             {
                 var trustedAssembliesPaths = GetPlatformAssemblyPaths();
@@ -31,6 +37,7 @@ namespace Vetuviem.IntegrationTests
                 }
             }
 
+            /// <inheritdoc />
             protected override Func<WpfViewBindingHelperGenerator> GetFactory()
             {
                 return () => new WpfViewBindingHelperGenerator();

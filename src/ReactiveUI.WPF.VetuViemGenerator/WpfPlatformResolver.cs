@@ -1,10 +1,13 @@
-﻿using System;
-using Vetuviem.SourceGenerator.Features.Core;
+﻿using Vetuviem.SourceGenerator.Features.Core;
 
 namespace ReactiveUI.WPF.VetuviemGenerator
 {
+    /// <summary>
+    /// UI Platform resolver for WPF.
+    /// </summary>
     public sealed class WpfPlatformResolver : IPlatformResolver
     {
+        /// <inheritdoc />
         public string[] GetAssemblyNames()
         {
             return new[]
@@ -21,11 +24,13 @@ namespace ReactiveUI.WPF.VetuviemGenerator
             };
         }
 
+        /// <inheritdoc />
         public string GetBaseUiElement()
         {
             return "global::System.Windows.UIElement";
         }
 
+        /// <inheritdoc />
         public string GetCommandInterface()
         {
             return "global::System.Windows.Input.ICommand";

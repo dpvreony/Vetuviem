@@ -2,8 +2,12 @@
 
 namespace ReactiveUI.Winforms.VetuviemGenerator
 {
+    /// <summary>
+    /// UI Platform resolver for Windows Forms.
+    /// </summary>
     public sealed class WinformsPlatformResolver : IPlatformResolver
     {
+        /// <inheritdoc />
         public string[] GetAssemblyNames()
         {
             return new[]
@@ -12,11 +16,13 @@ namespace ReactiveUI.Winforms.VetuviemGenerator
             };
         }
 
+        /// <inheritdoc />
         public string GetBaseUiElement()
         {
             return "global::System.Windows.Forms.Control";
         }
 
+        /// <inheritdoc />
         public string GetCommandInterface()
         {
             return null;

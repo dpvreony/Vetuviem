@@ -12,13 +12,19 @@ using Vetuviem.SourceGenerator.GeneratorProcessors;
 
 namespace Vetuviem.SourceGenerator
 {
+    /// <summary>
+    /// Base logic for a source generator.
+    /// </summary>
+    /// <typeparam name="TGeneratorProcessor"></typeparam>
     public abstract class AbstractBaseGenerator<TGeneratorProcessor> : ISourceGenerator
         where TGeneratorProcessor : AbstractGeneratorProcessor, new()
     {
+        /// <inheritdoc />
         public void Initialize(GeneratorInitializationContext context)
         {
         }
 
+        /// <inheritdoc />
         public void Execute(GeneratorExecutionContext context)
         {
             try
@@ -66,7 +72,6 @@ namespace Vetuviem.SourceGenerator
         /// Create the syntax tree representing the expansion of some member to which this attribute is applied.
         /// </summary>
         /// <param name="context">The transformation context being generated for.</param>
-        /// <param name="progress">A way to report diagnostic messages.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The generated member syntax to be added to the project.</returns>
         private MemberDeclarationSyntax GenerateAsync(
@@ -139,6 +144,10 @@ namespace Vetuviem.SourceGenerator
             return result;
         }
 
+        /// <summary>
+        /// Gets the platform resolver used for searching for UI types for the platform.
+        /// </summary>
+        /// <returns>Platform specific resolver.</returns>
         protected abstract IPlatformResolver GetPlatformResolver();
 
         private static IEnumerable<MetadataReference> GetReferencesOfInterest(
@@ -168,6 +177,10 @@ namespace Vetuviem.SourceGenerator
             return null;
         }
 
+        /// <summary>
+        /// Gets the root namespace to place the generated code inside.
+        /// </summary>
+        /// <returns>Fully qualified root namespace.</returns>
         protected abstract string GetNamespace();
     }
 }

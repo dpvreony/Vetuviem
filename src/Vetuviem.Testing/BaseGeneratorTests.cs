@@ -8,20 +8,29 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Extensions.Logging;
 using Vetuviem.SourceGenerator;
+using Vetuviem.SourceGenerator.GeneratorProcessors;
 using Xunit;
 using Xunit.Abstractions;
-using Vetuviem.SourceGenerator.GeneratorProcessors;
 
-namespace Dhgms.Nucleotide.UnitTests.Generators
+namespace Vetuviem.Testing
 {
-
+    /// <summary>
+    /// Unit Tests for a Source Generator.
+    /// </summary>
     [ExcludeFromCodeCoverage]
     public class BaseGeneratorTests
     {
+        /// <summary>
+        /// Unit Tests for the Execute Method.
+        /// </summary>
         public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor> : Foundatio.Xunit.TestWithLoggingBase
             where TGenerator : AbstractBaseGenerator<TGeneratorProcessor>
             where TGeneratorProcessor : AbstractGeneratorProcessor, new()
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="BaseExecuteMethod{TGenerator, TGeneratorProcessor}"/> class.
+            /// </summary>
+            /// <param name="output">Test Output Helper.</param>
             protected BaseExecuteMethod(ITestOutputHelper output) : base(output)
             {
             }
@@ -63,9 +72,18 @@ namespace Dhgms.Nucleotide.UnitTests.Generators
                 Assert.False(hasErrors);
             }
 
+            /// <summary>
+            /// Allows addition of platform specific metadata references. Unit Tests start in an agnostic fashion
+            /// with no specific references loaded. Source generators typically take these via MSBuild loading
+            /// from the csproj file, but you need to do it yourself in a test.
+            /// </summary>
+            /// <param name="metadataReferences"></param>
             protected abstract void AddReferenceAssemblies(List<MetadataReference> metadataReferences);
 
-
+            /// <summary>
+            /// Gets the factory method for creating a source generator.
+            /// </summary>
+            /// <returns>Function for creating a source generator.</returns>
             protected abstract Func<TGenerator> GetFactory();
 
             private static Compilation CreateCompilation(string source, IEnumerable<MetadataReference> reference) => CSharpCompilation.Create(
