@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Vetuviem.SourceGenerator.Features.Core;
-using ISymbol = Microsoft.CodeAnalysis.ISymbol;
-using SymbolKind = Microsoft.CodeAnalysis.SymbolKind;
 
 namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 {
@@ -15,6 +14,12 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
     /// </summary>
     public static class ViewBindingModelPropertyGenerator
     {
+        /// <summary>
+        /// Gets the properties to be generated.
+        /// </summary>
+        /// <param name="namedTypeSymbol">The type to check the properties on.</param>
+        /// <param name="desiredCommandInterface">The fully qualified typename for the Command interface used by the UI platform, if it uses one.</param>
+        /// <returns>List of property declarations.</returns>
         public static SyntaxList<MemberDeclarationSyntax> GetProperties(
             INamedTypeSymbol namedTypeSymbol,
             string desiredCommandInterface)
@@ -36,6 +41,14 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                     || propertySymbol.DeclaredAccessibility != Accessibility.Public
                     || propertySymbol.ExplicitInterfaceImplementations.Any())
                 {
+                    continue;
+                }
+
+                // windows forms has an issue where some properties are provided as "new" instances instead of overridden
+                // we're getting build warnings for these.
+                if (ReplacesBaseProperty(propertySymbol, namedTypeSymbol))
+                {
+                    // for now we skip, but we may adjust our model moving forward to make them "new".
                     continue;
                 }
 
@@ -63,6 +76,33 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             }
 
             return new SyntaxList<MemberDeclarationSyntax>(nodes);
+        }
+
+        private static bool ReplacesBaseProperty(
+            IPropertySymbol propertySymbol,
+            INamedTypeSymbol namedTypeSymbol)
+        {
+            var wantedName = propertySymbol.Name;
+            var baseType = namedTypeSymbol.BaseType;
+            while (baseType != null)
+            {
+                var nameMatches = baseType.GetMembers()
+                    .Where(x => x.Kind == SymbolKind.Property && x.Name.Equals(wantedName, StringComparison.Ordinal))
+                    .Cast<IPropertySymbol>()
+                    .ToImmutableArray();
+
+                foreach (var nameMatch in nameMatches)
+                {
+                    if (SymbolEqualityComparer.Default.Equals(nameMatch.Type, propertySymbol.Type))
+                    {
+                        return true;
+                    }
+                }
+
+                baseType = baseType.BaseType;
+            }
+
+            return false;
         }
 
         private static PropertyDeclarationSyntax GetPropertyDeclaration(
