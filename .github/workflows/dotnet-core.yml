@@ -18,7 +18,7 @@ jobs:
       DOTNET_NOLOGO: true
       DOTNET_GENERATE_ASPNET_CERTIFICATE: false
       solutionpath: src\Vetuviem.sln
-      unittestprojectpath: src\Vetuviem\Vetuviem.UnitTests.csproj
+      unittestprojectpath: src\Vetuviem.UnitTests\Vetuviem.UnitTests.csproj
     steps:
     - name: Checkout code
       uses: actions/checkout@v2

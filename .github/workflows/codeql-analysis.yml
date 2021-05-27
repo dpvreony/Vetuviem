@@ -60,13 +60,16 @@ jobs:
       with:
         dotnet-version: 5.0.*
 
+    - name: Add MSBuild to PATH
+      uses: glennawatson/setup-msbuild@v1.0.3
+
     - name: Restore Packages
       run: |
         dotnet restore ${{ env.SOLUTION_PATH }} /bl:artifacts\\binlog\\restore.binlog
 
     - name: Run Build
-      run: |
-        dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore /bl:artifacts\\binlog\\build.binlog
+      run: msbuild /t:build /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release
+      working-directory: src
 
 
     # ℹ️ Command-line programs to run using the OS shell.
