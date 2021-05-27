@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vetuviem.Testing\Vetuviem.Testing.csproj" />
+  </ItemGroup>
 
 </Project>

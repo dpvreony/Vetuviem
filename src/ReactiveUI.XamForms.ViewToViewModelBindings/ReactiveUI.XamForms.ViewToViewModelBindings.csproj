@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+    <LangVersion>9</LangVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>True</DebugSymbols>
+    <!--
+    If you're seeing CS8032 warnings, it can be because the upstream source generator dll has been rebuilt or you've changed the
+    target frameworks in this project. Visual Studio seems to have a cache that invalidates. Reloading Visual Studio can
+    solve the issue.
+    -->
+    <!--<WarningsAsErrors>8032,8785</WarningsAsErrors>-->
+    <TreatWarningsAsErrors />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ReactiveUI.XamForms.VetuViemGenerator\ReactiveUI.XamForms.VetuViemGenerator.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
+  </ItemGroup>
+
+</Project>

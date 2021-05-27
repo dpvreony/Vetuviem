@@ -18,7 +18,7 @@ jobs:
       DOTNET_NOLOGO: true
       DOTNET_GENERATE_ASPNET_CERTIFICATE: false
       solutionpath: src\Vetuviem.sln
-      unittestprojectpath: src\Vetuviem\Vetuviem.UnitTests.csproj
+      unittestprojectpath: src\Vetuviem.UnitTests\Vetuviem.UnitTests.csproj
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -34,6 +34,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+
+    - name: Add MSBuild to PATH
+      uses: glennawatson/setup-msbuild@v1.0.3
 
     - name: NBGV
       id: nbgv
@@ -64,8 +67,8 @@ jobs:
         dotnet restore ${{ env.solutionpath }} /bl:artifacts\\binlog\\restore.binlog
 
     - name: Run Build
-      run: |
-        dotnet build ${{ env.solutionpath }} --configuration Release --no-restore /bl:artifacts\\binlog\\build.binlog /p:ContinuousIntegrationBuild=true
+      run: msbuild /t:build /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release
+      working-directory: src
 
     - name: Run Unit Tests
       run: |
@@ -80,8 +83,8 @@ jobs:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Produce Nuget Packages
-      run: |
-        dotnet pack ${{ env.solutionpath }} --configuration Release --no-build /bl:artifacts\\binlog\\pack.binlog --nologo /p:PackageOutputPath=..\..\artifacts\nuget /p:ContinuousIntegrationBuild=true
+      run: msbuild /t:pack /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release /p:PackageOutputPath=..\..\artifacts\nuget /p:ContinuousIntegrationBuild=true
+      working-directory: src
 
     - name: List outdated packages
       run: |

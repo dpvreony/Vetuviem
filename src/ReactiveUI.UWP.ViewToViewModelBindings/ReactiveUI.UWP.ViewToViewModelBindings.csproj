@@ -1,0 +1,30 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+
+  <PropertyGroup>
+    <TargetFramework>uap10.0.16299</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>True</DebugSymbols>
+    <!--
+    If you're seeing CS8032 warnings, it can be because the upstream source generator dll has been rebuilt or you've changed the
+    target frameworks in this project. Visual Studio seems to have a cache that invalidates. Reloading Visual Studio can
+    solve the issue.
+    -->
+    <!--<WarningsAsErrors>8032,8785</WarningsAsErrors>-->
+    <TreatWarningsAsErrors />
+  </PropertyGroup>
+
+  <!--
+  <ItemGroup>
+    <ProjectReference Include="..\ReactiveUI.UWP.VetuViemGenerator\ReactiveUI.UWP.VetuViemGenerator.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
+  </ItemGroup>
+  -->
+
+  <ItemGroup>
+    <Reference Include="Windows, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(MSBuildProgramFiles32)\Windows Kits\10\UnionMetadata\10.0.16299.0\Windows.winmd</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
