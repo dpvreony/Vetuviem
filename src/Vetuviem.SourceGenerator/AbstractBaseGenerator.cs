@@ -130,6 +130,45 @@ namespace Vetuviem.SourceGenerator
             }
             */
             var desiredBaseType = platformResolver.GetBaseUiElement();
+            var desiredBaseTypeSymbolMatches = compilation.GetSymbolsWithName(
+                    desiredBaseType,
+                    SymbolFilter.Type)
+                    .ToImmutableArray();
+
+            switch (desiredBaseTypeSymbolMatches.Length)
+            {
+                case 0:
+                    context.ReportDiagnostic(ReportDiagnostics.FailedToFindDesiredBaseTypeSymbol(desiredBaseType));
+                    return namespaceDeclaration;
+                case 1:
+                    break;
+                default:
+                    context.ReportDiagnostic(ReportDiagnostics.DesiredBaseTypeSymbolSearchResultNotUnique(desiredBaseType));
+                    return namespaceDeclaration;
+            }
+
+            var desiredBaseTypeSymbol = desiredBaseTypeSymbolMatches[0];
+
+            // blazor uses an interface, so we check once to drive different inheritance check.
+            var desiredBaseTypeNamedTypeSymbol = desiredBaseTypeSymbol as INamedTypeSymbol;
+            if (desiredBaseTypeNamedTypeSymbol == null)
+            {
+                context.ReportDiagnostic(ReportDiagnostics.DesiredBaseTypeSymbolSearchNotNamedTypeSymbol(desiredBaseType));
+                return namespaceDeclaration;
+            }
+
+            var isInterface = false;
+            switch (desiredBaseTypeNamedTypeSymbol.TypeKind)
+            {
+                case TypeKind.Interface:
+                    isInterface = true;
+                    break;
+                case TypeKind.Class:
+                    break;
+                default:
+                    return namespaceDeclaration;
+            }
+
             var desiredCommandInterface = platformResolver.GetCommandInterface();
 
             var generatorProcessor = new TGeneratorProcessor();
