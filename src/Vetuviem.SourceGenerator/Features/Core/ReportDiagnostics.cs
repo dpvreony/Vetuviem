@@ -64,28 +64,35 @@ namespace Vetuviem.SourceGenerator.Features.Core
         public static Diagnostic StartingCheckOfType(string fullName)
         {
             return InfoDiagnostic(
-                ReportDiagnosticIds.MetadataReferenceNotAssemblySymbol,
+                ReportDiagnosticIds.StartingCheckOfType,
                 $"Starting Check Of Type: {fullName}");
         }
 
         public static Diagnostic FailedToFindDesiredBaseTypeSymbol(string desiredTypeName)
         {
-            return InfoDiagnostic(
-                ReportDiagnosticIds.MetadataReferenceNotAssemblySymbol,
+            return ErrorDiagnostic(
+                ReportDiagnosticIds.FailedToFindDesiredBaseTypeSymbol,
                 $"Failed To Find Desired Base Type Symbol: {desiredTypeName}");
         }
 
         public static Diagnostic DesiredBaseTypeSymbolSearchResultNotUnique(string desiredTypeName)
         {
-            return InfoDiagnostic(
-                ReportDiagnosticIds.MetadataReferenceNotAssemblySymbol,
+            return ErrorDiagnostic(
+                ReportDiagnosticIds.DesiredBaseTypeSymbolSearchResultNotUnique,
                 $"Desired Base Type Symbol Search Result Not Unique: {desiredTypeName}");
         }
 
         public static Diagnostic DesiredBaseTypeSymbolSearchNotNamedTypeSymbol(string desiredTypeName)
         {
-            return InfoDiagnostic(
-                ReportDiagnosticIds.MetadataReferenceNotAssemblySymbol,
+            return ErrorDiagnostic(
+                ReportDiagnosticIds.DesiredBaseTypeSymbolSearchNotNamedTypeSymbol,
+                $"Desired Base Type Symbol Search Not Named Type Symbol: {desiredTypeName}");
+        }
+
+        public static Diagnostic DesiredBaseTypeSymbolNotInterfaceOrClass(string desiredTypeName)
+        {
+            return ErrorDiagnostic(
+                ReportDiagnosticIds.DesiredBaseTypeSymbolNotInterfaceOrClass,
                 $"Desired Base Type Symbol Search Not Named Type Symbol: {desiredTypeName}");
         }
 
