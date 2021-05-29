@@ -20,5 +20,10 @@ namespace ReactiveUI.UWP.VetuviemGenerator
         {
             return new UwpPlatformResolver();
         }
+
+        protected override string GetPlatformName()
+        {
+            return "UWP";
+        }
     }
 }

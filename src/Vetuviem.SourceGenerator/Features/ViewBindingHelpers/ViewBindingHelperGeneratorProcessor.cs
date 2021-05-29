@@ -12,7 +12,9 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             Compilation generatorExecutionContext,
             Action<Diagnostic> reportDiagnosticAction,
             string desiredBaseType,
-            string desiredCommandInterface)
+            bool desiredBaseTypeIsInterface,
+            string desiredCommandInterface,
+            string platformName)
         {
             return namespaceDeclaration;
         }

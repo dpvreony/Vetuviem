@@ -11,7 +11,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         public static ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
-            string desiredCommandInterface)
+            string desiredCommandInterface,
+            string platformName)
         {
             var typeParameterList = GetTypeParameterListSyntax();
 
@@ -27,7 +28,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 namedTypeSymbol,
                 baseUiElement,
                 controlClassFullName,
-                classDeclaration);
+                classDeclaration,
+                platformName);
 
             var properties = ViewBindingModelPropertyGenerator.GetProperties(
                 namedTypeSymbol,
@@ -43,15 +45,19 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 .WithMembers(properties);
         }
 
-        private static ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(INamedTypeSymbol namedTypeSymbol,
-            string baseUiElement, string controlClassFullName, ClassDeclarationSyntax classDeclaration)
+        private static ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
+            INamedTypeSymbol namedTypeSymbol,
+            string baseUiElement,
+            string controlClassFullName,
+            ClassDeclarationSyntax classDeclaration,
+            string platformName)
         {
             if (!controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase))
             {
                 var baseClass = namedTypeSymbol.BaseType;
 
                 var baseViewBindingModelClassName =
-                    $"global::ReactiveUI.WPF.ViewToViewModelBindings.{baseClass.GetFullName().Replace("global::", string.Empty)}ViewBindingModel<TView, TViewModel>";
+                    $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{baseClass.GetFullName().Replace("global::", string.Empty)}ViewBindingModel<TView, TViewModel>";
                 var baseTypeNode =
                     SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(baseViewBindingModelClassName));
 #pragma warning disable SA1129 // Do not use default value type constructor

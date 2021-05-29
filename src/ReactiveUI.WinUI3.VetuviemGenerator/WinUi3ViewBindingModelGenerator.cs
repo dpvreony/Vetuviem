@@ -12,6 +12,11 @@ namespace ReactiveUI.WinUI3.VetuviemGenerator
             return null;
         }
 
+        protected override string GetPlatformName()
+        {
+            return "WinUi3";
+        }
+
         protected override IPlatformResolver GetPlatformResolver()
         {
             return new WinUi3PlatformResolver();

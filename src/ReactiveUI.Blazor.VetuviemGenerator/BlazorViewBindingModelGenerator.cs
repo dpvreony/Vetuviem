@@ -16,5 +16,10 @@ namespace ReactiveUI.Blazor.VetuviemGenerator
         {
             return new BlazorPlatformResolver();
         }
+
+        protected override string GetPlatformName()
+        {
+            return "Blazor";
+        }
     }
 }

@@ -17,7 +17,9 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             Compilation compilation,
             Action<Diagnostic> reportDiagnosticAction,
             string desiredBaseType,
-            string desiredCommandInterface)
+            bool desiredBaseTypeIsInterface,
+            string desiredCommandInterface,
+            string platformName)
         {
             var previouslyGeneratedClasses = new List<string>();
 
@@ -29,8 +31,10 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     compilation,
                     reportDiagnosticAction,
                     desiredBaseType,
+                    desiredBaseTypeIsInterface,
                     previouslyGeneratedClasses,
-                    desiredCommandInterface);
+                    desiredCommandInterface,
+                    platformName);
             }
 
             return namespaceDeclaration;
@@ -42,8 +46,10 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             Compilation compilation,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
+            bool desiredBaseTypeIsInterface,
             IList<string> previouslyGeneratedClasses,
-            string desiredCommandInterface)
+            string desiredCommandInterface,
+            string platformName)
         {
             reportDiagnosticAction(ReportDiagnostics.StartingScanOfAssembly(metadataReference));
 
@@ -69,8 +75,10 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     namespaceMember,
                     reportDiagnosticAction,
                     baseUiElement,
+                    desiredBaseTypeIsInterface,
                     previouslyGeneratedClasses,
-                    desiredCommandInterface);
+                    desiredCommandInterface,
+                    platformName);
 
                 if (nestedDeclarationSyntax != null)
                 {
@@ -111,8 +119,10 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             INamedTypeSymbol namedTypeSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
+            bool desiredBaseTypeIsInterface,
             IList<string> previouslyGeneratedClasses,
-            string desiredCommandInterface)
+            string desiredCommandInterface,
+            string platformName)
         {
             var fullName = namedTypeSymbol.GetFullName();
 
@@ -133,7 +143,10 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             // ensure we inherit from our desired element.
             if (namedTypeSymbol.IsSealed ||
                 namedTypeSymbol.IsStatic ||
-                (!HasDesiredBaseType(baseUiElement, namedTypeSymbol) &&
+                (!HasDesiredBaseType(
+                     baseUiElement,
+                     desiredBaseTypeIsInterface,
+                     namedTypeSymbol) &&
                 !fullName.Equals(baseUiElement, StringComparison.Ordinal)) ||
                 previouslyGeneratedClasses.Any(pgc => pgc.Equals(fullName)))
             {
@@ -145,7 +158,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             return ViewBindingModelClassGenerator.GenerateClass(
                 namedTypeSymbol,
                 baseUiElement,
-                desiredCommandInterface);
+                desiredCommandInterface,
+                platformName);
 
         }
 
@@ -153,8 +167,10 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             INamespaceSymbol namespaceSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
+            bool desiredBaseTypeIsInterface,
             IList<string> previouslyGeneratedClasses,
-            string desiredCommandInterface)
+            string desiredCommandInterface,
+            string platformName)
         {
             reportDiagnosticAction(ReportDiagnostics.StartingScanOfNamespace(namespaceSymbol));
 
@@ -168,8 +184,10 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     namedTypeSymbol,
                     reportDiagnosticAction,
                     baseUiElement,
+                    desiredBaseTypeIsInterface,
                     previouslyGeneratedClasses,
-                    desiredCommandInterface);
+                    desiredCommandInterface,
+                    platformName);
 
                 if (classDeclaration != null)
                 {
@@ -185,8 +203,10 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     nestedNamespaceSymbol,
                     reportDiagnosticAction,
                     baseUiElement,
+                    desiredBaseTypeIsInterface,
                     previouslyGeneratedClasses,
-                    desiredCommandInterface);
+                    desiredCommandInterface,
+                    platformName);
 
                 if (nestedNamespace != null)
                 {
@@ -207,20 +227,35 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             return null;
         }
 
-        private bool HasDesiredBaseType(string desiredBaseType, INamedTypeSymbol namedTypeSymbol)
+        private bool HasDesiredBaseType(
+            string desiredBaseType,
+            bool desiredBaseTypeIsInterface,
+            INamedTypeSymbol namedTypeSymbol)
         {
             var baseType = namedTypeSymbol.BaseType;
 
             while (baseType != null)
             {
                 var baseTypeFullName = baseType.GetFullName();
-                if (baseTypeFullName.Equals(desiredBaseType, StringComparison.Ordinal))
+                if (desiredBaseTypeIsInterface)
                 {
-                    return true;
+                    var interfaces = baseType.Interfaces;
+                    if (interfaces != null && baseType.Interfaces.Any(i => i.GetFullName().Equals(desiredBaseType, StringComparison.Ordinal)))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (baseTypeFullName.Equals(desiredBaseType, StringComparison.Ordinal))
+                    {
+                        return true;
+                    }
                 }
 
                 if (baseTypeFullName.Equals("global::System.Object", StringComparison.Ordinal))
                 {
+                    // we can drop out 1 iteration early
                     return false;
                 }
 

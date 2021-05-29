@@ -12,6 +12,11 @@ namespace ReactiveUI.Winforms.VetuviemGenerator
             return null;
         }
 
+        protected override string GetPlatformName()
+        {
+            return "Winforms";
+        }
+
         protected override IPlatformResolver GetPlatformResolver()
         {
             return new WinformsPlatformResolver();

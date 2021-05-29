@@ -69,6 +69,8 @@ namespace Vetuviem.SourceGenerator
             }
         }
 
+        protected abstract string GetPlatformName();
+
         /// <summary>
         /// Create the syntax tree representing the expansion of some member to which this attribute is applied.
         /// </summary>
@@ -141,11 +143,11 @@ namespace Vetuviem.SourceGenerator
 
 
             // blazor uses an interface, so we check once to drive different inheritance check.
-            var isInterface = false;
+            var desiredBaseTypeIsInterface = false;
             switch (desiredBaseTypeSymbolMatch.TypeKind)
             {
                 case TypeKind.Interface:
-                    isInterface = true;
+                    desiredBaseTypeIsInterface = true;
                     break;
                 case TypeKind.Class:
                     break;
@@ -158,13 +160,17 @@ namespace Vetuviem.SourceGenerator
 
             var generatorProcessor = new TGeneratorProcessor();
 
+            var platformName = GetPlatformName();
+
             var result = generatorProcessor.GenerateObjects(
                 namespaceDeclaration,
                 referencesOfInterest,
                 compilation,
                 context.ReportDiagnostic,
                 desiredBaseType,
-                desiredCommandInterface);
+                desiredBaseTypeIsInterface,
+                desiredCommandInterface,
+                platformName);
 
             return result;
         }

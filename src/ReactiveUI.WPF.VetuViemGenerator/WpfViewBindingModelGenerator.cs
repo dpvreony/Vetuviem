@@ -12,6 +12,11 @@ namespace ReactiveUI.WPF.VetuviemGenerator
             return null;
         }
 
+        protected override string GetPlatformName()
+        {
+            return "Wpf";
+        }
+
         protected override IPlatformResolver GetPlatformResolver()
         {
             return new WpfPlatformResolver();
