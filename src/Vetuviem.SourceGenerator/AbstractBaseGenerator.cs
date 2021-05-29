@@ -130,35 +130,19 @@ namespace Vetuviem.SourceGenerator
             }
             */
             var desiredBaseType = platformResolver.GetBaseUiElement();
-            var desiredBaseTypeSymbolMatches = compilation.GetSymbolsWithName(
-                    desiredBaseType,
-                    SymbolFilter.Type)
-                    .ToImmutableArray();
+            var desiredNameWithoutGlobal = desiredBaseType.Replace("global::", string.Empty);
+            var desiredBaseTypeSymbolMatch = compilation.GetTypeByMetadataName(desiredNameWithoutGlobal);
 
-            switch (desiredBaseTypeSymbolMatches.Length)
+            if (desiredBaseTypeSymbolMatch == null)
             {
-                case 0:
-                    context.ReportDiagnostic(ReportDiagnostics.FailedToFindDesiredBaseTypeSymbol(desiredBaseType));
-                    return namespaceDeclaration;
-                case 1:
-                    break;
-                default:
-                    context.ReportDiagnostic(ReportDiagnostics.DesiredBaseTypeSymbolSearchResultNotUnique(desiredBaseType));
-                    return namespaceDeclaration;
-            }
-
-            var desiredBaseTypeSymbol = desiredBaseTypeSymbolMatches[0];
-
-            // blazor uses an interface, so we check once to drive different inheritance check.
-            var desiredBaseTypeNamedTypeSymbol = desiredBaseTypeSymbol as INamedTypeSymbol;
-            if (desiredBaseTypeNamedTypeSymbol == null)
-            {
-                context.ReportDiagnostic(ReportDiagnostics.DesiredBaseTypeSymbolSearchNotNamedTypeSymbol(desiredBaseType));
+                context.ReportDiagnostic(ReportDiagnostics.FailedToFindDesiredBaseTypeSymbol(desiredBaseType));
                 return namespaceDeclaration;
             }
 
+
+            // blazor uses an interface, so we check once to drive different inheritance check.
             var isInterface = false;
-            switch (desiredBaseTypeNamedTypeSymbol.TypeKind)
+            switch (desiredBaseTypeSymbolMatch.TypeKind)
             {
                 case TypeKind.Interface:
                     isInterface = true;
@@ -166,6 +150,7 @@ namespace Vetuviem.SourceGenerator
                 case TypeKind.Class:
                     break;
                 default:
+                    context.ReportDiagnostic(ReportDiagnostics.DesiredBaseTypeSymbolNotInterfaceOrClass(desiredBaseType));
                     return namespaceDeclaration;
             }
 
