@@ -233,7 +233,7 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             bool desiredBaseTypeIsInterface,
             INamedTypeSymbol namedTypeSymbol)
         {
-            var baseType = namedTypeSymbol.BaseType;
+            var baseType = namedTypeSymbol;
 
             while (baseType != null)
             {

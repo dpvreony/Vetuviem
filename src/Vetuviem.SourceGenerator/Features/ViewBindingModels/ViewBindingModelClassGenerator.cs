@@ -134,15 +134,6 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 sep = sep.AddRange(GetTypeParameterSeparatedSyntaxList(namedTypeSymbol));
             }
 
-            /*
-            var baseType = namedTypeSymbol.BaseType;
-
-            if (namedTypeSymbol is {IsGenericType: true})
-            {
-                sep = sep.AddRange(GetTypeParameterSeparatedSyntaxList(baseType));
-            }
-            */
-
             var typeParameterList = SyntaxFactory.TypeParameterList(sep);
             return typeParameterList;
         }
