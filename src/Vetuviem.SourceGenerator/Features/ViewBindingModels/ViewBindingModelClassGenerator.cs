@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -53,36 +54,47 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             ClassDeclarationSyntax classDeclaration,
             string platformName)
         {
-            if (!controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase))
+            if (controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase))
             {
-                var baseClass = namedTypeSymbol.BaseType;
+                return classDeclaration;
+            }
 
-                var typeParameters = GetTypeArgumentListSyntax(baseClass);
+            var baseClass = namedTypeSymbol.BaseType;
+            if (baseClass?.BaseType == null)
+            {
+                // this is system.object which we don't produce a binding model for
+                // this happens when digging for a ui system that uses interfaces as the base description
+                // of ui components. i.e. blazor.
+                return classDeclaration;
+            }
 
-                // we dont use the full name of the type symbol as if the class is generic you end up with the type args in it.
-                var subNameSpace =
-                    baseClass.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                        .Replace("global::", string.Empty);
+            var typeParameters = GetTypeArgumentListSyntax(
+                namedTypeSymbol,
+                baseClass);
 
-                var baseViewBindingModelClassName =
-                    $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.{baseClass.Name}ViewBindingModel";
+            // we dont use the full name of the type symbol as if the class is generic you end up with the type args in it.
+            var subNameSpace =
+                baseClass.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                    .Replace("global::", string.Empty);
 
-                var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
+            var baseViewBindingModelClassName =
+                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.{baseClass.Name}ViewBindingModel";
 
-                var baseTypeName = SyntaxFactory.GenericName(
-                    baseTypeIdentifier,
-                    typeParameters);
+            var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
 
-                var baseTypeNode = SyntaxFactory.SimpleBaseType(baseTypeName);
+            var baseTypeName = SyntaxFactory.GenericName(
+                baseTypeIdentifier,
+                typeParameters);
+
+            var baseTypeNode = SyntaxFactory.SimpleBaseType(baseTypeName);
 
 #pragma warning disable SA1129 // Do not use default value type constructor
-                var baseTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
+            var baseTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
-                baseTypesList = baseTypesList.Add(baseTypeNode);
-                var baseList = SyntaxFactory.BaseList(baseTypesList);
+            baseTypesList = baseTypesList.Add(baseTypeNode);
+            var baseList = SyntaxFactory.BaseList(baseTypesList);
 
-                classDeclaration = classDeclaration.WithBaseList(baseList);
-            }
+            classDeclaration = classDeclaration.WithBaseList(baseList);
 
             return classDeclaration;
         }
@@ -146,17 +158,19 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             }
         }
 
-        private static TypeArgumentListSyntax GetTypeArgumentListSyntax(INamedTypeSymbol namedTypeSymbol)
+        private static TypeArgumentListSyntax GetTypeArgumentListSyntax(INamedTypeSymbol namedTypeSymbol, INamedTypeSymbol baseClass)
         {
 #pragma warning disable SA1129 // Do not use default value type constructor
-            var sep = GetTypeArgumentSeparatedSyntaxList(namedTypeSymbol);
+            var sep = GetTypeArgumentSeparatedSyntaxList(namedTypeSymbol, baseClass);
 #pragma warning restore SA1129 // Do not use default value type constructor
             var typeArgumentList = SyntaxFactory.TypeArgumentList(sep);
 
             return typeArgumentList;
         }
 
-        private static SeparatedSyntaxList<TypeSyntax> GetTypeArgumentSeparatedSyntaxList(INamedTypeSymbol namedTypeSymbol)
+        private static SeparatedSyntaxList<TypeSyntax> GetTypeArgumentSeparatedSyntaxList(
+            INamedTypeSymbol namedTypeSymbol,
+            INamedTypeSymbol baseClass)
         {
             var viewForParameter = SyntaxFactory.ParseTypeName("TView");
             var viewModelParameter = SyntaxFactory.ParseTypeName("TViewModel");
@@ -165,19 +179,19 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 #pragma warning restore SA1129 // Do not use default value type constructor
             sep = sep.AddRange(new[] {viewForParameter, viewModelParameter});
 
-            if (namedTypeSymbol is {IsGenericType: true})
+            if (baseClass is {IsGenericType: true})
             {
-                sep = sep.AddRange(GetTypeArgumentsFromTypeParameters(namedTypeSymbol));
+                sep = sep.AddRange(GetTypeArgumentsFromTypeParameters(baseClass));
             }
 
             return sep;
         }
 
-        private static IEnumerable<TypeSyntax> GetTypeArgumentsFromTypeParameters(INamedTypeSymbol namedTypeSymbol)
+        private static IEnumerable<TypeSyntax> GetTypeArgumentsFromTypeParameters(INamedTypeSymbol baseClass)
         {
-            foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
+            foreach (var typeParameterSymbol in baseClass.TypeArguments)
             {
-                yield return SyntaxFactory.ParseTypeName(typeParameterSymbol.Name);
+                yield return SyntaxFactory.ParseTypeName(typeParameterSymbol.ToDisplayString());
             }
         }
     }
