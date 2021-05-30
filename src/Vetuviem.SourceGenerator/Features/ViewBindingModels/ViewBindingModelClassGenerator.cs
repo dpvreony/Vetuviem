@@ -59,8 +59,13 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
                 var typeParameters = GetTypeArgumentListSyntax(baseClass);
 
+                // we dont use the full name of the type symbol as if the class is generic you end up with the type args in it.
+                var subNameSpace =
+                    baseClass.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                        .Replace("global::", string.Empty);
+
                 var baseViewBindingModelClassName =
-                    $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{baseClass.GetFullName().Replace("global::", string.Empty)}ViewBindingModel";
+                    $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.{baseClass.Name}ViewBindingModel";
 
                 var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
 
@@ -128,6 +133,15 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             {
                 sep = sep.AddRange(GetTypeParameterSeparatedSyntaxList(namedTypeSymbol));
             }
+
+            /*
+            var baseType = namedTypeSymbol.BaseType;
+
+            if (namedTypeSymbol is {IsGenericType: true})
+            {
+                sep = sep.AddRange(GetTypeParameterSeparatedSyntaxList(baseType));
+            }
+            */
 
             var typeParameterList = SyntaxFactory.TypeParameterList(sep);
             return typeParameterList;

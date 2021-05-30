@@ -13,6 +13,8 @@ namespace ReactiveUI.Blazor.VetuviemGenerator
             return new[]
             {
                 "Microsoft.AspNetCore.Components.dll",
+                "Microsoft.AspNetCore.Components.Forms.dll",
+                "Microsoft.AspNetCore.Components.Web.dll",
             };
         }
 
