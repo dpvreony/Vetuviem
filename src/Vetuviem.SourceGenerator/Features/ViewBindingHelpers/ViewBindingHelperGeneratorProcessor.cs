@@ -1,22 +1,12 @@
 ﻿using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Vetuviem.SourceGenerator.Features.ViewBindingHelpers;
+using Vetuviem.SourceGenerator.Features.ViewBindingModels;
 
 namespace Vetuviem.SourceGenerator.GeneratorProcessors
 {
-    public sealed class ViewBindingHelperGeneratorProcessor : AbstractGeneratorProcessor
+    public sealed class ViewBindingHelperGeneratorProcessor : AbstractGeneratorProcessor<ViewBindingHelperClassGenerator>
     {
-        public override NamespaceDeclarationSyntax GenerateObjects(
-            NamespaceDeclarationSyntax namespaceDeclaration,
-            MetadataReference[] assembliesOfInterest,
-            Compilation generatorExecutionContext,
-            Action<Diagnostic> reportDiagnosticAction,
-            string desiredBaseType,
-            bool desiredBaseTypeIsInterface,
-            string desiredCommandInterface,
-            string platformName)
-        {
-            return namespaceDeclaration;
-        }
     }
 }

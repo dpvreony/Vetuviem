@@ -6,9 +6,9 @@ using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 {
-    public static class ViewBindingModelClassGenerator
+    public class ViewBindingModelClassGenerator : IClassGenerator
     {
-        public static ClassDeclarationSyntax GenerateClass(
+        public ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string desiredCommandInterface,
