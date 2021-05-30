@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Extensions.Logging;
 using Vetuviem.SourceGenerator;
+using Vetuviem.SourceGenerator.Features.Core;
 using Vetuviem.SourceGenerator.GeneratorProcessors;
 using Xunit;
 using Xunit.Abstractions;
@@ -23,9 +24,10 @@ namespace Vetuviem.Testing
         /// <summary>
         /// Unit Tests for the Execute Method.
         /// </summary>
-        public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor> : Foundatio.Xunit.TestWithLoggingBase
-            where TGenerator : AbstractBaseGenerator<TGeneratorProcessor>
-            where TGeneratorProcessor : AbstractGeneratorProcessor, new()
+        public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor, TClassGenerator> : Foundatio.Xunit.TestWithLoggingBase
+            where TGenerator : AbstractBaseGenerator<TGeneratorProcessor, TClassGenerator>
+            where TGeneratorProcessor : AbstractGeneratorProcessor<TClassGenerator>, new()
+            where TClassGenerator : IClassGenerator, new()
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="BaseExecuteMethod{TGenerator, TGeneratorProcessor}"/> class.

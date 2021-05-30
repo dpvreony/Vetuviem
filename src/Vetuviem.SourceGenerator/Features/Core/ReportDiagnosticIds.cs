@@ -12,5 +12,10 @@
         public static string StartingScanOfAssembly => "VET-008";
         public static string NoAssemblyOrModuleSybmol => "VET-009";
         public static string NoGlobalNamespaceInAssemblyOrModule => "VET-010";
+        public static string DesiredBaseTypeSymbolNotInterfaceOrClass => "VET-011";
+        public static string StartingCheckOfType => "VET-012";
+        public static string FailedToFindDesiredBaseTypeSymbol => "VET-013";
+        public static string DesiredBaseTypeSymbolSearchResultNotUnique => "VET-014";
+        public static string DesiredBaseTypeSymbolSearchNotNamedTypeSymbol => "VET-015";
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.CodeAnalysis;
 using ReactiveUI.WPF.VetuviemGenerator;
+using Vetuviem.SourceGenerator.Features.ViewBindingModels;
 using Vetuviem.SourceGenerator.GeneratorProcessors;
 using Vetuviem.Testing;
 using Xunit.Abstractions;
@@ -15,7 +16,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
     public static class WpfViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WpfViewBindingModelGenerator, ViewBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WpfViewBindingModelGenerator, ViewBindingModelGeneratorProcessor, ViewBindingModelClassGenerator>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.

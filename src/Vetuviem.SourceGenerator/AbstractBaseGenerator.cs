@@ -17,8 +17,10 @@ namespace Vetuviem.SourceGenerator
     /// Base logic for a source generator.
     /// </summary>
     /// <typeparam name="TGeneratorProcessor"></typeparam>
-    public abstract class AbstractBaseGenerator<TGeneratorProcessor> : ISourceGenerator
-        where TGeneratorProcessor : AbstractGeneratorProcessor, new()
+    /// <typeparam name="TClassGenerator"></typeparam>
+    public abstract class AbstractBaseGenerator<TGeneratorProcessor, TClassGenerator> : ISourceGenerator
+        where TGeneratorProcessor : AbstractGeneratorProcessor<TClassGenerator>, new()
+        where TClassGenerator : IClassGenerator, new()
     {
         /// <inheritdoc />
         public void Initialize(GeneratorInitializationContext context)
@@ -68,6 +70,8 @@ namespace Vetuviem.SourceGenerator
                 context.ReportDiagnostic(ReportDiagnostics.UnhandledException(e));
             }
         }
+
+        protected abstract string GetPlatformName();
 
         /// <summary>
         /// Create the syntax tree representing the expansion of some member to which this attribute is applied.
@@ -130,9 +134,35 @@ namespace Vetuviem.SourceGenerator
             }
             */
             var desiredBaseType = platformResolver.GetBaseUiElement();
+            var desiredNameWithoutGlobal = desiredBaseType.Replace("global::", string.Empty);
+            var desiredBaseTypeSymbolMatch = compilation.GetTypeByMetadataName(desiredNameWithoutGlobal);
+
+            if (desiredBaseTypeSymbolMatch == null)
+            {
+                context.ReportDiagnostic(ReportDiagnostics.FailedToFindDesiredBaseTypeSymbol(desiredBaseType));
+                return namespaceDeclaration;
+            }
+
+
+            // blazor uses an interface, so we check once to drive different inheritance check.
+            var desiredBaseTypeIsInterface = false;
+            switch (desiredBaseTypeSymbolMatch.TypeKind)
+            {
+                case TypeKind.Interface:
+                    desiredBaseTypeIsInterface = true;
+                    break;
+                case TypeKind.Class:
+                    break;
+                default:
+                    context.ReportDiagnostic(ReportDiagnostics.DesiredBaseTypeSymbolNotInterfaceOrClass(desiredBaseType));
+                    return namespaceDeclaration;
+            }
+
             var desiredCommandInterface = platformResolver.GetCommandInterface();
 
             var generatorProcessor = new TGeneratorProcessor();
+
+            var platformName = GetPlatformName();
 
             var result = generatorProcessor.GenerateObjects(
                 namespaceDeclaration,
@@ -140,7 +170,9 @@ namespace Vetuviem.SourceGenerator
                 compilation,
                 context.ReportDiagnostic,
                 desiredBaseType,
-                desiredCommandInterface);
+                desiredBaseTypeIsInterface,
+                desiredCommandInterface,
+                platformName);
 
             return result;
         }

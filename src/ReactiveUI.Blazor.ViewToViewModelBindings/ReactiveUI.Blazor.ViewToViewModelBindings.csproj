@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -15,8 +15,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.6" PrivateAssets="all" ReferenceOutputAssembly="true" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="5.0.6" PrivateAssets="all" ReferenceOutputAssembly="true" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.6" PrivateAssets="all" ReferenceOutputAssembly="true" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ReactiveUI.Blazor.VetuViemGenerator\ReactiveUI.Blazor.VetuViemGenerator.csproj" OutputItemType="Analyzer" />
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+  </PropertyGroup>
+
+  <Target Name="GetDependencyTargetPaths">
+    <ItemGroup>
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_AspNetCore_Components)\lib\net5.0\Microsoft.AspNetCore.Components" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_AspNetCore_Components_Forms)\lib\net5.0\Microsoft.AspNetCore.Components.Forms" IncludeRuntimeDependency="false" />
+      <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_AspNetCore_Components_Web)\lib\net5.0\Microsoft.AspNetCore.Components.Web" IncludeRuntimeDependency="false" />
+    </ItemGroup>
+  </Target>
 </Project>
