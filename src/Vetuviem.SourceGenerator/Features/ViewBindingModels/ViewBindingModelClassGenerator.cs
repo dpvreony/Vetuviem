@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -56,10 +57,19 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             {
                 var baseClass = namedTypeSymbol.BaseType;
 
+                var typeParameters = GetTypeArgumentListSyntax(namedTypeSymbol);
+
                 var baseViewBindingModelClassName =
-                    $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{baseClass.GetFullName().Replace("global::", string.Empty)}ViewBindingModel<TView, TViewModel>";
-                var baseTypeNode =
-                    SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName(baseViewBindingModelClassName));
+                    $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{baseClass.GetFullName().Replace("global::", string.Empty)}ViewBindingModel";
+
+                var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
+
+                var baseTypeName = SyntaxFactory.GenericName(
+                    baseTypeIdentifier,
+                    typeParameters);
+
+                var baseTypeNode = SyntaxFactory.SimpleBaseType(baseTypeName);
+
 #pragma warning disable SA1129 // Do not use default value type constructor
                 var baseTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
@@ -114,6 +124,37 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             sep = sep.AddRange(new[] {viewForParameter, viewModelParameter});
             var typeParameterList = SyntaxFactory.TypeParameterList(sep);
             return typeParameterList;
+        }
+
+        private static TypeArgumentListSyntax GetTypeArgumentListSyntax(INamedTypeSymbol namedTypeSymbol)
+        {
+#pragma warning disable SA1129 // Do not use default value type constructor
+            var sep = GetTypeArgumentSepeSeparatedSyntaxList(namedTypeSymbol);
+#pragma warning restore SA1129 // Do not use default value type constructor
+            var typeArgumentList = SyntaxFactory.TypeArgumentList(sep);
+
+            return typeArgumentList;
+        }
+
+        private static SeparatedSyntaxList<TypeSyntax> GetTypeArgumentSepeSeparatedSyntaxList(INamedTypeSymbol namedTypeSymbol)
+        {
+            var viewForParameter = SyntaxFactory.ParseTypeName("TView");
+            var viewModelParameter = SyntaxFactory.ParseTypeName("TViewModel");
+#pragma warning disable SA1129 // Do not use default value type constructor
+            var sep = new SeparatedSyntaxList<TypeSyntax>();
+#pragma warning restore SA1129 // Do not use default value type constructor
+            sep = sep.AddRange(new[] {viewForParameter, viewModelParameter});
+            sep = sep.AddRange(GetTypeArgumentsFromTypeParameters(namedTypeSymbol));
+
+            return sep;
+        }
+
+        private static IEnumerable<TypeSyntax> GetTypeArgumentsFromTypeParameters(INamedTypeSymbol namedTypeSymbol)
+        {
+            foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
+            {
+                yield return SyntaxFactory.ParseTypeName(typeParameterSymbol.Name);
+            }
         }
     }
 }
