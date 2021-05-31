@@ -8,7 +8,7 @@ Vetuvium is a DSL to support View to View Model binding (MVVM -> V2VM -> Ve-Tu-V
 * Reduce the cognitive load by
   * Removing the risk of misusing 1 way or 2 way binding
   * Remove the need for the user to think about having to cater for Bind vs BindCommand
-* Offer a structure that allows for more work to be done potentially with Source Generators to reduce reflection.
+* Offer a structure that allows for more work to be done potentially with Source Generators to reduce reflection and improve the build time developer experience.
 
 ## Nuget Packages
 
