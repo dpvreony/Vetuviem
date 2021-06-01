@@ -3,11 +3,12 @@
     <Company>DPVreony and Contributors</Company>
 	<StartYear>2020</StartYear>
 	<Copyright>© $(StartYear)-$([System.DateTime]::Now.Year) $(Company)</Copyright>
-    <Product>Nucleotide ($(TargetFramework))</Product>
+    <Product>Vetuviem ($(TargetFramework))</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>dpvreony</Authors>
     <Owners>dpvreony</Owners>
     <PackageTags>Source Generation</PackageTags>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/dpvreony/nucleotide</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>$(RepositoryUrl)/releases</PackageReleaseNotes>
@@ -62,5 +63,9 @@
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
   </ItemGroup>
- </Project>
+
+  <ItemGroup>
+    <None Include="..\..\readme.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+</Project>
 
