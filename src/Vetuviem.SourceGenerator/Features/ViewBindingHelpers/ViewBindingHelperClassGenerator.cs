@@ -34,10 +34,20 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
                 platformName);
             */
 
+            var fullyQualifiedClassName = string.Empty;
+
             var applyBindingMethod = GetApplyBindingMethod(
                 namedTypeSymbol,
                 platformName);
-            var members = new SyntaxList<MemberDeclarationSyntax>(applyBindingMethod);
+            var applyBindingInternalMethod = GetApplyBindingInternalMethod(
+                namedTypeSymbol,
+                platformName);
+            var members = new SyntaxList<MemberDeclarationSyntax>(
+                new []
+                {
+                    applyBindingMethod,
+                    applyBindingInternalMethod
+                });
 
             return classDeclaration
                 .WithModifiers(modifiers)
@@ -49,7 +59,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
                     controlClassFullName));
         }
 
-        private MemberDeclarationSyntax? GetApplyBindingMethod(INamedTypeSymbol namedTypeSymbol, string platformName)
+        private MemberDeclarationSyntax GetApplyBindingMethod(INamedTypeSymbol namedTypeSymbol, string platformName)
         {
             string controlType = namedTypeSymbol.GetFullName();
             var subNameSpace =
@@ -60,8 +70,6 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
                 $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.{namedTypeSymbol.Name}ViewBindingModel";
 
             var methodName = $"ApplyBinding";
-
-            //var body = generationModelEntityGenerationModel.Select(GetApplyConfigurationInvocationDeclaration).ToArray();
 
             var parameters = GetParams(new []
             {
@@ -81,13 +89,53 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             return declaration;
         }
 
+        private MemberDeclarationSyntax GetApplyBindingInternalMethod(INamedTypeSymbol namedTypeSymbol, string platformName)
+        {
+            string controlType = namedTypeSymbol.GetFullName();
+            var subNameSpace =
+                namedTypeSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                    .Replace("global::", string.Empty);
+
+            var baseViewBindingModelClassName =
+                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.{namedTypeSymbol.Name}ViewBindingModel";
+
+            var methodName = $"ApplyBindingInternal";
+
+            var parameters = GetParams(new []
+            {
+                $"global::System.Linq.Expressions.Expression<Func<TView, {controlType}>> control",
+                $"{baseViewBindingModelClassName} viewBindingModel",
+                "global::System.Action<global::System.IDisposable> registerForDisposalAction"
+            });
+
+            var body = GetApplyBindingInternalMethodBody();
+
+            var returnType = SyntaxFactory.ParseTypeName("void");
+            var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
+                .WithParameterList(parameters)
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword),
+                    SyntaxFactory.Token(SyntaxKind.StaticKeyword))
+                .AddBodyStatements(body);
+            return declaration;
+        }
+
         private StatementSyntax[] GetApplyBindingMethodBody()
         {
+            var args = new[] { "control", "viewBindingModel", "registerForDisposalAction"};
+
             return new StatementSyntax[]
             {
                 RoslynGenerationHelpers.GetNullGuardCheckSyntax("control"),
                 RoslynGenerationHelpers.GetNullGuardCheckSyntax("viewBindingModel"),
                 RoslynGenerationHelpers.GetNullGuardCheckSyntax("registerForDisposalAction"),
+                SyntaxFactory.ExpressionStatement(RoslynGenerationHelpers.GetStaticMethodInvocationSyntax("ApplyBindingInternal", args, false)),
+            };
+        }
+
+        private StatementSyntax[] GetApplyBindingInternalMethodBody()
+        {
+            return new StatementSyntax[]
+            {
             };
         }
 
