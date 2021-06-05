@@ -70,7 +70,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
                 "global::System.Action<global::System.IDisposable> registerForDisposalAction"
             });
 
-            var body = new StatementSyntax[0];
+            var body = GetApplyBindingMethodBody();
 
             var returnType = SyntaxFactory.ParseTypeName("void");
             var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
@@ -79,6 +79,16 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
                     SyntaxFactory.Token(SyntaxKind.StaticKeyword))
                 .AddBodyStatements(body);
             return declaration;
+        }
+
+        private StatementSyntax[] GetApplyBindingMethodBody()
+        {
+            return new StatementSyntax[]
+            {
+                RoslynGenerationHelpers.GetNullGuardCheckSyntax("control"),
+                RoslynGenerationHelpers.GetNullGuardCheckSyntax("viewBindingModel"),
+                RoslynGenerationHelpers.GetNullGuardCheckSyntax("registerForDisposalAction"),
+            };
         }
 
         protected static ParameterListSyntax GetParams(string[] argCollection)
