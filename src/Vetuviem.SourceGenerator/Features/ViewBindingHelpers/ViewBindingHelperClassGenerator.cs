@@ -16,33 +16,21 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             string desiredCommandInterface,
             string platformName)
         {
-            //var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
-
             var controlClassFullName = namedTypeSymbol.GetFullName();
 
             var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword));
 
-            //var constraintClauses = GetTypeParameterConstraintClauseSyntaxes();
 
             var classDeclaration = SyntaxFactory.ClassDeclaration($"{namedTypeSymbol.Name}ViewBindingHelper");
-
-            /*
-            classDeclaration = ApplyBaseClassDeclarationSyntax(
-                namedTypeSymbol,
-                baseUiElement,
-                controlClassFullName,
-                classDeclaration,
-                platformName);
-            */
-
-            var fullyQualifiedClassName = string.Empty;
 
             var applyBindingMethod = GetApplyBindingMethod(
                 namedTypeSymbol,
                 platformName);
             var applyBindingInternalMethod = GetApplyBindingInternalMethod(
                 namedTypeSymbol,
+                baseUiElement,
                 platformName);
+
             var members = new SyntaxList<MemberDeclarationSyntax>(
                 new []
                 {
@@ -52,8 +40,6 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
 
             return classDeclaration
                 .WithModifiers(modifiers)
-                //.WithTypeParameterList(typeParameterList)
-                //.WithConstraintClauses(constraintClauses)
                 .WithMembers(members)
                 .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
                     "A class that contains View Bindings Helper logic for the {0}ViewBindingModel and thus the {0} control.",
@@ -107,9 +93,9 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             return declaration;
         }
 
-        private MemberDeclarationSyntax GetApplyBindingInternalMethod(INamedTypeSymbol namedTypeSymbol, string platformName)
+        private MemberDeclarationSyntax GetApplyBindingInternalMethod(INamedTypeSymbol namedTypeSymbol, string baseUiElement, string platformName)
         {
-            var body = GetApplyBindingInternalMethodBody(namedTypeSymbol);
+            var body = GetApplyBindingInternalMethodBody(namedTypeSymbol, baseUiElement, platformName);
             return GetApplyBindingMethodViaCommonLogic(
                 namedTypeSymbol,
                 platformName,
@@ -131,7 +117,10 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             };
         }
 
-        private StatementSyntax[] GetApplyBindingInternalMethodBody(INamedTypeSymbol namedTypeSymbol)
+        private StatementSyntax[] GetApplyBindingInternalMethodBody(
+            INamedTypeSymbol namedTypeSymbol,
+            string baseUiElement,
+            string platformName)
         {
             var body = new List<StatementSyntax>();
 
@@ -143,6 +132,11 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             // TODO: add a call to the base controls binding helper.
             // these classes are all static helpers so it's not a base.ApplyBindings()
             // it was done so not doing loads of ctor's during binding.
+            AddUpstreamStaticClassInvocationIfRequired(
+                body,
+                namedTypeSymbol,
+                baseUiElement,
+                platformName);
 
             foreach (var prop in properties)
             {
@@ -163,12 +157,54 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
                     $"viewBindingModel",
                     propertySymbol.Name,
                     "ApplyBinding",
-                    new[] {"control"}));
+                    new[] {"control", "registerForDisposalAction"}));
             }
 
 
 
             return body.ToArray();
+        }
+
+        private void AddUpstreamStaticClassInvocationIfRequired(
+            List<StatementSyntax> body,
+            INamedTypeSymbol namedTypeSymbol,
+            string baseUiElement,
+            string platformName)
+        {
+            var controlClassFullName = namedTypeSymbol.GetFullName();
+            if (controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            var baseClass = namedTypeSymbol.BaseType;
+            if (baseClass?.BaseType == null)
+            {
+                // this is system.object which we don't produce a binding model for
+                // this happens when digging for a ui system that uses interfaces as the base description
+                // of ui components. i.e. blazor.
+                return;
+            }
+
+            // we don't use the full name of the type symbol as if the class is generic you end up with the type args in it.
+            var subNameSpace =
+                baseClass.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                    .Replace("global::", string.Empty);
+
+            var baseViewBindingModelClassName =
+                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.{baseClass.Name}ViewBindingHelper";
+
+
+            var invocationSyntax = RoslynGenerationHelpers.GetStaticMethodInvocationSyntax(
+                baseViewBindingModelClassName,
+                "ApplyBindingInternal",
+                new[] { "control", "viewBindingModel", "registerForDisposalAction"},
+                false);
+
+            var invocationExpression = SyntaxFactory.ExpressionStatement(invocationSyntax);
+
+            body.Add(invocationExpression);
+
         }
 
         protected static ParameterListSyntax GetParams(string[] argCollection)
