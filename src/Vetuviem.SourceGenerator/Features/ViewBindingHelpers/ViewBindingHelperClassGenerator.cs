@@ -61,35 +61,20 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
 
         private MemberDeclarationSyntax GetApplyBindingMethod(INamedTypeSymbol namedTypeSymbol, string platformName)
         {
-            string controlType = namedTypeSymbol.GetFullName();
-            var subNameSpace =
-                namedTypeSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
-                    .Replace("global::", string.Empty);
-
-            var baseViewBindingModelClassName =
-                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.{namedTypeSymbol.Name}ViewBindingModel";
-
-            var methodName = $"ApplyBinding";
-
-            var parameters = GetParams(new []
-            {
-                $"global::System.Linq.Expressions.Expression<Func<TView, {controlType}>> control",
-                $"{baseViewBindingModelClassName} viewBindingModel",
-                "global::System.Action<global::System.IDisposable> registerForDisposalAction"
-            });
-
             var body = GetApplyBindingMethodBody();
-
-            var returnType = SyntaxFactory.ParseTypeName("void");
-            var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
-                .WithParameterList(parameters)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
-                    SyntaxFactory.Token(SyntaxKind.StaticKeyword))
-                .AddBodyStatements(body);
-            return declaration;
+            return GetApplyBindingMethodViaCommonLogic(
+                namedTypeSymbol,
+                platformName,
+                "ApplyingBinding",
+                body,
+                SyntaxKind.PublicKeyword);
         }
 
-        private MemberDeclarationSyntax GetApplyBindingInternalMethod(INamedTypeSymbol namedTypeSymbol, string platformName)
+        private MemberDeclarationSyntax GetApplyBindingMethodViaCommonLogic(INamedTypeSymbol namedTypeSymbol,
+            string platformName,
+            string methodName,
+            StatementSyntax[] methodBody,
+            SyntaxKind accessKeyword)
         {
             string controlType = namedTypeSymbol.GetFullName();
             var subNameSpace =
@@ -99,24 +84,37 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             var baseViewBindingModelClassName =
                 $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.{namedTypeSymbol.Name}ViewBindingModel";
 
-            var methodName = $"ApplyBindingInternal";
-
             var parameters = GetParams(new []
             {
-                $"global::System.Linq.Expressions.Expression<Func<TView, {controlType}>> control",
-                $"{baseViewBindingModelClassName} viewBindingModel",
+                $"global::System.Linq.Expressions.Expression<global::System.Func<TView, {controlType}>> control",
+                $"{baseViewBindingModelClassName}<TView, TViewModel> viewBindingModel",
                 "global::System.Action<global::System.IDisposable> registerForDisposalAction"
             });
 
-            var body = GetApplyBindingInternalMethodBody();
 
+            var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
             var returnType = SyntaxFactory.ParseTypeName("void");
+            var constraintClauses = GetTypeParameterConstraintClauseSyntaxes();
+
             var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
+                .WithTypeParameterList(typeParameterList)
+                .WithConstraintClauses(constraintClauses)
                 .WithParameterList(parameters)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword),
+                .AddModifiers(SyntaxFactory.Token(accessKeyword),
                     SyntaxFactory.Token(SyntaxKind.StaticKeyword))
-                .AddBodyStatements(body);
+                .AddBodyStatements(methodBody);
             return declaration;
+        }
+
+        private MemberDeclarationSyntax GetApplyBindingInternalMethod(INamedTypeSymbol namedTypeSymbol, string platformName)
+        {
+            var body = GetApplyBindingInternalMethodBody();
+            return GetApplyBindingMethodViaCommonLogic(
+                namedTypeSymbol,
+                platformName,
+                "ApplyingBindingInternal",
+                body,
+                SyntaxKind.InternalKeyword);
         }
 
         private StatementSyntax[] GetApplyBindingMethodBody()
