@@ -548,7 +548,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="methodName"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static StatementSyntax GetMethodOnVariableInvocationSyntax(string variableName, string methodName, string[] args, bool isAsync)
+        public static StatementSyntax GetMethodOnVariableInvocationSyntax(
+            string variableName,
+            string methodName,
+            string[] args,
+            bool isAsync)
         {
             var getAddCommandInvocation = SyntaxFactory.MemberAccessExpression(
                   SyntaxKind.SimpleMemberAccessExpression,
@@ -589,6 +593,41 @@ namespace Vetuviem.SourceGenerator.Features.Core
             var awaitCommand = SyntaxFactory.AwaitExpression(SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
                 getCommandInvocation);
             return SyntaxFactory.ExpressionStatement(awaitCommand);
+        }
+
+        /// <summary>
+        /// Gets the syntax for invoking a method on a field and passing in a value
+        /// </summary>
+        /// <param name="fieldName"></param>
+        /// <param name="methodName"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static StatementSyntax GetMethodOnPropertyOfVariableInvocationSyntax(
+            string variableName,
+            string propertyName,
+            string methodName,
+            string[] args)
+        {
+            var variableAccess = SyntaxFactory.MemberAccessExpression(
+                  SyntaxKind.SimpleMemberAccessExpression,
+                  SyntaxFactory.IdentifierName(variableName),
+                  SyntaxFactory.IdentifierName(propertyName));
+
+            SeparatedSyntaxList<ArgumentSyntax> argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            if (args != null && args.Length > 0)
+            {
+
+                foreach (var s in args)
+                {
+                    argsList = argsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseName(s)));
+                }
+            }
+
+            var conditionalAccess = SyntaxFactory.ConditionalAccessExpression(variableAccess, SyntaxFactory.MemberBindingExpression(SyntaxFactory.IdentifierName(methodName)));
+
+            var getCommandInvocation = SyntaxFactory.InvocationExpression(conditionalAccess, SyntaxFactory.ArgumentList(argsList));
+
+            return SyntaxFactory.ExpressionStatement(getCommandInvocation);
         }
 
         public static ExpressionSyntax GetMethodOnVariableInvocationExpression(string variableName, string methodName, string[] args, bool isAsync)

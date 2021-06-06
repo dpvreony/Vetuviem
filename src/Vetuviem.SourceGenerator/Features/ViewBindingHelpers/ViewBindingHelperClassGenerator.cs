@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -108,7 +109,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
 
         private MemberDeclarationSyntax GetApplyBindingInternalMethod(INamedTypeSymbol namedTypeSymbol, string platformName)
         {
-            var body = GetApplyBindingInternalMethodBody();
+            var body = GetApplyBindingInternalMethodBody(namedTypeSymbol);
             return GetApplyBindingMethodViaCommonLogic(
                 namedTypeSymbol,
                 platformName,
@@ -130,11 +131,44 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             };
         }
 
-        private StatementSyntax[] GetApplyBindingInternalMethodBody()
+        private StatementSyntax[] GetApplyBindingInternalMethodBody(INamedTypeSymbol namedTypeSymbol)
         {
-            return new StatementSyntax[]
+            var body = new List<StatementSyntax>();
+
+            var properties = namedTypeSymbol
+                .GetMembers()
+                .Where(x => x.Kind == SymbolKind.Property)
+                .ToArray();
+
+            // TODO: add a call to the base controls binding helper.
+            // these classes are all static helpers so it's not a base.ApplyBindings()
+            // it was done so not doing loads of ctor's during binding.
+
+            foreach (var prop in properties)
             {
-            };
+                var propertySymbol = prop as IPropertySymbol;
+
+                if (propertySymbol == null
+                    || propertySymbol.IsIndexer
+                    || propertySymbol.IsOverride
+                    || propertySymbol.DeclaredAccessibility != Accessibility.Public
+                    || propertySymbol.ExplicitInterfaceImplementations.Any())
+                {
+                    continue;
+                }
+
+                // TODO: generate method could be cleaner as variable->property->method
+                // also need to do a null check
+                body.Add(RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
+                    $"viewBindingModel",
+                    propertySymbol.Name,
+                    "ApplyBinding",
+                    new[] {"control"}));
+            }
+
+
+
+            return body.ToArray();
         }
 
         protected static ParameterListSyntax GetParams(string[] argCollection)
