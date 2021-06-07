@@ -52,7 +52,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             return GetApplyBindingMethodViaCommonLogic(
                 namedTypeSymbol,
                 platformName,
-                "ApplyingBinding",
+                "ApplyBinding",
                 body,
                 SyntaxKind.PublicKeyword);
         }
@@ -71,10 +71,14 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             var baseViewBindingModelClassName =
                 $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.{namedTypeSymbol.Name}ViewBindingModel";
 
+            // TODO: make use of the type params method, need to remove a lot of this parsing stuff
+            var genericArg = namedTypeSymbol.IsGenericType ? ",T" : string.Empty;
+
             var parameters = GetParams(new []
             {
                 $"global::System.Linq.Expressions.Expression<global::System.Func<TView, {controlType}>> control",
-                $"{baseViewBindingModelClassName}<TView, TViewModel> viewBindingModel",
+                "TViewModel viewModel",
+                $"{baseViewBindingModelClassName}<TView, TViewModel{genericArg}> viewBindingModel",
                 "global::System.Action<global::System.IDisposable> registerForDisposalAction"
             });
 
@@ -99,18 +103,19 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             return GetApplyBindingMethodViaCommonLogic(
                 namedTypeSymbol,
                 platformName,
-                "ApplyingBindingInternal",
+                "ApplyBindingInternal",
                 body,
                 SyntaxKind.InternalKeyword);
         }
 
         private StatementSyntax[] GetApplyBindingMethodBody()
         {
-            var args = new[] { "control", "viewBindingModel", "registerForDisposalAction"};
+            var args = new[] { "control", "viewModel", "viewBindingModel", "registerForDisposalAction"};
 
             return new StatementSyntax[]
             {
                 RoslynGenerationHelpers.GetNullGuardCheckSyntax("control"),
+                RoslynGenerationHelpers.GetNullGuardCheckSyntax("viewModel"),
                 RoslynGenerationHelpers.GetNullGuardCheckSyntax("viewBindingModel"),
                 RoslynGenerationHelpers.GetNullGuardCheckSyntax("registerForDisposalAction"),
                 SyntaxFactory.ExpressionStatement(RoslynGenerationHelpers.GetStaticMethodInvocationSyntax("ApplyBindingInternal", args, false)),
@@ -151,13 +156,19 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
                     continue;
                 }
 
-                // TODO: generate method could be cleaner as variable->property->method
-                // also need to do a null check
+                var invokeArgs = new[]
+                    {
+                        "registerForDisposalAction",
+                        "control",
+                        "viewModel",
+                        $"vw => vw.{propertySymbol.Name}",
+                    };
+
                 body.Add(RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
                     $"viewBindingModel",
                     propertySymbol.Name,
                     "ApplyBinding",
-                    new[] {"control", "registerForDisposalAction"}));
+                    invokeArgs));
             }
 
 

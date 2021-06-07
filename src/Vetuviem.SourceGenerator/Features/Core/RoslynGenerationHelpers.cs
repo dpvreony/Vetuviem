@@ -60,7 +60,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             argsList = argsList.Add(SyntaxFactory.Argument(nameOfInvocation));
 
             var objectCreationEx = SyntaxFactory.ObjectCreationExpression(
-                SyntaxFactory.ParseTypeName(nameof(ArgumentNullException)),
+                SyntaxFactory.ParseTypeName("global::System.ArgumentNullException"),
                 SyntaxFactory.ArgumentList(argsList),
                 null);
 
