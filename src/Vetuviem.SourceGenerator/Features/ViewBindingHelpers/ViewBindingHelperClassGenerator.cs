@@ -76,10 +76,11 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
 
             var parameters = GetParams(new []
             {
-                $"global::System.Linq.Expressions.Expression<global::System.Func<TView, {controlType}>> control",
+                "TView view",
                 "TViewModel viewModel",
                 $"{baseViewBindingModelClassName}<TView, TViewModel{genericArg}> viewBindingModel",
-                "global::System.Action<global::System.IDisposable> registerForDisposalAction"
+                "global::System.Action<global::System.IDisposable> registerForDisposalAction",
+                $"global::System.Linq.Expressions.Expression<global::System.Func<TView, {controlType}>> control",
             });
 
 
@@ -110,14 +111,15 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
 
         private StatementSyntax[] GetApplyBindingMethodBody()
         {
-            var args = new[] { "control", "viewModel", "viewBindingModel", "registerForDisposalAction"};
+            var args = new[] { "view", "viewModel", "viewBindingModel", "registerForDisposalAction", "control"};
 
             return new StatementSyntax[]
             {
-                RoslynGenerationHelpers.GetNullGuardCheckSyntax("control"),
+                RoslynGenerationHelpers.GetNullGuardCheckSyntax("view"),
                 RoslynGenerationHelpers.GetNullGuardCheckSyntax("viewModel"),
                 RoslynGenerationHelpers.GetNullGuardCheckSyntax("viewBindingModel"),
                 RoslynGenerationHelpers.GetNullGuardCheckSyntax("registerForDisposalAction"),
+                RoslynGenerationHelpers.GetNullGuardCheckSyntax("control"),
                 SyntaxFactory.ExpressionStatement(RoslynGenerationHelpers.GetStaticMethodInvocationSyntax("ApplyBindingInternal", args, false)),
             };
         }
@@ -143,6 +145,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
                 baseUiElement,
                 platformName);
 
+            var controlFullName = namedTypeSymbol.GetFullName();
+
             foreach (var prop in properties)
             {
                 var propertySymbol = prop as IPropertySymbol;
@@ -156,12 +160,14 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
                     continue;
                 }
 
+                var propType = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
                 var invokeArgs = new[]
                     {
                         "registerForDisposalAction",
-                        "control",
+                        "view",
                         "viewModel",
-                        $"vw => vw.{propertySymbol.Name}",
+                        $"global::Vetuviem.Core.ExpressionHelpers.GetControlPropertyExpressionFromViewExpression<TView, {controlFullName}, {propType}>(control, \"{propertySymbol.Name}\")",
                     };
 
                 body.Add(RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
@@ -203,13 +209,13 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
                     .Replace("global::", string.Empty);
 
             var baseViewBindingModelClassName =
-                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.{baseClass.Name}ViewBindingHelper";
+                $"global::ReactiveUI.{platformName}.ViewToViewModelBindingHelpers.{subNameSpace}.{baseClass.Name}ViewBindingHelper";
 
 
             var invocationSyntax = RoslynGenerationHelpers.GetStaticMethodInvocationSyntax(
                 baseViewBindingModelClassName,
                 "ApplyBindingInternal",
-                new[] { "control", "viewBindingModel", "registerForDisposalAction"},
+                new[] { "view", "viewModel", "viewBindingModel", "registerForDisposalAction", "control"},
                 false);
 
             var invocationExpression = SyntaxFactory.ExpressionStatement(invocationSyntax);

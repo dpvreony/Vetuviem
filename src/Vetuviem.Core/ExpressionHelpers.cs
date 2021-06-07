@@ -5,7 +5,7 @@ namespace Vetuviem.Core
 {
     public static class ExpressionHelpers
     {
-        public static Expression<Func<TView, object>> GetControlPropertyExpressionFromViewExpression<TView, TProp>(
+        public static Expression<Func<TView, TResult>> GetControlPropertyExpressionFromViewExpression<TView, TProp, TResult>(
             Expression<Func<TView, TProp>> viewPropExpression,
             string propertyName)
         {
@@ -14,7 +14,7 @@ namespace Vetuviem.Core
                 viewPropExpression.Body,
                 member);
 
-            var propertyExpression = Expression.Lambda<Func<TView, object>>(
+            var propertyExpression = Expression.Lambda<Func<TView, TResult>>(
                     memberAccess,
                     viewPropExpression.Parameters);
 
