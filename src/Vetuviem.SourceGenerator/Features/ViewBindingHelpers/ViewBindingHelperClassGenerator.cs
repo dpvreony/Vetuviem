@@ -211,11 +211,20 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             var baseViewBindingModelClassName =
                 $"global::ReactiveUI.{platformName}.ViewToViewModelBindingHelpers.{subNameSpace}.{baseClass.Name}ViewBindingHelper";
 
+            var controlFullName = namedTypeSymbol.GetFullName();
+            var baseClassFullName = baseClass.GetFullName();
 
             var invocationSyntax = RoslynGenerationHelpers.GetStaticMethodInvocationSyntax(
                 baseViewBindingModelClassName,
                 "ApplyBindingInternal",
-                new[] { "view", "viewModel", "viewBindingModel", "registerForDisposalAction", "control"},
+                new[]
+                {
+                    "view",
+                    "viewModel",
+                    "viewBindingModel",
+                    "registerForDisposalAction",
+                    $"global::Vetuviem.Core.ExpressionHelpers.ConvertControlExpressionToBaseClassExpression<TView, {controlFullName}, {baseClassFullName}>(control)"
+                },
                 false);
 
             var invocationExpression = SyntaxFactory.ExpressionStatement(invocationSyntax);
