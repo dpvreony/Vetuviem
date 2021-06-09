@@ -17,5 +17,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         public string AnswerFour { get; set; }
 
         public string AnswerFive { get; set; }
+
+        public int MaxLength => 50;
     }
 }

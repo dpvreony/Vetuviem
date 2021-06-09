@@ -34,6 +34,12 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         {
             return new()
             {
+                // max length is used in this scenario because you may have a flexible data capture form
+                // in this sample it's fixed, but also used for calculating the limit on the label
+                // we actually set the control max length slightly longer than the desired max length
+                // this is to do with capturing a bad paste from the user. where it would cap at the max length of the
+                // control, and they wouldn't be aware they passed the limit and lost data.
+                MaxLength = new OneWayBind<QuestionnaireViewModel, int>(vm => vm.MaxLength, x => x + 10),
                 Text = new TwoWayBinding<QuestionnaireViewModel, string>(viewModelTextExpression),
             };
         }
