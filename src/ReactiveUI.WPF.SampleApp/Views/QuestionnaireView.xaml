@@ -7,7 +7,27 @@
                              mc:Ignorable="d"
                              Title="QuestionnaireView" Height="450" Width="800">
     <Grid>
-        <TextBox Name="Forename" />
-        <TextBox Name="Surname" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Label>Forename</Label>
+        <TextBox Grid.Column="1" Grid.Row="0" Name="Forename" Width="120" />
+
+        <Label Grid.Column="0" Grid.Row="1">Surname</Label>
+        <TextBox Grid.Column="1" Grid.Row="1" Name="Surname" Width="120" />
     </Grid>
 </local:ReactiveQuestionnaireWindow>
