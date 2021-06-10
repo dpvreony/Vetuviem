@@ -1,38 +1,68 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Windows.Controls;
 using ReactiveUI.WPF.SampleApp.ViewModels;
 using ReactiveUI.WPF.SampleApp.Views;
+using ReactiveUI.Wpf.ViewToViewModelBindings.System.Windows;
 using ReactiveUI.Wpf.ViewToViewModelBindings.System.Windows.Controls;
 using Vetuviem.Core;
 
 namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 {
-    public sealed class QuestionnaireViewBindingModels
+    public sealed class QuestionnaireViewBindingModels : IEnableViewToViewModelBindings<QuestionnaireView, QuestionnaireViewModel>
     {
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> ForenameTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(vm => vm.Forename);
+            => GetStandardTextBoxViewModel(
+                vw => vw.Forename,
+                vm => vm.Forename);
 
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> SurnameTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(vm => vm.Surname);
+            => GetStandardTextBoxViewModel(
+                vw =>vw.Surname,
+                vm => vm.Surname);
 
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerOneTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(vm => vm.AnswerOne);
+            => GetStandardTextBoxViewModel(
+                vw =>vw.AnswerOne,
+                vm => vm.AnswerOne);
 
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerTwoTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(vm => vm.AnswerTwo);
+            => GetStandardTextBoxViewModel(
+                vw =>vw.AnswerTwo,
+                vm => vm.AnswerTwo);
 
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerThreeTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(vm => vm.AnswerThree);
+            => GetStandardTextBoxViewModel(
+                vw =>vw.AnswerThree,
+                vm => vm.AnswerThree);
 
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFourTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(vm => vm.AnswerFour);
+            => GetStandardTextBoxViewModel(
+                vw =>vw.AnswerFour,
+                vm => vm.AnswerFour);
 
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFiveTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(vm => vm.AnswerFive);
+            => GetStandardTextBoxViewModel(
+                vw =>vw.AnswerFive,
+                vm => vm.AnswerFive);
 
-        private static TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardTextBoxViewModel(Expression<Func<QuestionnaireViewModel, string>> viewModelTextExpression)
+        public IEnumerable<IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
         {
-            return new()
+            yield return ForenameTextBoxViewBindingModel;
+            yield return SurnameTextBoxViewBindingModel;
+            yield return AnswerOneTextBoxViewBindingModel;
+            yield return AnswerTwoTextBoxViewBindingModel;
+            yield return AnswerThreeTextBoxViewBindingModel;
+            yield return AnswerFourTextBoxViewBindingModel;
+            yield return AnswerFiveTextBoxViewBindingModel;
+        }
+
+        private static TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardTextBoxViewModel(
+            Expression<Func<QuestionnaireView, TextBox>> viewExpression,
+            Expression<Func<QuestionnaireViewModel, string>> viewModelTextExpression)
+        {
+            return new(viewExpression)
             {
                 // max length is used in this scenario because you may have a flexible data capture form
                 // in this sample it's fixed, but also used for calculating the limit on the label
@@ -43,5 +73,6 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
                 Text = new TwoWayBinding<QuestionnaireViewModel, string>(viewModelTextExpression),
             };
         }
+
     }
 }
