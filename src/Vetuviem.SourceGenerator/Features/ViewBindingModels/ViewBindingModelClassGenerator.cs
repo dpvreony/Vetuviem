@@ -59,13 +59,13 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         {
             const string methodName = "ApplyBindings";
             var returnType = SyntaxFactory.ParseTypeName("void");
-            var args = new[] { "view", "viewModel", "viewBindingModel", "registerForDisposalAction"};
+            var args = new[] { "view", "viewModel", "this", "registerForDisposalAction"};
             var subNameSpace =
                 namedTypeSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
                     .Replace("global::", string.Empty);
 
             var baseViewBindingModelClassName =
-                $"global::ReactiveUI.{platformName}.ViewToViewModelHelpers.{subNameSpace}.{namedTypeSymbol.Name}ViewBindingModel";
+                $"global::ReactiveUI.{platformName}.ViewToViewModelBindingHelpers.{subNameSpace}.{namedTypeSymbol.Name}ViewBindingHelper";
 
             var methodBody = new StatementSyntax[]
             {
