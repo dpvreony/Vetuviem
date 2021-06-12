@@ -10,6 +10,6 @@ namespace Vetuviem.SourceGenerator
 {
     public abstract class AbstractViewBindingHelperGenerator : AbstractBaseGenerator<ViewBindingHelperGeneratorProcessor, ViewBindingHelperClassGenerator>
     {
-        protected override string GetNamespace() => "ReactiveUI.Wpf.ViewToViewModelBindingHelpers";
+        protected override string GetNamespace() => $"ReactiveUI.{GetPlatformName()}.ViewToViewModelBindingHelpers";
     }
 }
