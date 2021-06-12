@@ -9,7 +9,15 @@ using Vetuviem.SourceGenerator.Features.ViewBindingModels;
 
 namespace Vetuviem.SourceGenerator.GeneratorProcessors
 {
-    public sealed class ViewBindingModelGeneratorProcessor : AbstractGeneratorProcessor<ViewBindingModelClassGenerator>
+    public sealed class ViewBindingModelGeneratorProcessor : AbstractGeneratorProcessor
     {
+        protected override Func<IClassGenerator>[] GetClassGenerators()
+        {
+            return new Func<IClassGenerator>[]
+            {
+                () => new GenericViewBindingModelClassGenerator(),
+                () => new ControlBoundViewBindingModelClassGenerator(),
+            };
+        }
     }
 }

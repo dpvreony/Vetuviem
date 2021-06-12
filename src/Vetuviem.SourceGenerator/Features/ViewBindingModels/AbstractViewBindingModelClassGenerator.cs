@@ -8,7 +8,7 @@ using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 {
-    public class ViewBindingModelClassGenerator : IClassGenerator
+    public class AbstractViewBindingModelClassGenerator : IClassGenerator
     {
         public ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,

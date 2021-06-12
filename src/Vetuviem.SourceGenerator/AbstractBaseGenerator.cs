@@ -19,7 +19,7 @@ namespace Vetuviem.SourceGenerator
     /// <typeparam name="TGeneratorProcessor"></typeparam>
     /// <typeparam name="TClassGenerator"></typeparam>
     public abstract class AbstractBaseGenerator<TGeneratorProcessor, TClassGenerator> : ISourceGenerator
-        where TGeneratorProcessor : AbstractGeneratorProcessor<TClassGenerator>, new()
+        where TGeneratorProcessor : AbstractGeneratorProcessor, new()
         where TClassGenerator : IClassGenerator, new()
     {
         /// <inheritdoc />
