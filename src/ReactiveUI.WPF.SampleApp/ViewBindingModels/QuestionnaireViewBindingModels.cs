@@ -12,37 +12,37 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 {
     public sealed class QuestionnaireViewBindingModels : IEnableViewToViewModelBindings<QuestionnaireView, QuestionnaireViewModel>
     {
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> ForenameTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> ForenameTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw => vw.Forename,
                 vm => vm.Forename);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> SurnameTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> SurnameTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw =>vw.Surname,
                 vm => vm.Surname);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerOneTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> AnswerOneTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw =>vw.AnswerOne,
                 vm => vm.AnswerOne);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerTwoTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> AnswerTwoTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw =>vw.AnswerTwo,
                 vm => vm.AnswerTwo);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerThreeTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> AnswerThreeTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw =>vw.AnswerThree,
                 vm => vm.AnswerThree);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFourTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> AnswerFourTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw =>vw.AnswerFour,
                 vm => vm.AnswerFour);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFiveTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> AnswerFiveTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw =>vw.AnswerFive,
                 vm => vm.AnswerFive);
@@ -58,7 +58,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
             yield return AnswerFiveTextBoxViewBindingModel;
         }
 
-        private static TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardTextBoxViewModel(
+        private static TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> GetStandardTextBoxViewModel(
             Expression<Func<QuestionnaireView, TextBox>> viewExpression,
             Expression<Func<QuestionnaireViewModel, string>> viewModelTextExpression)
         {

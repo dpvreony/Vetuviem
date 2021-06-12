@@ -190,6 +190,10 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     desiredCommandInterface,
                     platformName);
 
+                #error need to change this logic to have a generic and a concrete class
+                // the generic class is used to allowing the expression inheritance without having to do the re-cast
+                // the concrete class is there to simplify use of control binding and remove the need for the generic.
+
                 if (classDeclaration != null)
                 {
                     nestedMembers.Add(classDeclaration);

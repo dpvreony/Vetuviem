@@ -56,22 +56,22 @@ namespace ReactiveUI.WPF.SampleApp.Views
         }
     }
 
-    public static class VbmExtensions
-    {
-        public static void ApplyBinding(
-            this TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> vbm,
-            QuestionnaireView view,
-            QuestionnaireViewModel viewModel,
-            Action<IDisposable> action,
-            Expression<Func<QuestionnaireView, TextBox>> control)
-        {
-            TextBoxViewBindingHelper.ApplyBinding(
-                view,
-                viewModel,
-                vbm,
-                action,
-                control);
+    //public static class VbmExtensions
+    //{
+    //    public static void ApplyBinding(
+    //        this TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> vbm,
+    //        QuestionnaireView view,
+    //        QuestionnaireViewModel viewModel,
+    //        Action<IDisposable> action,
+    //        Expression<Func<QuestionnaireView, TextBox>> control)
+    //    {
+    //        TextBoxViewBindingHelper.ApplyBinding(
+    //            view,
+    //            viewModel,
+    //            vbm,
+    //            action,
+    //            control);
 
-        }
-    }
+    //    }
+    //}
 }
