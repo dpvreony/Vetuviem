@@ -1,0 +1,25 @@
+﻿using Microsoft.CodeAnalysis;
+using Vetuviem.SourceGenerator;
+using Vetuviem.SourceGenerator.Features.Core;
+
+namespace ReactiveUI.Blazor.VetuviemGenerator
+{
+    [Generator]
+    public sealed class BlazorViewBindingHelperGenerator : AbstractViewBindingHelperGenerator
+    {
+        protected override MetadataReference CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest)
+        {
+            return null;
+        }
+
+        protected override IPlatformResolver GetPlatformResolver()
+        {
+            return new BlazorPlatformResolver();
+        }
+
+        protected override string GetPlatformName()
+        {
+            return "Blazor";
+        }
+    }
+}
