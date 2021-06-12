@@ -33,9 +33,11 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 classDeclaration,
                 platformName);
 
-            var members = ViewBindingModelPropertyGenerator.GetProperties(
+            var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, controlClassFullName));
+
+            members = members.AddRange(ViewBindingModelPropertyGenerator.GetProperties(
                 namedTypeSymbol,
-                desiredCommandInterface);
+                desiredCommandInterface));
 
             members = members.Add(GetApplyBindingsMethod(
                 namedTypeSymbol,
@@ -50,6 +52,26 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                     "A class that contains View Bindings for the {0} control.",
                     controlClassFullName))
                 .WithMembers(members);
+        }
+
+        private MemberDeclarationSyntax GetConstructorMethod(
+            INamedTypeSymbol namedTypeSymbol,
+            string controlClassFullName)
+        {
+            var className = $"{namedTypeSymbol.Name}ViewBindingModel";
+            var body = new List<StatementSyntax>();
+
+            var parameters = RoslynGenerationHelpers.GetParams(new []
+            {
+                $"global::System.Linq.Expressions.Expression<global::System.Func<TView, {controlClassFullName}>> viewExpression",
+            });
+
+            var declaration = SyntaxFactory.ConstructorDeclaration(className)
+                .WithParameterList(parameters)
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddBodyStatements(body.ToArray());
+
+            return declaration;
         }
 
         private MemberDeclarationSyntax GetApplyBindingsMethod(
