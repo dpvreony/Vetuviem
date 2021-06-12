@@ -74,7 +74,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             // TODO: make use of the type params method, need to remove a lot of this parsing stuff
             var genericArg = namedTypeSymbol.IsGenericType ? ",T" : string.Empty;
 
-            var parameters = GetParams(new []
+            var parameters = RoslynGenerationHelpers.GetParams(new []
             {
                 "TView view",
                 "TViewModel viewModel",
@@ -231,19 +231,6 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
 
             body.Add(invocationExpression);
 
-        }
-
-        protected static ParameterListSyntax GetParams(string[] argCollection)
-        {
-            var parameters = SyntaxFactory.SeparatedList<ParameterSyntax>();
-
-            foreach (var s in argCollection)
-            {
-                var node = SyntaxFactory.Parameter(SyntaxFactory.Identifier(s));
-                parameters = parameters.Add(node);
-            }
-
-            return SyntaxFactory.ParameterList(parameters);
         }
 
         private static SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes()

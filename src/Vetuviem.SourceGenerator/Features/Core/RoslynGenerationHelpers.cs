@@ -12,6 +12,19 @@ namespace Vetuviem.SourceGenerator.Features.Core
     /// </summary>
     public static class RoslynGenerationHelpers
     {
+        public static ParameterListSyntax GetParams(string[] argCollection)
+        {
+            var parameters = SyntaxFactory.SeparatedList<ParameterSyntax>();
+
+            foreach (var s in argCollection)
+            {
+                var node = SyntaxFactory.Parameter(SyntaxFactory.Identifier(s));
+                parameters = parameters.Add(node);
+            }
+
+            return SyntaxFactory.ParameterList(parameters);
+        }
+
         public static AttributeArgumentListSyntax GetAttributeArgumentListSyntax(IList<string> attributeArguments)
         {
             if (attributeArguments == null || attributeArguments.Count < 1)

@@ -33,9 +33,14 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 classDeclaration,
                 platformName);
 
-            var properties = ViewBindingModelPropertyGenerator.GetProperties(
+            var members = ViewBindingModelPropertyGenerator.GetProperties(
                 namedTypeSymbol,
                 desiredCommandInterface);
+
+            members = members.Add(GetApplyBindingsMethod(
+                namedTypeSymbol,
+                desiredCommandInterface,
+                platformName));
 
             return classDeclaration
                 .WithModifiers(modifiers)
@@ -44,7 +49,44 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
                     "A class that contains View Bindings for the {0} control.",
                     controlClassFullName))
-                .WithMembers(properties);
+                .WithMembers(members);
+        }
+
+        private MemberDeclarationSyntax GetApplyBindingsMethod(
+            INamedTypeSymbol namedTypeSymbol,
+            string desiredCommandInterface,
+            string platformName)
+        {
+            const string methodName = "ApplyBindings";
+            var returnType = SyntaxFactory.ParseTypeName("void");
+            var args = new[] { "view", "viewModel", "viewBindingModel", "registerForDisposalAction"};
+            var subNameSpace =
+                namedTypeSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                    .Replace("global::", string.Empty);
+
+            var baseViewBindingModelClassName =
+                $"global::ReactiveUI.{platformName}.ViewToViewModelHelpers.{subNameSpace}.{namedTypeSymbol.Name}ViewBindingModel";
+
+            var methodBody = new StatementSyntax[]
+            {
+                SyntaxFactory.ExpressionStatement(RoslynGenerationHelpers.GetStaticMethodInvocationSyntax(baseViewBindingModelClassName, "ApplyBinding", args, false)),
+            };
+
+            var isOverride = false;
+
+            var parameters = RoslynGenerationHelpers.GetParams(new []
+            {
+                "TView view",
+                "TViewModel viewModel",
+                "global::System.Action<global::System.IDisposable> registerForDisposalAction",
+            });
+
+            var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+                    SyntaxFactory.Token(isOverride ? SyntaxKind.OverrideKeyword : SyntaxKind.VirtualKeyword))
+                .WithParameterList(parameters)
+                .AddBodyStatements(methodBody);
+            return declaration;
         }
 
         private static ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
@@ -56,6 +98,14 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         {
             if (controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase))
             {
+                // so we're at the core type we're generating for. so we put our interface on here.
+#pragma warning disable SA1129 // Do not use default value type constructor
+                var interfaceTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
+#pragma warning restore SA1129 // Do not use default value type constructor
+                interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.IViewBindingModel<TView, TViewModel>")));
+                var interfaceList = SyntaxFactory.BaseList(interfaceTypesList);
+                classDeclaration = classDeclaration.WithBaseList(interfaceList);
+
                 return classDeclaration;
             }
 

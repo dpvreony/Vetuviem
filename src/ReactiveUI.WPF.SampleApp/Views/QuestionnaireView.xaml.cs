@@ -5,6 +5,7 @@ using ReactiveUI.WPF.SampleApp.ViewBindingModels;
 using ReactiveUI.WPF.SampleApp.ViewModels;
 using ReactiveUI.Wpf.ViewToViewModelBindingHelpers.System.Windows.Controls;
 using ReactiveUI.Wpf.ViewToViewModelBindings.System.Windows.Controls;
+using Vetuviem.Core;
 
 namespace ReactiveUI.WPF.SampleApp.Views
 {
@@ -29,17 +30,17 @@ namespace ReactiveUI.WPF.SampleApp.Views
         {
             // this is still an investigation piece as the next bit to make more usable.
             var vbm = new QuestionnaireViewBindingModels();
-
-            // we should have a get bindings method
-            /*
-            var bindingModels = vbm.GetBindingModels();
-            foreach (var bindingModel in bindingModels)
+            var bindings = vbm.GetBindings();
+            foreach (var viewBindingModel in bindings)
             {
-                bindingModel.ApplyBinding();
+                viewBindingModel.ApplyBindings(
+                    this,
+                    this.ViewModel,
+                    action);
             }
-            */
 
             // as we went to the trouble of producing a vbm, it should have an ApplyBinding() method on the IOneWay or IOneOrTwoWay interfaces
+            /*
             vbm.ForenameTextBoxViewBindingModel.ApplyBinding(
                 this,
                 this.ViewModel,
@@ -51,6 +52,7 @@ namespace ReactiveUI.WPF.SampleApp.Views
                 this.ViewModel,
                 action,
                 vw => vw.Surname);
+            */
         }
     }
 
