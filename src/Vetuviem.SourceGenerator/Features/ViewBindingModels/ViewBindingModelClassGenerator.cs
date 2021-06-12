@@ -33,11 +33,15 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 classDeclaration,
                 platformName);
 
+            var isDerivedType = !controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase);
+
             var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, controlClassFullName));
 
             members = members.AddRange(ViewBindingModelPropertyGenerator.GetProperties(
                 namedTypeSymbol,
-                desiredCommandInterface));
+                desiredCommandInterface,
+                isDerivedType,
+                controlClassFullName));
 
             members = members.Add(GetApplyBindingsMethod(
                 namedTypeSymbol,
