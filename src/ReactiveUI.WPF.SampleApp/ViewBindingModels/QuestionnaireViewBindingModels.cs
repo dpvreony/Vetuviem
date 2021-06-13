@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Windows.Controls;
 using ReactiveUI.WPF.SampleApp.ViewModels;
 using ReactiveUI.WPF.SampleApp.Views;
-using ReactiveUI.Wpf.ViewToViewModelBindings.System.Windows;
 using ReactiveUI.Wpf.ViewToViewModelBindings.System.Windows.Controls;
 using Vetuviem.Core;
 
@@ -12,53 +11,53 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 {
     public sealed class QuestionnaireViewBindingModels : IEnableViewToViewModelBindings<QuestionnaireView, QuestionnaireViewModel>
     {
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> ForenameTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> ForenameTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw => vw.Forename,
                 vm => vm.Forename);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> SurnameTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> SurnameTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw =>vw.Surname,
                 vm => vm.Surname);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> AnswerOneTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerOneTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw =>vw.AnswerOne,
                 vm => vm.AnswerOne);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> AnswerTwoTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerTwoTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw =>vw.AnswerTwo,
                 vm => vm.AnswerTwo);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> AnswerThreeTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerThreeTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw =>vw.AnswerThree,
                 vm => vm.AnswerThree);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> AnswerFourTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFourTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw =>vw.AnswerFour,
                 vm => vm.AnswerFour);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> AnswerFiveTextBoxViewBindingModel
+        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFiveTextBoxViewBindingModel
             => GetStandardTextBoxViewModel(
                 vw =>vw.AnswerFive,
                 vm => vm.AnswerFive);
 
         public IEnumerable<IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
         {
-            yield return ForenameTextBoxViewBindingModel;
-            yield return SurnameTextBoxViewBindingModel;
-            yield return AnswerOneTextBoxViewBindingModel;
-            yield return AnswerTwoTextBoxViewBindingModel;
-            yield return AnswerThreeTextBoxViewBindingModel;
-            yield return AnswerFourTextBoxViewBindingModel;
-            yield return AnswerFiveTextBoxViewBindingModel;
+            yield return (IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>)ForenameTextBoxViewBindingModel;
+            yield return (IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>)SurnameTextBoxViewBindingModel;
+            yield return (IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>)AnswerOneTextBoxViewBindingModel;
+            yield return (IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>)AnswerTwoTextBoxViewBindingModel;
+            yield return (IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>)AnswerThreeTextBoxViewBindingModel;
+            yield return (IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>)AnswerFourTextBoxViewBindingModel;
+            yield return (IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>)AnswerFiveTextBoxViewBindingModel;
         }
 
-        private static TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> GetStandardTextBoxViewModel(
+        private static TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardTextBoxViewModel(
             Expression<Func<QuestionnaireView, TextBox>> viewExpression,
             Expression<Func<QuestionnaireViewModel, string>> viewModelTextExpression)
         {

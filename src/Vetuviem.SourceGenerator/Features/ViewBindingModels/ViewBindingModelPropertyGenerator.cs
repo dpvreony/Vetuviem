@@ -31,29 +31,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 .Where(x => x.Kind == SymbolKind.Property)
                 .ToArray();
 
-            // we do +1 in case we're adding the control expression.
-            var nodes = new List<MemberDeclarationSyntax>(properties.Length + 1);
-
-            if (!isDerivedType)
-            {
-                var controlBindingExpressionType = SyntaxFactory.ParseTypeName(
-                    $"global::System.Linq.Expressions.Expression<global::System.Func<TView, {controlClassFullName}>>");
-
-                var accessorList = new[]
-                {
-                    SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
-                        .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
-                    SyntaxFactory.AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
-                        .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
-                };
-
-                nodes.Add(SyntaxFactory.PropertyDeclaration(
-                        controlBindingExpressionType,
-                        "VetuviemControlBindingExpression")
-                    .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
-                    .WithAccessorList(
-                        SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList))));
-            }
+            var nodes = new List<MemberDeclarationSyntax>(properties.Length);
 
             foreach (var prop in properties)
             {

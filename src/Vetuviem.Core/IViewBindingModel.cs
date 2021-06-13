@@ -3,7 +3,7 @@ using ReactiveUI;
 
 namespace Vetuviem.Core
 {
-    public interface IViewBindingModel<TView, TViewModel>
+    public interface IViewBindingModel<in TView, in TViewModel>
         where TView : class, IViewFor<TViewModel>
         where TViewModel : class, IReactiveObject
     {

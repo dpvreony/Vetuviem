@@ -24,10 +24,9 @@ namespace Vetuviem.Testing
         /// <summary>
         /// Unit Tests for the Execute Method.
         /// </summary>
-        public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor, TClassGenerator> : Foundatio.Xunit.TestWithLoggingBase
-            where TGenerator : AbstractBaseGenerator<TGeneratorProcessor, TClassGenerator>
-            where TGeneratorProcessor : AbstractGeneratorProcessor<TClassGenerator>, new()
-            where TClassGenerator : IClassGenerator, new()
+        public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor> : Foundatio.Xunit.TestWithLoggingBase
+            where TGenerator : AbstractBaseGenerator<TGeneratorProcessor>
+            where TGeneratorProcessor : AbstractGeneratorProcessor, new()
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="BaseExecuteMethod{TGenerator, TGeneratorProcessor}"/> class.
