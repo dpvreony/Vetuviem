@@ -12,105 +12,70 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 {
     public sealed class QuestionnaireViewBindingModels : IEnableViewToViewModelBindings<QuestionnaireView, QuestionnaireViewModel>
     {
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> ForenameTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(
+        public IEnumerable<IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
+        {
+            // Forename
+            yield return GetStandardTextBoxViewModel(
                 vw => vw.Forename,
                 vm => vm.Forename);
-
-        public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> ForenameLengthRemainingLabelViewBindingModel
-            => GetStandardLengthRemainingLabelViewBindingModel(
+            yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.ForenameLengthRemaining,
                 vm => vm.ForenameLengthRemaining,
                 vm => vm.ForenameLengthRemaining);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> SurnameTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(
+            // Surname
+            yield return GetStandardTextBoxViewModel(
                 vw =>vw.Surname,
                 vm => vm.Surname);
-
-        public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> SurnameLengthRemainingLabelViewBindingModel
-            => GetStandardLengthRemainingLabelViewBindingModel(
+            yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.SurnameLengthRemaining,
                 vm => vm.SurnameLengthRemaining,
                 vm => vm.SurnameLengthRemaining);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerOneTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(
+            // answer one
+            yield return GetStandardTextBoxViewModel(
                 vw =>vw.AnswerOne,
                 vm => vm.AnswerOne);
-
-        public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerOneRemainingLabelViewBindingModel
-            => GetStandardLengthRemainingLabelViewBindingModel(
+            yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerOneLengthRemaining,
                 vm => vm.AnswerOneLengthRemaining,
                 vm => vm.AnswerOneLengthRemaining);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerTwoTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(
+            // answer two
+            yield return GetStandardTextBoxViewModel(
                 vw =>vw.AnswerTwo,
                 vm => vm.AnswerTwo);
-
-        public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerTwoRemainingLabelViewBindingModel
-            => GetStandardLengthRemainingLabelViewBindingModel(
+            yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerTwoLengthRemaining,
                 vm => vm.AnswerTwoLengthRemaining,
                 vm => vm.AnswerTwoLengthRemaining);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerThreeTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(
+            // answer three
+            yield return GetStandardTextBoxViewModel(
                 vw =>vw.AnswerThree,
                 vm => vm.AnswerThree);
-
-        public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerThreeRemainingLabelViewBindingModel
-            => GetStandardLengthRemainingLabelViewBindingModel(
+            yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerThreeLengthRemaining,
                 vm => vm.AnswerThreeLengthRemaining,
                 vm => vm.AnswerThreeLengthRemaining);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFourTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(
+            // answer four
+            yield return GetStandardTextBoxViewModel(
                 vw =>vw.AnswerFour,
                 vm => vm.AnswerFour);
-
-        public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFourRemainingLabelViewBindingModel
-            => GetStandardLengthRemainingLabelViewBindingModel(
+            yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerFourLengthRemaining,
                 vm => vm.AnswerFourLengthRemaining,
                 vm => vm.AnswerFourLengthRemaining);
 
-        public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFiveTextBoxViewBindingModel
-            => GetStandardTextBoxViewModel(
+            // answer five
+            yield return GetStandardTextBoxViewModel(
                 vw =>vw.AnswerFive,
                 vm => vm.AnswerFive);
-
-        public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFiveRemainingLabelViewBindingModel
-            => GetStandardLengthRemainingLabelViewBindingModel(
+            yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerFiveLengthRemaining,
                 vm => vm.AnswerFiveLengthRemaining,
                 vm => vm.AnswerFourLengthRemaining);
-
-        public IEnumerable<IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
-        {
-            yield return ForenameTextBoxViewBindingModel;
-            yield return ForenameLengthRemainingLabelViewBindingModel;
-
-            yield return SurnameTextBoxViewBindingModel;
-            yield return SurnameLengthRemainingLabelViewBindingModel;
-
-            yield return AnswerOneTextBoxViewBindingModel;
-            yield return AnswerOneRemainingLabelViewBindingModel;
-
-            yield return AnswerTwoTextBoxViewBindingModel;
-            yield return AnswerTwoRemainingLabelViewBindingModel;
-
-            yield return AnswerThreeTextBoxViewBindingModel;
-            yield return AnswerThreeRemainingLabelViewBindingModel;
-
-            yield return AnswerFourTextBoxViewBindingModel;
-            yield return AnswerFourRemainingLabelViewBindingModel;
-
-            yield return AnswerFiveTextBoxViewBindingModel;
-            yield return AnswerFiveRemainingLabelViewBindingModel;
 
         }
 
