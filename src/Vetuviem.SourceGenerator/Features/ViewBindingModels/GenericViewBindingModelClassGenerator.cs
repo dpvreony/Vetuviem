@@ -95,6 +95,13 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 // this is system.object which we don't produce a binding model for
                 // this happens when digging for a ui system that uses interfaces as the base description
                 // of ui components. i.e. blazor.
+#pragma warning disable SA1129 // Do not use default value type constructor
+                var interfaceTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
+#pragma warning restore SA1129 // Do not use default value type constructor
+                interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.AbstractViewBindingModel<TView, TViewModel, TControl>")));
+                var interfaceList = SyntaxFactory.BaseList(interfaceTypesList);
+                classDeclaration = classDeclaration.WithBaseList(interfaceList);
+
                 return classDeclaration;
             }
 

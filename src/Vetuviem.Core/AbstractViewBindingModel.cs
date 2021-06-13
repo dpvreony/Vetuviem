@@ -6,7 +6,6 @@ namespace Vetuviem.Core
         : global::Vetuviem.Core.IViewBindingModel<TView, TViewModel>
         where TView : class, global::ReactiveUI.IViewFor<TViewModel>
         where TViewModel : class, global::ReactiveUI.IReactiveObject
-        where TControl : class
     {
         protected AbstractViewBindingModel(global::System.Linq.Expressions.Expression<global::System.Func<TView, TControl>> vetuviemControlBindingExpression)
         {

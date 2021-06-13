@@ -36,7 +36,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 classDeclaration,
                 platformName);
 
-            var isDerivedType = !controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase);
+            var isDerivedType = !controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase) && namedTypeSymbol.BaseType?.BaseType != null;
 
             var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, isDerivedType));
 
