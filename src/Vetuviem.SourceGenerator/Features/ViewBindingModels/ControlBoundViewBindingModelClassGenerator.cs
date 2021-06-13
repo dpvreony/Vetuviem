@@ -83,6 +83,40 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             return classDeclaration;
         }
 
+
+        protected override SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(string controlClassFullName)
+        {
+#pragma warning disable SA1129 // Do not use default value type constructor
+            var viewConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
+#pragma warning restore SA1129 // Do not use default value type constructor
+            var viewForConstraint =
+                SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("global::ReactiveUI.IViewFor<TViewModel>"));
+
+            viewConstraints = viewConstraints
+                .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint))
+                .Add(viewForConstraint);
+            var viewConstraintClause = SyntaxFactory.TypeParameterConstraintClause(
+                SyntaxFactory.IdentifierName("TView"),
+                viewConstraints);
+
+            var reactiveObjectInterfaceConstraint =
+                SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("global::ReactiveUI.IReactiveObject"));
+#pragma warning disable SA1129 // Do not use default value type constructor
+            var viewModelConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
+#pragma warning restore SA1129 // Do not use default value type constructor
+            viewModelConstraints =
+                viewModelConstraints
+                    .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint))
+                    .Add(reactiveObjectInterfaceConstraint);
+            var viewModelConstraintClause = SyntaxFactory.TypeParameterConstraintClause(
+                SyntaxFactory.IdentifierName("TViewModel"),
+                viewModelConstraints);
+
+            var constraintClauses =
+                new SyntaxList<TypeParameterConstraintClauseSyntax>(new[] {viewConstraintClause, viewModelConstraintClause});
+            return constraintClauses;
+        }
+
         private static TypeArgumentListSyntax GetTypeArgumentListSyntax(INamedTypeSymbol namedTypeSymbol)
         {
 #pragma warning disable SA1129 // Do not use default value type constructor

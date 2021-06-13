@@ -102,52 +102,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             ClassDeclarationSyntax classDeclaration,
             string platformName);
 
-        private static SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(
-            string controlClassFullName)
-        {
-#pragma warning disable SA1129 // Do not use default value type constructor
-            var viewConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
-#pragma warning restore SA1129 // Do not use default value type constructor
-            var viewForConstraint =
-                SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("global::ReactiveUI.IViewFor<TViewModel>"));
-
-            viewConstraints = viewConstraints
-                .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint))
-                .Add(viewForConstraint);
-            var viewConstraintClause = SyntaxFactory.TypeParameterConstraintClause(
-                SyntaxFactory.IdentifierName("TView"),
-                viewConstraints);
-
-            var reactiveObjectInterfaceConstraint =
-                SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("global::ReactiveUI.IReactiveObject"));
-#pragma warning disable SA1129 // Do not use default value type constructor
-            var viewModelConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
-#pragma warning restore SA1129 // Do not use default value type constructor
-            viewModelConstraints =
-                viewModelConstraints
-                    .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint))
-                    .Add(reactiveObjectInterfaceConstraint);
-            var viewModelConstraintClause = SyntaxFactory.TypeParameterConstraintClause(
-                SyntaxFactory.IdentifierName("TViewModel"),
-                viewModelConstraints);
-
-            var baseControlConstraint =
-                SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName(controlClassFullName));
-#pragma warning disable SA1129 // Do not use default value type constructor
-            var controlConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
-#pragma warning restore SA1129 // Do not use default value type constructor
-            controlConstraints =
-                controlConstraints
-                    .Add(baseControlConstraint);
-
-            var controlConstraintCluase = SyntaxFactory.TypeParameterConstraintClause(
-                SyntaxFactory.IdentifierName("TControl"),
-                controlConstraints);
-
-            var constraintClauses =
-                new SyntaxList<TypeParameterConstraintClauseSyntax>(new[] {viewConstraintClause, viewModelConstraintClause, controlConstraintCluase});
-            return constraintClauses;
-        }
+        protected abstract SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(
+            string controlClassFullName);
 
         private TypeParameterListSyntax GetTypeParameterListSyntax(INamedTypeSymbol namedTypeSymbol)
         {
