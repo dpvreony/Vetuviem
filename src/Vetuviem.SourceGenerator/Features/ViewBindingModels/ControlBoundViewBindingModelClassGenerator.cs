@@ -8,6 +8,11 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 {
     public class ControlBoundViewBindingModelClassGenerator : AbstractViewBindingModelClassGenerator
     {
+        protected override SyntaxTokenList GetClassModifiers(SyntaxTokenList modifiers)
+        {
+            return modifiers;
+        }
+
         protected override SyntaxList<MemberDeclarationSyntax> ApplyMembers(
             SyntaxList<MemberDeclarationSyntax> members,
             INamedTypeSymbol namedTypeSymbol,
@@ -16,6 +21,11 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             string controlClassFullName,
             string platformName)
         {
+            members = members.Add(GetApplyBindingsMethod(
+                namedTypeSymbol,
+                desiredCommandInterface,
+                platformName));
+
             return members;
         }
 
@@ -144,6 +154,41 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             }
 
             return sep;
+        }
+
+        private MemberDeclarationSyntax GetApplyBindingsMethod(
+            INamedTypeSymbol namedTypeSymbol,
+            string desiredCommandInterface,
+            string platformName)
+        {
+            const string methodName = "ApplyBindings";
+            var returnType = SyntaxFactory.ParseTypeName("void");
+            var args = new[] { "view", "viewModel", "this", "registerForDisposalAction", "this.VetuviemControlBindingExpression"};
+            var subNameSpace =
+                namedTypeSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
+                    .Replace("global::", string.Empty);
+
+            var baseViewBindingModelClassName =
+                $"global::ReactiveUI.{platformName}.ViewToViewModelBindingHelpers.{subNameSpace}.{namedTypeSymbol.Name}ViewBindingHelper";
+
+            var methodBody = new StatementSyntax[]
+            {
+                SyntaxFactory.ExpressionStatement(RoslynGenerationHelpers.GetStaticMethodInvocationSyntax(baseViewBindingModelClassName, "ApplyBinding", args, false)),
+            };
+
+            var parameters = RoslynGenerationHelpers.GetParams(new []
+            {
+                "TView view",
+                "TViewModel viewModel",
+                "global::System.Action<global::System.IDisposable> registerForDisposalAction",
+            });
+
+            var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+                    SyntaxFactory.Token(SyntaxKind.OverrideKeyword))
+                .WithParameterList(parameters)
+                .AddBodyStatements(methodBody);
+            return declaration;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             var controlClassFullName = namedTypeSymbol.GetFullName();
 
             var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+            modifiers = GetClassModifiers(modifiers);
 
             var constraintClauses = GetTypeParameterConstraintClauseSyntaxes(controlClassFullName);
 
@@ -50,6 +51,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                     controlClassFullName))
                 .WithMembers(members);
         }
+
+        protected abstract SyntaxTokenList GetClassModifiers(SyntaxTokenList modifiers);
 
         protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(SyntaxList<MemberDeclarationSyntax> members, INamedTypeSymbol namedTypeSymbol, string desiredCommandInterface, bool isDerivedType, string controlClassFullName, string platformName);
 
