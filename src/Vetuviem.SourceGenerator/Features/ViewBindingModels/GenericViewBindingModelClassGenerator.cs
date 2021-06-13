@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -30,6 +30,12 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 desiredCommandInterface,
                 isDerivedType,
                 controlClassFullName));
+
+            members = members.Add(GetApplyBindingsMethod(
+                namedTypeSymbol,
+                desiredCommandInterface,
+                platformName,
+                isDerivedType));
 
             return members;
         }
@@ -197,6 +203,89 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             }
 
             return sep;
+        }
+
+        private MemberDeclarationSyntax GetApplyBindingsMethod(
+            INamedTypeSymbol namedTypeSymbol,
+            string desiredCommandInterface,
+            string platformName,
+            bool isDerivedType)
+        {
+            const string methodName = "ApplyBindings";
+            var returnType = SyntaxFactory.ParseTypeName("void");
+
+            var methodBody = GetApplyBindingMethodBody(namedTypeSymbol, isDerivedType);
+
+            var parameters = RoslynGenerationHelpers.GetParams(new []
+            {
+                "TView view",
+                "TViewModel viewModel",
+                "global::System.Action<global::System.IDisposable> registerForDisposalAction",
+            });
+
+            var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+                    SyntaxFactory.Token(SyntaxKind.OverrideKeyword))
+                .WithParameterList(parameters)
+                .AddBodyStatements(methodBody);
+            return declaration;
+        }
+
+        private StatementSyntax[] GetApplyBindingMethodBody(INamedTypeSymbol namedTypeSymbol, bool isDerivedType)
+        {
+            var body = new List<StatementSyntax>();
+
+            var properties = namedTypeSymbol
+                .GetMembers()
+                .Where(x => x.Kind == SymbolKind.Property)
+                .ToArray();
+
+            if (isDerivedType)
+            {
+                var baseInvokeArgs = new[]
+                {
+                    "view",
+                    "viewModel",
+                    "registerForDisposalAction",
+                };
+                body.Add(SyntaxFactory.ExpressionStatement(RoslynGenerationHelpers.GetMethodOnVariableInvocationExpression("base", "ApplyBindings", baseInvokeArgs, false)));
+            }
+
+            var controlFullName = namedTypeSymbol.GetFullName();
+
+            foreach (var prop in properties)
+            {
+                var propertySymbol = prop as IPropertySymbol;
+
+                if (propertySymbol == null
+                    || propertySymbol.IsIndexer
+                    || propertySymbol.IsOverride
+                    || propertySymbol.DeclaredAccessibility != Accessibility.Public
+                    || propertySymbol.ExplicitInterfaceImplementations.Any())
+                {
+                    continue;
+                }
+
+                var propType = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+                var invokeArgs = new[]
+                    {
+                        "registerForDisposalAction",
+                        "view",
+                        "viewModel",
+                        $"global::Vetuviem.Core.ExpressionHelpers.GetControlPropertyExpressionFromViewExpression<TView, TControl, {propType}>(VetuviemControlBindingExpression, \"{propertySymbol.Name}\")",
+                    };
+
+                body.Add(RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
+                    $"this",
+                    propertySymbol.Name,
+                    "ApplyBinding",
+                    invokeArgs));
+            }
+
+
+
+            return body.ToArray();
         }
     }
 }

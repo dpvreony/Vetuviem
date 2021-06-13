@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Linq.Expressions;
-using System.Windows.Controls;
 using ReactiveUI.WPF.SampleApp.ViewBindingModels;
 using ReactiveUI.WPF.SampleApp.ViewModels;
-using ReactiveUI.Wpf.ViewToViewModelBindingHelpers.System.Windows.Controls;
-using ReactiveUI.Wpf.ViewToViewModelBindings.System.Windows.Controls;
-using Vetuviem.Core;
 
 namespace ReactiveUI.WPF.SampleApp.Views
 {
@@ -38,40 +33,6 @@ namespace ReactiveUI.WPF.SampleApp.Views
                     this.ViewModel,
                     action);
             }
-
-            // as we went to the trouble of producing a vbm, it should have an ApplyBinding() method on the IOneWay or IOneOrTwoWay interfaces
-            /*
-            vbm.ForenameTextBoxViewBindingModel.ApplyBinding(
-                this,
-                this.ViewModel,
-                action,
-                vw => vw.Forename);
-
-            vbm.ForenameTextBoxViewBindingModel.ApplyBinding(
-                this,
-                this.ViewModel,
-                action,
-                vw => vw.Surname);
-            */
         }
     }
-
-    //public static class VbmExtensions
-    //{
-    //    public static void ApplyBinding(
-    //        this TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel, TextBox> vbm,
-    //        QuestionnaireView view,
-    //        QuestionnaireViewModel viewModel,
-    //        Action<IDisposable> action,
-    //        Expression<Func<QuestionnaireView, TextBox>> control)
-    //    {
-    //        TextBoxViewBindingHelper.ApplyBinding(
-    //            view,
-    //            viewModel,
-    //            vbm,
-    //            action,
-    //            control);
-
-    //    }
-    //}
 }
