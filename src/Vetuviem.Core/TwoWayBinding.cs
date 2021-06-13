@@ -13,21 +13,21 @@ namespace Vetuviem.Core
     /// </summary>
     /// <typeparam name="TViewModel">The type for the ViewModel.</typeparam>
     /// <typeparam name="TViewProp">The type for the View.</typeparam>
-    public class TwoWayBindingWithConvertors<TViewModel, TViewProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
+    public class TwoWayBindingWithConvertors<TViewModel, TViewProp, TVMProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
         where TViewModel : class
     {
-        private readonly Expression<Func<TViewModel, TViewProp>> _viewModelBinding;
-        private readonly Func<TViewProp, TViewProp> _vmToViewConverter;
-        private readonly Func<TViewProp, TViewProp> _viewToVmConverter;
+        private readonly Expression<Func<TViewModel, TVMProp>> _viewModelBinding;
+        private readonly Func<TVMProp, TViewProp> _vmToViewConverter;
+        private readonly Func<TViewProp, TVMProp> _viewToVmConverter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TwoWayBinding{TViewModel, TViewProp}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
         public TwoWayBindingWithConvertors(
-            Expression<Func<TViewModel, TViewProp>> viewModelBinding,
-            Func<TViewProp, TViewProp> vmToViewConverter,
-            Func<TViewProp, TViewProp> viewToVmConverter)
+            Expression<Func<TViewModel, TVMProp>> viewModelBinding,
+            Func<TVMProp, TViewProp> vmToViewConverter,
+            Func<TViewProp, TVMProp> viewToVmConverter)
         {
             _viewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
             _vmToViewConverter = vmToViewConverter;

@@ -20,6 +20,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> ForenameLengthRemainingLabelViewBindingModel
             => GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.ForenameLengthRemaining,
+                vm => vm.ForenameLengthRemaining,
                 vm => vm.ForenameLengthRemaining);
 
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> SurnameTextBoxViewBindingModel
@@ -30,6 +31,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> SurnameLengthRemainingLabelViewBindingModel
             => GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.SurnameLengthRemaining,
+                vm => vm.SurnameLengthRemaining,
                 vm => vm.SurnameLengthRemaining);
 
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerOneTextBoxViewBindingModel
@@ -40,6 +42,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerOneRemainingLabelViewBindingModel
             => GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerOneLengthRemaining,
+                vm => vm.AnswerOneLengthRemaining,
                 vm => vm.AnswerOneLengthRemaining);
 
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerTwoTextBoxViewBindingModel
@@ -50,6 +53,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerTwoRemainingLabelViewBindingModel
             => GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerTwoLengthRemaining,
+                vm => vm.AnswerTwoLengthRemaining,
                 vm => vm.AnswerTwoLengthRemaining);
 
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerThreeTextBoxViewBindingModel
@@ -60,6 +64,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerThreeRemainingLabelViewBindingModel
             => GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerThreeLengthRemaining,
+                vm => vm.AnswerThreeLengthRemaining,
                 vm => vm.AnswerThreeLengthRemaining);
 
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFourTextBoxViewBindingModel
@@ -70,6 +75,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFourRemainingLabelViewBindingModel
             => GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerFourLengthRemaining,
+                vm => vm.AnswerFourLengthRemaining,
                 vm => vm.AnswerFourLengthRemaining);
 
         public TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFiveTextBoxViewBindingModel
@@ -80,7 +86,8 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         public LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> AnswerFiveRemainingLabelViewBindingModel
             => GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerFiveLengthRemaining,
-                vm => vm.AnswerFiveLengthRemaining);
+                vm => vm.AnswerFiveLengthRemaining,
+                vm => vm.AnswerFourLengthRemaining);
 
         public IEnumerable<IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
         {
@@ -109,14 +116,26 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 
         private LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardLengthRemainingLabelViewBindingModel(
             Expression<Func<QuestionnaireView, Label>> controlExpression,
-            Expression<Func<QuestionnaireViewModel, object>> viewModelNumberExpression)
+            Expression<Func<QuestionnaireViewModel, object>> viewModelObjectExpression,
+            Expression<Func<QuestionnaireViewModel, int>> viewModelNumberExpression)
         {
             return new(controlExpression)
             {
-                // TODO: explore the ability to pass in an object and not apply a vm convertor
-                Content = new OneWayBind<QuestionnaireViewModel, object>(viewModelNumberExpression, o => o.ToString()),
-                // TODO: explore the ability to pass in a type (int) and convert to brush
+                // TODO: explore the ability to pass in an object and not apply a vm convertor. this is doing boxing we can probably avoid
+                Content = new OneWayBind<QuestionnaireViewModel, object>(viewModelObjectExpression, o => o.ToString()),
+                Foreground = new OneWayBindingWithConversionOnOneOrTwoWay<QuestionnaireViewModel, Brush, int>(viewModelNumberExpression, lengthRemaining => GetBrushForLengthRemaining(lengthRemaining))
                 //Foreground = new OneWayBind<QuestionnaireViewModel, Brush>()
+            };
+        }
+
+        private static Brush GetBrushForLengthRemaining(int lengthRemaining)
+        {
+            return lengthRemaining switch
+            {
+                < 0 => Brushes.Red,
+                < 10 => Brushes.OrangeRed,
+                < 20 => Brushes.Orange,
+                _ => Brushes.Black
             };
         }
 
