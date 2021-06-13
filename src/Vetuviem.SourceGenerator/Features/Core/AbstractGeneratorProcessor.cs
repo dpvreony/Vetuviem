@@ -8,8 +8,7 @@ using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.GeneratorProcessors
 {
-    public abstract class AbstractGeneratorProcessor<TClassGenerator>
-        where TClassGenerator : IClassGenerator, new()
+    public abstract class AbstractGeneratorProcessor
     {
         public NamespaceDeclarationSyntax GenerateObjects(
             NamespaceDeclarationSyntax namespaceDeclaration,
@@ -40,6 +39,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             return namespaceDeclaration;
         }
 
+        protected abstract Func<IClassGenerator>[] GetClassGenerators();
+
         private NamespaceDeclarationSyntax CheckAssemblyForUiTypes(
             NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference metadataReference,
@@ -68,6 +69,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                 return namespaceDeclaration;
             }
 
+            var classGenerators = GetClassGenerators();
+
             // we skip building the global namespace as gives an empty name
             foreach (var namespaceMember in globalNamespace.GetNamespaceMembers())
             {
@@ -78,7 +81,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     desiredBaseTypeIsInterface,
                     previouslyGeneratedClasses,
                     desiredCommandInterface,
-                    platformName);
+                    platformName,
+                    classGenerators);
 
                 if (nestedDeclarationSyntax != null)
                 {
@@ -115,14 +119,15 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
             }
         }
 
-        private ClassDeclarationSyntax CheckTypeForUiType(
-            INamedTypeSymbol namedTypeSymbol,
+        private void CheckTypeForUiType(INamedTypeSymbol namedTypeSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
             IList<string> previouslyGeneratedClasses,
             string desiredCommandInterface,
-            string platformName)
+            string platformName,
+            Func<IClassGenerator>[] classGenerators,
+            List<MemberDeclarationSyntax> memberDeclarationSyntaxes)
         {
             var fullName = namedTypeSymbol.GetFullName();
 
@@ -132,12 +137,12 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                 var accessibility = namedTypeSymbol.DeclaredAccessibility;
                 if (accessibility != Accessibility.Public)
                 {
-                    return null;
+                    return;
                 }
             }
             catch
             {
-                return null;
+                return;
             }
 
             // ensure we inherit from our desired element.
@@ -150,28 +155,33 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                 !fullName.Equals(baseUiElement, StringComparison.Ordinal)) ||
                 previouslyGeneratedClasses.Any(pgc => pgc.Equals(fullName)))
             {
-                return null;
+                return;
             }
 
             previouslyGeneratedClasses.Add(fullName);
             reportDiagnosticAction(ReportDiagnostics.HasDesiredBaseType(baseUiElement, namedTypeSymbol));
-            var classGenerator = new TClassGenerator();
-            return classGenerator.GenerateClass(
-                namedTypeSymbol,
-                baseUiElement,
-                desiredCommandInterface,
-                platformName);
 
+            foreach (var classGeneratorFactory in classGenerators)
+            {
+                var generator = classGeneratorFactory();
+                var generatedClass = generator.GenerateClass(
+                    namedTypeSymbol,
+                    baseUiElement,
+                    desiredCommandInterface,
+                    platformName);
+
+                memberDeclarationSyntaxes.Add(generatedClass);
+            }
         }
 
-        private NamespaceDeclarationSyntax CheckNamespaceForUiTypes(
-            INamespaceSymbol namespaceSymbol,
+        private NamespaceDeclarationSyntax CheckNamespaceForUiTypes(INamespaceSymbol namespaceSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
             IList<string> previouslyGeneratedClasses,
             string desiredCommandInterface,
-            string platformName)
+            string platformName,
+            Func<IClassGenerator>[] classGenerators)
         {
             reportDiagnosticAction(ReportDiagnostics.StartingScanOfNamespace(namespaceSymbol));
 
@@ -181,19 +191,16 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
 
             foreach (var namedTypeSymbol in namedTypeSymbols)
             {
-                var classDeclaration = CheckTypeForUiType(
+                CheckTypeForUiType(
                     namedTypeSymbol,
                     reportDiagnosticAction,
                     baseUiElement,
                     desiredBaseTypeIsInterface,
                     previouslyGeneratedClasses,
                     desiredCommandInterface,
-                    platformName);
-
-                if (classDeclaration != null)
-                {
-                    nestedMembers.Add(classDeclaration);
-                }
+                    platformName,
+                    classGenerators,
+                    nestedMembers);
             }
 
             var nestedSymbols = namespaceSymbol.GetNamespaceMembers();
@@ -207,7 +214,8 @@ namespace Vetuviem.SourceGenerator.GeneratorProcessors
                     desiredBaseTypeIsInterface,
                     previouslyGeneratedClasses,
                     desiredCommandInterface,
-                    platformName);
+                    platformName,
+                    classGenerators);
 
                 if (nestedNamespace != null)
                 {

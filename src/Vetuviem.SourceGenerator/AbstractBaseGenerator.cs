@@ -17,10 +17,8 @@ namespace Vetuviem.SourceGenerator
     /// Base logic for a source generator.
     /// </summary>
     /// <typeparam name="TGeneratorProcessor"></typeparam>
-    /// <typeparam name="TClassGenerator"></typeparam>
-    public abstract class AbstractBaseGenerator<TGeneratorProcessor, TClassGenerator> : ISourceGenerator
-        where TGeneratorProcessor : AbstractGeneratorProcessor<TClassGenerator>, new()
-        where TClassGenerator : IClassGenerator, new()
+    public abstract class AbstractBaseGenerator<TGeneratorProcessor> : ISourceGenerator
+        where TGeneratorProcessor : AbstractGeneratorProcessor, new()
     {
         /// <inheritdoc />
         public void Initialize(GeneratorInitializationContext context)

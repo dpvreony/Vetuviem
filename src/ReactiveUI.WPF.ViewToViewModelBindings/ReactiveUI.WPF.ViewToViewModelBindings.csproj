@@ -13,6 +13,9 @@
     <!--<WarningsAsErrors>8032,8785</WarningsAsErrors>-->
     <TreatWarningsAsErrors />
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="ReactiveUI.WPF" Version="13.3.2" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ReactiveUI.WPF.VetuViemGenerator\ReactiveUI.WPF.VetuviemGenerator.csproj" OutputItemType="Analyzer" />

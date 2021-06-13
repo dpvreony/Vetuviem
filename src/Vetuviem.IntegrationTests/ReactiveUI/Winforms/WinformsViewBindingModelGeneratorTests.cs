@@ -16,7 +16,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Winforms
     public static class ViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WinformsViewBindingModelGenerator, ViewBindingModelGeneratorProcessor, ViewBindingModelClassGenerator>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WinformsViewBindingModelGenerator, ViewBindingModelGeneratorProcessor>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
