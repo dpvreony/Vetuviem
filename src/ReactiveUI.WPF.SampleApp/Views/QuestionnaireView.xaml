@@ -26,23 +26,30 @@
 
         <Label>Forename</Label>
         <TextBox Grid.Column="1" Grid.Row="0" Name="Forename" Width="120" />
+        <Label Grid.Column="2" Grid.Row="0" Name="ForenameLengthRemaining" Width="120">??</Label>
 
         <Label Grid.Column="0" Grid.Row="1">Surname</Label>
         <TextBox Grid.Column="1" Grid.Row="1" Name="Surname" Width="120" />
+        <Label Grid.Column="2" Grid.Row="1" Name="SurnameLengthRemaining" Width="120">??</Label>
 
         <Label Grid.Column="0" Grid.Row="2">Question 1</Label>
         <TextBox Grid.Column="1" Grid.Row="2" Name="AnswerOne" Width="120" />
+        <Label Grid.Column="2" Grid.Row="2" Name="AnswerOneLengthRemaining" Width="120">??</Label>
 
         <Label Grid.Column="0" Grid.Row="3">Question 2</Label>
         <TextBox Grid.Column="1" Grid.Row="3" Name="AnswerTwo" Width="120" />
+        <Label Grid.Column="2" Grid.Row="3" Name="AnswerTwoLengthRemaining" Width="120">??</Label>
 
         <Label Grid.Column="0" Grid.Row="4">Question 3</Label>
         <TextBox Grid.Column="1" Grid.Row="4" Name="AnswerThree" Width="120" />
+        <Label Grid.Column="2" Grid.Row="4" Name="AnswerThreeLengthRemaining" Width="120">??</Label>
 
         <Label Grid.Column="0" Grid.Row="5">Question 4</Label>
         <TextBox Grid.Column="1" Grid.Row="5" Name="AnswerFour" Width="120" />
+        <Label Grid.Column="2" Grid.Row="5" Name="AnswerFourLengthRemaining" Width="120">??</Label>
 
         <Label Grid.Column="0" Grid.Row="6">Question 5</Label>
         <TextBox Grid.Column="1" Grid.Row="6" Name="AnswerFive" Width="120" />
+        <Label Grid.Column="2" Grid.Row="6" Name="AnswerFiveLengthRemaining" Width="120">??</Label>
     </Grid>
 </local:ReactiveQuestionnaireWindow>
