@@ -21,6 +21,7 @@ namespace ReactiveUI.WPF.VetuviemGenerator
                 "PresentationFramework.Luna.dll",
                 "PresentationFramework.Royale.dll",
                 "PresentationUI.dll",
+                "ReactiveUI.Wpf.dll",
             };
         }
 

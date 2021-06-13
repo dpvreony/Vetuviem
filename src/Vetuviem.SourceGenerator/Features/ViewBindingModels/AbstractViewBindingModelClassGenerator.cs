@@ -127,6 +127,13 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         {
             foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
             {
+                if (typeParameterSymbol.Name.Equals("TViewModel"))
+                {
+                    // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
+                    // in theory they should be the same type anyway, but not guaranteed.
+                    continue;
+                }
+
                 yield return SyntaxFactory.TypeParameter(typeParameterSymbol.Name);
             }
         }
@@ -135,6 +142,13 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         {
             foreach (var typeParameterSymbol in baseClass.TypeArguments)
             {
+                if (typeParameterSymbol.Name.Equals("TViewModel"))
+                {
+                    // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
+                    // in theory they should be the same type anyway, but not guaranteed.
+                    continue;
+                }
+
                 yield return SyntaxFactory.ParseTypeName(typeParameterSymbol.ToDisplayString());
             }
         }

@@ -18,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReactiveUI.WPF.VetuViemGenerator\ReactiveUI.WPF.VetuviemGenerator.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\ReactiveUI.WPF.VetuViemGenerator\ReactiveUI.WPF.VetuviemGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
+
 </Project>
