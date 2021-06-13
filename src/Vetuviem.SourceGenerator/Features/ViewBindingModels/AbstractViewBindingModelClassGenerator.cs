@@ -137,8 +137,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             var controlConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
             controlConstraints =
-                viewModelConstraints
-                    .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint))
+                controlConstraints
                     .Add(baseControlConstraint);
 
             var controlConstraintCluase = SyntaxFactory.TypeParameterConstraintClause(

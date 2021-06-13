@@ -171,8 +171,6 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 SyntaxFactory.ExpressionStatement(RoslynGenerationHelpers.GetStaticMethodInvocationSyntax(baseViewBindingModelClassName, "ApplyBinding", args, false)),
             };
 
-            var isOverride = false;
-
             var parameters = RoslynGenerationHelpers.GetParams(new []
             {
                 "TView view",
@@ -182,7 +180,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
             var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
-                    SyntaxFactory.Token(isOverride ? SyntaxKind.OverrideKeyword : SyntaxKind.VirtualKeyword))
+                    SyntaxFactory.Token(SyntaxKind.OverrideKeyword))
                 .WithParameterList(parameters)
                 .AddBodyStatements(methodBody);
             return declaration;

@@ -98,7 +98,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         {
             var viewForParameter = SyntaxFactory.ParseTypeName("TView");
             var viewModelParameter = SyntaxFactory.ParseTypeName("TViewModel");
-            var controlParameter = SyntaxFactory.ParseTypeName("TControl");
+            var controlParameter = SyntaxFactory.ParseTypeName(namedTypeSymbol.GetFullName());
 #pragma warning disable SA1129 // Do not use default value type constructor
             var sep = new SeparatedSyntaxList<TypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
