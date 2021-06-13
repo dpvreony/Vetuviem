@@ -69,7 +69,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
                     .Replace("global::", string.Empty);
 
             var baseViewBindingModelClassName =
-                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.{namedTypeSymbol.Name}ViewBindingModel";
+                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.Unbound{namedTypeSymbol.Name}ViewBindingModel";
 
             // TODO: make use of the type params method, need to remove a lot of this parsing stuff
             var genericArg = namedTypeSymbol.IsGenericType ? ",T" : string.Empty;
@@ -78,7 +78,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             {
                 "TView view",
                 "TViewModel viewModel",
-                $"{baseViewBindingModelClassName}<TView, TViewModel{genericArg}> viewBindingModel",
+                $"{baseViewBindingModelClassName}<TView, TViewModel,{controlType}{genericArg}> viewBindingModel",
                 "global::System.Action<global::System.IDisposable> registerForDisposalAction",
                 $"global::System.Linq.Expressions.Expression<global::System.Func<TView, {controlType}>> control",
             });
@@ -139,11 +139,15 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingHelpers
             // TODO: add a call to the base controls binding helper.
             // these classes are all static helpers so it's not a base.ApplyBindings()
             // it was done so not doing loads of ctor's during binding.
+            // removed the upstream as the generics and having this in split class is causing headaches.
+            // might be worth bringing the generators together.
+            /*
             AddUpstreamStaticClassInvocationIfRequired(
                 body,
                 namedTypeSymbol,
                 baseUiElement,
                 platformName);
+            */
 
             var controlFullName = namedTypeSymbol.GetFullName();
 
