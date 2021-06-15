@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Reactive;
+using System.Threading.Tasks;
 
 namespace ReactiveUI.WPF.SampleApp.ViewModels
 {
@@ -55,6 +57,13 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             _answerFiveLengthRemaining = GetLengthRemainingObservable(
                 vm => vm.AnswerFive,
                 vm => vm.AnswerFiveLengthRemaining);
+
+            LaunchInteraction = ReactiveCommand.CreateFromTask(() => OnLaunchInteraction());
+        }
+
+        private Task<Unit> OnLaunchInteraction()
+        {
+            return Task.FromResult(Unit.Default);
         }
 
         public string Forename
@@ -64,6 +73,8 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         }
 
         public int ForenameLengthRemaining => this._forenameLengthRemaining.Value;
+
+        public ReactiveCommand<Unit, Unit> LaunchInteraction { get; set; }
 
         public string Surname
         {
