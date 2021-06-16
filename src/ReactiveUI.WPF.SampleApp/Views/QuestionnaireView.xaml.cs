@@ -21,18 +21,12 @@ namespace ReactiveUI.WPF.SampleApp.Views
             this.WhenActivated(action => this.OnWhenActivated(action));
         }
 
-        private void OnWhenActivated(Action<IDisposable> action)
+        private void OnWhenActivated(Action<IDisposable> disposeWithAction)
         {
-            // this is still an investigation piece as the next bit to make more usable.
-            var vbm = new QuestionnaireViewBindingModels();
-            var bindings = vbm.GetBindings();
-            foreach (var viewBindingModel in bindings)
-            {
-                viewBindingModel.ApplyBindings(
-                    this,
-                    this.ViewModel,
-                    action);
-            }
+            new QuestionnaireViewBindingModels().ApplyBindings(
+                disposeWithAction,
+                this,
+                this.ViewModel);
         }
     }
 }

@@ -10,9 +10,9 @@ using Vetuviem.Core;
 
 namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 {
-    public sealed class QuestionnaireViewBindingModels : IEnableViewToViewModelBindings<QuestionnaireView, QuestionnaireViewModel>
+    public sealed class QuestionnaireViewBindingModels : AbstractEnableViewToViewModelBindings<QuestionnaireView, QuestionnaireViewModel>
     {
-        public IEnumerable<IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
+        protected override IEnumerable<IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
         {
             // Forename
             yield return GetStandardTextBoxViewModel(
