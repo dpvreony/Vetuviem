@@ -14,6 +14,12 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
     {
         protected override IEnumerable<IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
         {
+            // launch interaction
+            yield return new ButtonViewBindingModel<QuestionnaireView, QuestionnaireViewModel>(vw => vw.LaunchInteraction)
+            {
+                Command = new CommandBinding<QuestionnaireViewModel>(vm => vm.LaunchInteraction)
+            };
+
             // Forename
             yield return GetStandardTextBoxViewModel(
                 vw => vw.Forename,

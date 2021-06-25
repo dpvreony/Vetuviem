@@ -146,7 +146,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             if (!string.IsNullOrWhiteSpace(desiredCommandInterface))
             {
                 var propType = prop.Type;
-                var isCommand = propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface));
+                var isCommand = propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Equals(desiredCommandInterface)
+                    || propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface));
                 if (isCommand)
                 {
                     return "ICommandBinding";

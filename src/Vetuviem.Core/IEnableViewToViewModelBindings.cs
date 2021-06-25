@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ReactiveUI;
 
 namespace Vetuviem.Core
