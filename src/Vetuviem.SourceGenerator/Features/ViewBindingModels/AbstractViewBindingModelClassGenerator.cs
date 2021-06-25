@@ -119,24 +119,26 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
             foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
             {
-#pragma warning disable SA1129 // Do not use default value type constructor
-                var newTypeParameterContraint = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
-#pragma warning restore SA1129 // Do not use default value type constructor
+                if (typeParameterSymbol.Name.Equals("TViewModel"))
+                {
+                    // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
+                    // in theory they should be the same type anyway, but not guaranteed.
+                    continue;
+                }
+
+                var typeParameterConstraintSyntaxList = new List<TypeParameterConstraintSyntax>();
 
                 var hasReferenceTypeConstraint = typeParameterSymbol.HasReferenceTypeConstraint;
                 if (hasReferenceTypeConstraint)
                 {
-                    newTypeParameterContraint =
-                        newTypeParameterContraint
-                            .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
+                    typeParameterConstraintSyntaxList.Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
                 }
+
 
                 var constraintTypes = typeParameterSymbol.ConstraintTypes;
                 foreach (var constraintType in constraintTypes)
                 {
-                    newTypeParameterContraint =
-                        newTypeParameterContraint
-                            .Add(SyntaxFactory.TypeConstraint(
+                    typeParameterConstraintSyntaxList.Add(SyntaxFactory.TypeConstraint(
                                 SyntaxFactory.ParseTypeName(constraintType.ToDisplayString(
                                     SymbolDisplayFormat.FullyQualifiedFormat))));
                 }
@@ -156,6 +158,12 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                             .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
                 }
 #endif
+                if (typeParameterConstraintSyntaxList.Count < 1)
+                {
+                    continue;
+                }
+
+                var newTypeParameterContraint = SyntaxFactory.SeparatedList(typeParameterConstraintSyntaxList);
 
                 var newTypeParameterConstraintClause = SyntaxFactory.TypeParameterConstraintClause(
                     SyntaxFactory.IdentifierName(typeParameterSymbol.Name),
