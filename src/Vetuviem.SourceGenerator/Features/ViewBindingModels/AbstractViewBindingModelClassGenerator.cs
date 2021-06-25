@@ -23,7 +23,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
             modifiers = GetClassModifiers(modifiers);
 
-            var constraintClauses = GetTypeParameterConstraintClauseSyntaxes(controlClassFullName);
+            var constraintClauses = GetTypeParameterConstraintClauseSyntaxes(controlClassFullName, namedTypeSymbol);
 
             var classNameIdentifier = GetClassNameIdentifier(namedTypeSymbol);
 
@@ -106,7 +106,64 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             string platformName);
 
         protected abstract SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(
-            string controlClassFullName);
+            string controlClassFullName,
+            INamedTypeSymbol namedTypeSymbol);
+
+        protected void ApplyTypeConstraintsFromNamedTypedSymbol(INamedTypeSymbol namedTypeSymbol,
+            List<TypeParameterConstraintClauseSyntax> typeParameterConstraintClauseSyntaxList)
+        {
+            if (!namedTypeSymbol.IsGenericType)
+            {
+                return;
+            }
+
+            foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
+            {
+#pragma warning disable SA1129 // Do not use default value type constructor
+                var newTypeParameterContraint = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
+#pragma warning restore SA1129 // Do not use default value type constructor
+
+                var hasReferenceTypeConstraint = typeParameterSymbol.HasReferenceTypeConstraint;
+                if (hasReferenceTypeConstraint)
+                {
+                    newTypeParameterContraint =
+                        newTypeParameterContraint
+                            .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
+                }
+
+                var constraintTypes = typeParameterSymbol.ConstraintTypes;
+                foreach (var constraintType in constraintTypes)
+                {
+                    newTypeParameterContraint =
+                        newTypeParameterContraint
+                            .Add(SyntaxFactory.TypeConstraint(
+                                SyntaxFactory.ParseTypeName(constraintType.ToDisplayString(
+                                    SymbolDisplayFormat.FullyQualifiedFormat))));
+                }
+
+#if TODO
+                var constraintNullableAnnotations = typeParameterSymbol.ConstraintNullableAnnotations;
+                var hasConstructorConstraint = typeParameterSymbol.HasConstructorConstraint;
+                var hasNotNullConstraint = typeParameterSymbol.HasNotNullConstraint;
+                var hasUnmanagedTypeConstraint = typeParameterSymbol.HasUnmanagedTypeConstraint;
+                var hasValueTypeConstraint = typeParameterSymbol.HasValueTypeConstraint;
+
+                var referenceTypeConstraintNullableAnnotation = typeParameterSymbol.ReferenceTypeConstraintNullableAnnotation;
+                if (referenceTypeConstraintNullableAnnotation == NullableAnnotation.Annotated)
+                {
+                    newTypeParameterContraint =
+                        newTypeParameterContraint
+                            .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
+                }
+#endif
+
+                var newTypeParameterConstraintClause = SyntaxFactory.TypeParameterConstraintClause(
+                    SyntaxFactory.IdentifierName(typeParameterSymbol.Name),
+                    newTypeParameterContraint);
+
+                typeParameterConstraintClauseSyntaxList.Add(newTypeParameterConstraintClause);
+            }
+        }
 
         private TypeParameterListSyntax GetTypeParameterListSyntax(INamedTypeSymbol namedTypeSymbol)
         {
