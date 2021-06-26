@@ -15,6 +15,7 @@ namespace ReactiveUI.Blazor.VetuviemGenerator
                 "Microsoft.AspNetCore.Components.dll",
                 "Microsoft.AspNetCore.Components.Forms.dll",
                 "Microsoft.AspNetCore.Components.Web.dll",
+                "ReactiveUI.Blazor.dll",
             };
         }
 

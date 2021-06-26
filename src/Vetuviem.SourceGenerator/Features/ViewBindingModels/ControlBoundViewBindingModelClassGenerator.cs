@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -89,7 +90,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         }
 
 
-        protected override SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(string controlClassFullName)
+        protected override SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(
+            string controlClassFullName, INamedTypeSymbol namedTypeSymbol)
         {
 #pragma warning disable SA1129 // Do not use default value type constructor
             var viewConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
@@ -117,8 +119,18 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 SyntaxFactory.IdentifierName("TViewModel"),
                 viewModelConstraints);
 
+            var typeParameterConstraintClauseSyntaxList =
+                new List<TypeParameterConstraintClauseSyntax>
+                {
+                    viewConstraintClause, viewModelConstraintClause
+                };
+
+            ApplyTypeConstraintsFromNamedTypedSymbol(
+                namedTypeSymbol,
+                typeParameterConstraintClauseSyntaxList);
+
             var constraintClauses =
-                new SyntaxList<TypeParameterConstraintClauseSyntax>(new[] {viewConstraintClause, viewModelConstraintClause});
+                new SyntaxList<TypeParameterConstraintClauseSyntax>(typeParameterConstraintClauseSyntaxList);
             return constraintClauses;
         }
 

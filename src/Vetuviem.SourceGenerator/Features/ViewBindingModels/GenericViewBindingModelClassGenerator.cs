@@ -136,7 +136,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             return classDeclaration;
         }
 
-        protected override SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(string controlClassFullName)
+        protected override SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(
+            string controlClassFullName, INamedTypeSymbol namedTypeSymbol)
         {
 #pragma warning disable SA1129 // Do not use default value type constructor
             var viewConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
@@ -177,8 +178,18 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 SyntaxFactory.IdentifierName("TControl"),
                 controlConstraints);
 
+            var typeParameterConstraintClauseSyntaxList =
+                new List<TypeParameterConstraintClauseSyntax>
+                {
+                    viewConstraintClause, viewModelConstraintClause, controlConstraintCluase
+                };
+
+            ApplyTypeConstraintsFromNamedTypedSymbol(
+                namedTypeSymbol,
+                typeParameterConstraintClauseSyntaxList);
+
             var constraintClauses =
-                new SyntaxList<TypeParameterConstraintClauseSyntax>(new[] {viewConstraintClause, viewModelConstraintClause, controlConstraintCluase});
+                new SyntaxList<TypeParameterConstraintClauseSyntax>(typeParameterConstraintClauseSyntaxList);
             return constraintClauses;
         }
 
