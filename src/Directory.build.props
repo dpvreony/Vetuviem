@@ -30,6 +30,7 @@
 	<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
 	<WarningsAsErrors />
 	-->
+	<Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsTestProject)">
