@@ -34,6 +34,12 @@ namespace Vetuviem.SourceGenerator
 
                 var memberDeclarationSyntax = GenerateAsync(context, CancellationToken.None);
 
+                var nullableDirectiveTrivia = SyntaxFactory.NullableDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.EnableKeyword), true);
+                var trivia = SyntaxFactory.Trivia(nullableDirectiveTrivia);
+                var leadingSyntaxTriviaList = SyntaxFactory.TriviaList(trivia);
+
+                memberDeclarationSyntax = memberDeclarationSyntax.WithLeadingTrivia(leadingSyntaxTriviaList);
+
                 var parseOptions = context.ParseOptions;
 
                 var cu = SyntaxFactory.CompilationUnit()

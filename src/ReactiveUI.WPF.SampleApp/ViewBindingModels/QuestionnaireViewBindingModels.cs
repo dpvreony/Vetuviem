@@ -82,7 +82,6 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
                 vw => vw.AnswerFiveLengthRemaining,
                 vm => vm.AnswerFiveLengthRemaining,
                 vm => vm.AnswerFourLengthRemaining);
-
         }
 
         private LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardLengthRemainingLabelViewBindingModel(
@@ -93,7 +92,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
             return new(controlExpression)
             {
                 // TODO: explore the ability to pass in an object and not apply a vm convertor. this is doing boxing we can probably avoid
-                Content = new OneWayBind<QuestionnaireViewModel, object>(viewModelObjectExpression, o => o.ToString()),
+                Content = new OneWayBind<QuestionnaireViewModel, object>(viewModelObjectExpression, o => o?.ToString()),
                 Foreground = new OneWayBindingWithConversionOnOneOrTwoWay<QuestionnaireViewModel, Brush, int>(viewModelNumberExpression, lengthRemaining => GetBrushForLengthRemaining(lengthRemaining))
                 //Foreground = new OneWayBind<QuestionnaireViewModel, Brush>()
             };
