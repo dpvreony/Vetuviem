@@ -217,16 +217,6 @@ namespace Vetuviem.SourceGenerator
 
         protected abstract MetadataReference CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest);
 
-        private static string[] GetPlatformAssemblyPaths(GeneratorExecutionContext context)
-        {
-            if (AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") is string trustedPlatformAssemblies)
-            {
-                return trustedPlatformAssemblies.Split(Path.PathSeparator);
-            }
-
-            return null;
-        }
-
         /// <summary>
         /// Gets the root namespace to place the generated code inside.
         /// </summary>

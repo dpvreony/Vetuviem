@@ -58,7 +58,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 {
                     SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
-                    SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration)
+                    SyntaxFactory.AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
                 };
 
@@ -135,7 +135,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 desiredCommandInterface);
 
             var returnType = prop.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.{bindingName}<TViewModel, {returnType}>");
+            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.{bindingName}<TViewModel, {returnType}>?");
             return type;
         }
 
