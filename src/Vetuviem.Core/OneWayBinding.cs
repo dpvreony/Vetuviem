@@ -31,6 +31,7 @@ namespace Vetuviem.Core
             get;
         }
 
+        /// <inheritdoc/>
         public void ApplyBinding<TView>(
             Action<IDisposable> d,
             TView view,
@@ -83,6 +84,7 @@ namespace Vetuviem.Core
             get;
         }
 
+        /// <inheritdoc/>
         public void ApplyBinding<TView>(
             Action<IDisposable> d,
             TView view,
@@ -101,7 +103,6 @@ namespace Vetuviem.Core
                 viewBinding,
                 Selector));
         }
-
     }
 
     /// <summary>

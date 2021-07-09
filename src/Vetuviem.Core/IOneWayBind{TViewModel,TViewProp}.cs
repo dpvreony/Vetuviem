@@ -19,7 +19,7 @@ namespace Vetuviem.Core
         /// <summary>
         /// Gets the binding to apply between the ViewModel and the View.
         /// </summary>
-        Expression<Func<TViewModel, TViewProp>> ViewModelBinding { get; }
+        Expression<Func<TViewModel, TViewProp?>> ViewModelBinding { get; }
 
         /// <summary>
         /// Applies a View to View Model Binding.
