@@ -25,7 +25,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return SyntaxFactory.ParameterList(parameters);
         }
 
-        public static AttributeArgumentListSyntax GetAttributeArgumentListSyntax(IList<string> attributeArguments)
+        public static AttributeArgumentListSyntax? GetAttributeArgumentListSyntax(IList<string> attributeArguments)
         {
             if (attributeArguments == null || attributeArguments.Count < 1)
             {
