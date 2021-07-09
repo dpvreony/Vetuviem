@@ -31,6 +31,8 @@
 	<WarningsAsErrors />
 	-->
 	<Nullable>enable</Nullable>
+	<Packable>false</Packable>
+	<Packable Condition="$(IsTestProject) != 'true' and $(MSBuildProjectName.StartsWith('Vetuviem.'))">false</Packable>
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsTestProject)">
