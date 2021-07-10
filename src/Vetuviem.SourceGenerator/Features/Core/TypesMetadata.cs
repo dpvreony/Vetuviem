@@ -7,7 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Pharmacist.Core.Generation
+namespace Vetuviem.SourceGenerator.Features.Core
 {
     /// <summary>
     ///     Contains metadata about types.

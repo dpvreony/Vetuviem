@@ -9,9 +9,8 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.SourceGenerator.GeneratorProcessors
+namespace Vetuviem.SourceGenerator.Features.Core
 {
     public abstract class AbstractGeneratorProcessor
     {

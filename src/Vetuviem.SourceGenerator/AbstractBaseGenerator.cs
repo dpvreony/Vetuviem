@@ -9,7 +9,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Vetuviem.SourceGenerator.Features.Core;
-using Vetuviem.SourceGenerator.GeneratorProcessors;
 
 namespace Vetuviem.SourceGenerator
 {

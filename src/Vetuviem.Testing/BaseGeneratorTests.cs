@@ -9,7 +9,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Extensions.Logging;
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
-using Vetuviem.SourceGenerator.GeneratorProcessors;
 using Xunit;
 using Xunit.Abstractions;
 

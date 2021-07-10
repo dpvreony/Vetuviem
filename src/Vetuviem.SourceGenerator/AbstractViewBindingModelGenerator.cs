@@ -1,5 +1,4 @@
 ﻿using Vetuviem.SourceGenerator.Features.ViewBindingModels;
-using Vetuviem.SourceGenerator.GeneratorProcessors;
 
 namespace Vetuviem.SourceGenerator
 {

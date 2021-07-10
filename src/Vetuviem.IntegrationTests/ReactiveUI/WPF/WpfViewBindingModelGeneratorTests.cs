@@ -4,7 +4,6 @@ using System.IO;
 using Microsoft.CodeAnalysis;
 using ReactiveUI.WPF.VetuviemGenerator;
 using Vetuviem.SourceGenerator.Features.ViewBindingModels;
-using Vetuviem.SourceGenerator.GeneratorProcessors;
 using Vetuviem.Testing;
 using Xunit.Abstractions;
 
