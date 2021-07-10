@@ -41,6 +41,11 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             return $"Unbound{namedTypeSymbol.Name}ViewBindingModel";
         }
 
+        protected override string GetConstructorSummaryText(string className)
+        {
+            return  $"Initializes a new instance of the <see cref=\"{className}{{TView, TViewModel, TControl, TValue}}\"/> class.";
+        }
+
         protected override List<StatementSyntax> GetConstructorBody(bool isDerivedType)
         {
             var body = new List<StatementSyntax>();
@@ -235,7 +240,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
                     SyntaxFactory.Token(SyntaxKind.OverrideKeyword))
                 .WithParameterList(parameters)
-                .AddBodyStatements(methodBody);
+                .AddBodyStatements(methodBody)
+                .WithLeadingTrivia(XmlSyntaxFactory.InheritdocSyntax);
             return declaration;
         }
 

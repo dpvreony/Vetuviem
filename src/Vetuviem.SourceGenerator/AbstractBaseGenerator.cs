@@ -38,6 +38,12 @@ namespace Vetuviem.SourceGenerator
                 var trivia = SyntaxFactory.Trivia(nullableDirectiveTrivia);
                 var leadingSyntaxTriviaList = SyntaxFactory.TriviaList(trivia);
 
+
+                if (memberDeclarationSyntax == null)
+                {
+                    return;
+                }
+
                 memberDeclarationSyntax = memberDeclarationSyntax.WithLeadingTrivia(leadingSyntaxTriviaList);
 
                 var parseOptions = context.ParseOptions;
@@ -54,15 +60,6 @@ namespace Vetuviem.SourceGenerator
                         encoding: Encoding.UTF8)
                     .GetText();
 
-                //var logRoot = SyntaxFactory.CompilationUnit();
-
-                //var logFileSourceText = SyntaxFactory.SyntaxTree(
-                //        logRoot,
-                //        parseOptions,
-                //        encoding: Encoding.UTF8)
-                //    .GetText();
-
-                // var logFileHintName = $"{feature}.{guid}.g.log.txt";
                 var hintName = $"{feature}.g.cs";
 
                 context.AddSource(

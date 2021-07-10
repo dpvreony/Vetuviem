@@ -84,15 +84,23 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 SyntaxKind.BaseConstructorInitializer,
                 baseInitializerArgumentList);
 
+            var summaryText = GetConstructorSummaryText(className);
+            var summaryParameters = new (string paramName, string paramText)[]
+            {
+                ("viewExpression", "expression representing the control on the view to bind to.")
+            };
 
             var declaration = SyntaxFactory.ConstructorDeclaration(className)
                 .WithInitializer(initializer)
                 .WithParameterList(parameters)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
-                .AddBodyStatements(body.ToArray());
+                .AddBodyStatements(body.ToArray())
+                .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummaryComment(summaryText, summaryParameters));
 
             return declaration;
         }
+
+        protected abstract string GetConstructorSummaryText(string className);
 
         protected abstract List<StatementSyntax> GetConstructorBody(bool isDerivedType);
 
@@ -119,7 +127,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
             foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
             {
-                if (typeParameterSymbol.Name.Equals("TViewModel"))
+                if (typeParameterSymbol.Name.Equals("TViewModel", StringComparison.Ordinal))
                 {
                     // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
                     // in theory they should be the same type anyway, but not guaranteed.
@@ -192,7 +200,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         {
             foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
             {
-                if (typeParameterSymbol.Name.Equals("TViewModel"))
+                if (typeParameterSymbol.Name.Equals("TViewModel", StringComparison.Ordinal))
                 {
                     // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
                     // in theory they should be the same type anyway, but not guaranteed.
@@ -207,7 +215,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         {
             foreach (var typeParameterSymbol in baseClass.TypeArguments)
             {
-                if (typeParameterSymbol.Name.Equals("TViewModel"))
+                if (typeParameterSymbol.Name.Equals("TViewModel", StringComparison.Ordinal))
                 {
                     // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
                     // in theory they should be the same type anyway, but not guaranteed.

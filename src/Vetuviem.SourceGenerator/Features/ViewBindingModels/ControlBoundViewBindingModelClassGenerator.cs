@@ -30,6 +30,11 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             return $"{namedTypeSymbol.Name}ViewBindingModel";
         }
 
+        protected override string GetConstructorSummaryText(string className)
+        {
+            return $"Initializes a new instance of the <see cref=\"{className}{{TView, TViewModel, TValue}}\"/> class.";
+        }
+
         protected override List<StatementSyntax> GetConstructorBody(bool isDerivedType)
         {
             var body = new List<StatementSyntax>();
