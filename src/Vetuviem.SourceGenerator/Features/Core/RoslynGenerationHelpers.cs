@@ -117,7 +117,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="fieldName"></param>
         /// <param name="methodName"></param>
         /// <returns></returns>
-        public static LocalDeclarationStatementSyntax GetVariableAssignmentFromMethodOnFieldSyntax(string variableName, string fieldName, string methodName, string[] args, bool isAsync)
+        public static LocalDeclarationStatementSyntax GetVariableAssignmentFromMethodOnFieldSyntax(string variableName, string fieldName, string methodName, string[] args)
         {
             var fieldMemberAccess = SyntaxFactory.MemberAccessExpression(
                   SyntaxKind.SimpleMemberAccessExpression,

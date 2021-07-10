@@ -22,9 +22,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         /// <returns>List of property declarations.</returns>
         public static SyntaxList<MemberDeclarationSyntax> GetProperties(
             INamedTypeSymbol namedTypeSymbol,
-            string desiredCommandInterface,
-            bool isDerivedType,
-            string controlClassFullName)
+            string desiredCommandInterface)
         {
             var properties = namedTypeSymbol
                 .GetMembers()

@@ -33,6 +33,8 @@
 	<Nullable>enable</Nullable>
 	<Packable>false</Packable>
 	<Packable Condition="$(IsTestProject) != 'true' and $(MSBuildProjectName.StartsWith('Vetuviem.'))">false</Packable>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+	<RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode>
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsTestProject)">
@@ -70,5 +72,9 @@
   <ItemGroup>
     <None Include="..\..\readme.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
+  
+  <!-- Net Analyzers config taken from : https://docs.microsoft.com/en-gb/visualstudio/code-quality/migrate-from-fxcop-analyzers-to-net-analyzers?view=vs-2019 -->
+  <PropertyGroup>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>
 </Project>
-
