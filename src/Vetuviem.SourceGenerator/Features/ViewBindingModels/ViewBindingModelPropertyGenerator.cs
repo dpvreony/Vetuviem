@@ -22,9 +22,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         /// <returns>List of property declarations.</returns>
         public static SyntaxList<MemberDeclarationSyntax> GetProperties(
             INamedTypeSymbol namedTypeSymbol,
-            string desiredCommandInterface,
-            bool isDerivedType,
-            string controlClassFullName)
+            string desiredCommandInterface)
         {
             var properties = namedTypeSymbol
                 .GetMembers()
@@ -58,7 +56,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 {
                     SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
-                    SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration)
+                    SyntaxFactory.AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
                 };
 
@@ -135,7 +133,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 desiredCommandInterface);
 
             var returnType = prop.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.{bindingName}<TViewModel, {returnType}>");
+            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.{bindingName}<TViewModel, {returnType}>?");
             return type;
         }
 
@@ -146,8 +144,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             if (!string.IsNullOrWhiteSpace(desiredCommandInterface))
             {
                 var propType = prop.Type;
-                var isCommand = propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Equals(desiredCommandInterface)
-                    || propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface));
+                var isCommand = propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Equals(desiredCommandInterface, StringComparison.Ordinal)
+                    || propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal));
                 if (isCommand)
                 {
                     return "ICommandBinding";

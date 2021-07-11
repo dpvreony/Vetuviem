@@ -20,17 +20,18 @@ namespace Vetuviem.Core
         /// Initializes a new instance of the <see cref="OneWayBinding{TViewModel, TViewProp}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
-        public OneWayBinding(Expression<Func<TViewModel, TViewProp>> viewModelBinding)
+        public OneWayBinding(Expression<Func<TViewModel, TViewProp?>> viewModelBinding)
         {
             ViewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
         }
 
         /// <inheritdoc/>
-        public Expression<Func<TViewModel, TViewProp>> ViewModelBinding
+        public Expression<Func<TViewModel, TViewProp?>> ViewModelBinding
         {
             get;
         }
 
+        /// <inheritdoc/>
         public void ApplyBinding<TView>(
             Action<IDisposable> d,
             TView view,
@@ -65,7 +66,7 @@ namespace Vetuviem.Core
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
         /// <param name="selector">Conversion selector function.</param>
         public OneWayBindingWithConversion(
-            Expression<Func<TViewModel, TViewProp>> viewModelBinding,
+            Expression<Func<TViewModel, TViewProp?>> viewModelBinding,
             Func<TViewProp, TOut> selector)
         {
             ViewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
@@ -78,11 +79,12 @@ namespace Vetuviem.Core
         public Func<TViewProp, TOut> Selector { get; }
 
         /// <inheritdoc/>
-        public Expression<Func<TViewModel, TViewProp>> ViewModelBinding
+        public Expression<Func<TViewModel, TViewProp?>> ViewModelBinding
         {
             get;
         }
 
+        /// <inheritdoc/>
         public void ApplyBinding<TView>(
             Action<IDisposable> d,
             TView view,
@@ -101,7 +103,6 @@ namespace Vetuviem.Core
                 viewBinding,
                 Selector));
         }
-
     }
 
     /// <summary>
@@ -119,8 +120,8 @@ namespace Vetuviem.Core
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
         /// <param name="selector">Conversion selector function.</param>
         public OneWayBindingWithConversionOnOneOrTwoWay(
-            Expression<Func<TViewModel, TVMProp>> viewModelBinding,
-            Func<TVMProp, TViewProp> selector)
+            Expression<Func<TViewModel, TVMProp?>> viewModelBinding,
+            Func<TVMProp?, TViewProp> selector)
         {
             ViewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
             Selector = selector ?? throw new ArgumentNullException(nameof(selector));
@@ -129,10 +130,10 @@ namespace Vetuviem.Core
         /// <summary>
         /// Gets the conversion selector function.
         /// </summary>
-        public Func<TVMProp, TViewProp> Selector { get; }
+        public Func<TVMProp?, TViewProp> Selector { get; }
 
         /// <inheritdoc/>
-        public Expression<Func<TViewModel, TVMProp>> ViewModelBinding
+        public Expression<Func<TViewModel, TVMProp?>> ViewModelBinding
         {
             get;
         }

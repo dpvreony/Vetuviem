@@ -27,14 +27,10 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         {
             members = members.AddRange(ViewBindingModelPropertyGenerator.GetProperties(
                 namedTypeSymbol,
-                desiredCommandInterface,
-                isDerivedType,
-                controlClassFullName));
+                desiredCommandInterface));
 
             members = members.Add(GetApplyBindingsMethod(
                 namedTypeSymbol,
-                desiredCommandInterface,
-                platformName,
                 isDerivedType));
 
             return members;
@@ -43,6 +39,11 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         protected override string GetClassNameIdentifier(INamedTypeSymbol namedTypeSymbol)
         {
             return $"Unbound{namedTypeSymbol.Name}ViewBindingModel";
+        }
+
+        protected override string GetConstructorSummaryText(string className)
+        {
+            return  $"Initializes a new instance of the <see cref=\"{className}{{TView, TViewModel, TControl, TValue}}\"/> class.";
         }
 
         protected override List<StatementSyntax> GetConstructorBody(bool isDerivedType)
@@ -105,9 +106,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 return classDeclaration;
             }
 
-            var typeParameters = GetTypeArgumentListSyntax(
-                namedTypeSymbol,
-                baseClass);
+            var typeParameters = GetTypeArgumentListSyntax(baseClass);
 
             // we dont use the full name of the type symbol as if the class is generic you end up with the type args in it.
             var subNameSpace =
@@ -193,19 +192,17 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             return constraintClauses;
         }
 
-        private static TypeArgumentListSyntax GetTypeArgumentListSyntax(INamedTypeSymbol namedTypeSymbol, INamedTypeSymbol baseClass)
+        private static TypeArgumentListSyntax GetTypeArgumentListSyntax(INamedTypeSymbol baseClass)
         {
 #pragma warning disable SA1129 // Do not use default value type constructor
-            var sep = GetTypeArgumentSeparatedSyntaxList(namedTypeSymbol, baseClass);
+            var sep = GetTypeArgumentSeparatedSyntaxList(baseClass);
 #pragma warning restore SA1129 // Do not use default value type constructor
             var typeArgumentList = SyntaxFactory.TypeArgumentList(sep);
 
             return typeArgumentList;
         }
 
-        private static SeparatedSyntaxList<TypeSyntax> GetTypeArgumentSeparatedSyntaxList(
-            INamedTypeSymbol namedTypeSymbol,
-            INamedTypeSymbol baseClass)
+        private static SeparatedSyntaxList<TypeSyntax> GetTypeArgumentSeparatedSyntaxList(INamedTypeSymbol baseClass)
         {
             var viewForParameter = SyntaxFactory.ParseTypeName("TView");
             var viewModelParameter = SyntaxFactory.ParseTypeName("TViewModel");
@@ -225,8 +222,6 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
         private MemberDeclarationSyntax GetApplyBindingsMethod(
             INamedTypeSymbol namedTypeSymbol,
-            string desiredCommandInterface,
-            string platformName,
             bool isDerivedType)
         {
             const string methodName = "ApplyBindings";
@@ -245,7 +240,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
                     SyntaxFactory.Token(SyntaxKind.OverrideKeyword))
                 .WithParameterList(parameters)
-                .AddBodyStatements(methodBody);
+                .AddBodyStatements(methodBody)
+                .WithLeadingTrivia(XmlSyntaxFactory.InheritdocSyntax);
             return declaration;
         }
 

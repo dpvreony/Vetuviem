@@ -9,7 +9,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Vetuviem.SourceGenerator.Features.Core;
-using Vetuviem.SourceGenerator.GeneratorProcessors;
 
 namespace Vetuviem.SourceGenerator
 {
@@ -32,7 +31,19 @@ namespace Vetuviem.SourceGenerator
             {
                 context.ReportDiagnostic(ReportDiagnostics.StartingSourceGenerator());
 
-                var memberDeclarationSyntax = GenerateAsync(context, CancellationToken.None);
+                var memberDeclarationSyntax = GenerateAsync(context, context.CancellationToken);
+
+                var nullableDirectiveTrivia = SyntaxFactory.NullableDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.EnableKeyword), true);
+                var trivia = SyntaxFactory.Trivia(nullableDirectiveTrivia);
+                var leadingSyntaxTriviaList = SyntaxFactory.TriviaList(trivia);
+
+
+                if (memberDeclarationSyntax == null)
+                {
+                    return;
+                }
+
+                memberDeclarationSyntax = memberDeclarationSyntax.WithLeadingTrivia(leadingSyntaxTriviaList);
 
                 var parseOptions = context.ParseOptions;
 
@@ -48,15 +59,6 @@ namespace Vetuviem.SourceGenerator
                         encoding: Encoding.UTF8)
                     .GetText();
 
-                //var logRoot = SyntaxFactory.CompilationUnit();
-
-                //var logFileSourceText = SyntaxFactory.SyntaxTree(
-                //        logRoot,
-                //        parseOptions,
-                //        encoding: Encoding.UTF8)
-                //    .GetText();
-
-                // var logFileHintName = $"{feature}.{guid}.g.log.txt";
                 var hintName = $"{feature}.g.cs";
 
                 context.AddSource(
@@ -77,10 +79,15 @@ namespace Vetuviem.SourceGenerator
         /// <param name="context">The transformation context being generated for.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The generated member syntax to be added to the project.</returns>
-        private MemberDeclarationSyntax GenerateAsync(
+        private MemberDeclarationSyntax? GenerateAsync(
             GeneratorExecutionContext context,
             CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return null;
+            }
+
             var namespaceName = GetNamespace();
 
             var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(namespaceName));
@@ -102,6 +109,11 @@ namespace Vetuviem.SourceGenerator
 
             var assembliesOfInterest = platformResolver.GetAssemblyNames();
 
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return null;
+            }
+
             var referencesOfInterest = GetReferencesOfInterest(
                 compilation.References,
                 assembliesOfInterest).ToArray();
@@ -112,25 +124,6 @@ namespace Vetuviem.SourceGenerator
                 return namespaceDeclaration;
             }
 
-            /*
-            var missingAssemblies = assembliesOfInterest.ToList();
-
-            foreach (MetadataReference metadataReference in references)
-            {
-            }
-
-
-            foreach (string trustedAssembliesPath in trustedAssembliesPaths)
-            {
-                if (assembliesOfInterest.All(assemblyOfInterest => !trustedAssembliesPath.EndsWith(assemblyOfInterest, StringComparison.Ordinal)))
-                {
-                    continue;
-                }
-
-                var metadataReference = MetadataReference.CreateFromFile(trustedAssembliesPath);
-                compilation = compilation.AddReferences(metadataReference);
-            }
-            */
             var desiredBaseType = platformResolver.GetBaseUiElement();
             var desiredNameWithoutGlobal = desiredBaseType.Replace("global::", string.Empty);
             var desiredBaseTypeSymbolMatch = compilation.GetTypeByMetadataName(desiredNameWithoutGlobal);
@@ -140,7 +133,6 @@ namespace Vetuviem.SourceGenerator
                 context.ReportDiagnostic(ReportDiagnostics.FailedToFindDesiredBaseTypeSymbol(desiredBaseType));
                 return namespaceDeclaration;
             }
-
 
             // blazor uses an interface, so we check once to drive different inheritance check.
             var desiredBaseTypeIsInterface = false;
@@ -210,16 +202,6 @@ namespace Vetuviem.SourceGenerator
         }
 
         protected abstract MetadataReference CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest);
-
-        private static string[] GetPlatformAssemblyPaths(GeneratorExecutionContext context)
-        {
-            if (AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") is string trustedPlatformAssemblies)
-            {
-                return trustedPlatformAssemblies.Split(Path.PathSeparator);
-            }
-
-            return null;
-        }
 
         /// <summary>
         /// Gets the root namespace to place the generated code inside.

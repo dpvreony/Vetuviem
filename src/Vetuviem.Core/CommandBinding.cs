@@ -9,8 +9,8 @@ namespace Vetuviem.Core
     public sealed class CommandBinding<TViewModel> : ICommandBinding<TViewModel, ICommand>
         where TViewModel : class
     {
-        private readonly Expression<Func<TViewModel, ReactiveCommand<Unit, Unit>>> _viewModelBinding;
-        private readonly string _toEvent;
+        private readonly Expression<Func<TViewModel, ReactiveCommand<Unit, Unit>?>> _viewModelBinding;
+        private readonly string? _toEvent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandBinding{TViewModel}"/> class.
@@ -18,10 +18,10 @@ namespace Vetuviem.Core
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
         /// <param name="toEvent">If specified, bind to the specific event instead of the default.</param>
         public CommandBinding(
-            Expression<Func<TViewModel, ReactiveCommand<Unit, Unit>>> viewModelBinding,
-            string toEvent = null)
+            Expression<Func<TViewModel, ReactiveCommand<Unit, Unit>?>> viewModelBinding,
+            string? toEvent = null)
         {
-            _viewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
+            _viewModelBinding = viewModelBinding;
             _toEvent = toEvent;
         }
 

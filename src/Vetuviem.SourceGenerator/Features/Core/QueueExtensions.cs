@@ -5,7 +5,7 @@
 
 using System.Collections.Generic;
 
-namespace Pharmacist.Core.Utilities
+namespace Vetuviem.SourceGenerator.Features.Core
 {
     /// <summary>
     /// Helper methods with queues.

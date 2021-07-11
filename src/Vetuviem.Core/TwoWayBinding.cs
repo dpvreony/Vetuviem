@@ -17,8 +17,8 @@ namespace Vetuviem.Core
     public class TwoWayBindingWithConvertors<TViewModel, TViewProp, TViewModelProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
         where TViewModel : class
     {
-        private readonly Expression<Func<TViewModel, TViewModelProp>> _viewModelBinding;
-        private readonly Func<TViewModelProp, TViewProp> _vmToViewConverter;
+        private readonly Expression<Func<TViewModel, TViewModelProp?>> _viewModelBinding;
+        private readonly Func<TViewModelProp?, TViewProp> _vmToViewConverter;
         private readonly Func<TViewProp, TViewModelProp> _viewToVmConverter;
 
         /// <summary>
@@ -26,8 +26,8 @@ namespace Vetuviem.Core
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
         public TwoWayBindingWithConvertors(
-            Expression<Func<TViewModel, TViewModelProp>> viewModelBinding,
-            Func<TViewModelProp, TViewProp> vmToViewConverter,
+            Expression<Func<TViewModel, TViewModelProp?>> viewModelBinding,
+            Func<TViewModelProp?, TViewProp> vmToViewConverter,
             Func<TViewProp, TViewModelProp> viewToVmConverter)
         {
             _viewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
@@ -65,13 +65,13 @@ namespace Vetuviem.Core
     public class TwoWayBinding<TViewModel, TViewProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
         where TViewModel : class
     {
-        private readonly Expression<Func<TViewModel, TViewProp>> _viewModelBinding;
+        private readonly Expression<Func<TViewModel, TViewProp?>> _viewModelBinding;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TwoWayBinding{TViewModel, TViewProp}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
-        public TwoWayBinding(Expression<Func<TViewModel, TViewProp>> viewModelBinding)
+        public TwoWayBinding(Expression<Func<TViewModel, TViewProp?>> viewModelBinding)
         {
             _viewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
         }

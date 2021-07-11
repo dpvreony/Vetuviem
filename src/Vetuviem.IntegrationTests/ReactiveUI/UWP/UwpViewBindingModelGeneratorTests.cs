@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using ReactiveUI.UWP.VetuviemGenerator;
 using Vetuviem.SourceGenerator.Features.ViewBindingModels;
-using Vetuviem.SourceGenerator.GeneratorProcessors;
 using Vetuviem.Testing;
 using Xunit.Abstractions;
 
