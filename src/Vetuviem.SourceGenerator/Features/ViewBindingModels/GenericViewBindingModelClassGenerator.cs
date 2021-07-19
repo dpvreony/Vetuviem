@@ -31,7 +31,8 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
             members = members.Add(GetApplyBindingsMethod(
                 namedTypeSymbol,
-                isDerivedType));
+                isDerivedType,
+                desiredCommandInterface));
 
             return members;
         }
@@ -222,12 +223,16 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
         private MemberDeclarationSyntax GetApplyBindingsMethod(
             INamedTypeSymbol namedTypeSymbol,
-            bool isDerivedType)
+            bool isDerivedType,
+            string desiredCommandInterface)
         {
             const string methodName = "ApplyBindings";
             var returnType = SyntaxFactory.ParseTypeName("void");
 
-            var methodBody = GetApplyBindingMethodBody(namedTypeSymbol, isDerivedType);
+            var methodBody = GetApplyBindingMethodBody(
+                namedTypeSymbol,
+                isDerivedType,
+                desiredCommandInterface);
 
             var parameters = RoslynGenerationHelpers.GetParams(new []
             {
@@ -245,7 +250,10 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             return declaration;
         }
 
-        private StatementSyntax[] GetApplyBindingMethodBody(INamedTypeSymbol namedTypeSymbol, bool isDerivedType)
+        private StatementSyntax[] GetApplyBindingMethodBody(
+            INamedTypeSymbol namedTypeSymbol,
+            bool isDerivedType,
+            string desiredCommandInterface)
         {
             var body = new List<StatementSyntax>();
 
@@ -266,6 +274,10 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             }
 
             var controlFullName = namedTypeSymbol.GetFullName();
+
+            var commandBindingStatements = new List<StatementSyntax>(properties.Length);
+            var oneWayBindingStatements = new List<StatementSyntax>(properties.Length);
+            var twoWayBindingStatements = new List<StatementSyntax>(properties.Length);
 
             foreach (var prop in properties)
             {
@@ -290,16 +302,55 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                         $"global::Vetuviem.Core.ExpressionHelpers.GetControlPropertyExpressionFromViewExpression<TView, TControl, {propType}>(VetuviemControlBindingExpression, \"{propertySymbol.Name}\")",
                     };
 
-                body.Add(RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
+                var invocationStatement = RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
                     $"this",
                     propertySymbol.Name,
                     "ApplyBinding",
-                    invokeArgs));
+                    invokeArgs);
+
+                AddInvocationStatementToRelevantCollection(
+                    propertySymbol,
+                    desiredCommandInterface,
+                    invocationStatement,
+                    commandBindingStatements,
+                    oneWayBindingStatements,
+                    twoWayBindingStatements);
             }
 
-
+            body.AddRange(commandBindingStatements);
+            body.AddRange(oneWayBindingStatements);
+            body.AddRange(twoWayBindingStatements);
 
             return body.ToArray();
+        }
+
+        private static void AddInvocationStatementToRelevantCollection(
+            IPropertySymbol prop,
+            string desiredCommandInterface,
+            StatementSyntax invocation,
+            ICollection<StatementSyntax> commandBindingStatements,
+            ICollection<StatementSyntax> oneWayBindingStatements,
+            ICollection<StatementSyntax> twoWayBindingStatements)
+        {
+            if (!string.IsNullOrWhiteSpace(desiredCommandInterface))
+            {
+                var propType = prop.Type;
+                var isCommand = propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Equals(desiredCommandInterface, StringComparison.Ordinal)
+                                || propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal));
+                if (isCommand)
+                {
+                    commandBindingStatements.Add(invocation);
+                    return;
+                }
+            }
+
+            if (prop.IsReadOnly)
+            {
+                oneWayBindingStatements.Add(invocation);
+                return;
+            }
+
+            twoWayBindingStatements.Add(invocation);
         }
     }
 }

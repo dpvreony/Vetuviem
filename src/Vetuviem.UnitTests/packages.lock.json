@@ -2,6 +2,15 @@
   "version": 1,
   "dependencies": {
     ".NETCoreApp,Version=v5.0": {
+      "GitHubActionsTestLogger": {
+        "type": "Direct",
+        "requested": "[1.2.0, )",
+        "resolved": "1.2.0",
+        "contentHash": "HLj7RTXSx4ROyAZeKveJ8suw8bWXkVIOZj8D83e8Tg/xQvyzpgsvIYq7tV2SfpC7SAhgCVORQBu/2lF7MuQ5Wg==",
+        "dependencies": {
+          "Microsoft.TestPlatform.ObjectModel": "16.8.3"
+        }
+      },
       "Microsoft.NET.Test.Sdk": {
         "type": "Direct",
         "requested": "[16.10.0, )",
