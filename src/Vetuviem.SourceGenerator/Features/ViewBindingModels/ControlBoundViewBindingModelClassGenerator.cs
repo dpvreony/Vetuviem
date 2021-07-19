@@ -167,7 +167,5 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
             return sep;
         }
-
-
     }
 }
