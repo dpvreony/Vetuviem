@@ -1,5 +1,5 @@
 # Vetuviem
-Vetuvium is a DSL to support View to View Model binding (MVVM -> V2VM -> Ve-Tu-Viem) aimed at offering a structure to get more re-usability out of ReactiveUI.
+Vetuvium is a toolkit to support View to View Model binding (MVVM -> V2VM -> Ve-Tu-Viem) aimed at offering a structure to get more re-usability out of ReactiveUI.
 
 ## Mission Statement
 * To give a mechanism to reduce the amount of boiler plate code being produced, by allowing some of the ReactiveUI specific logic to be hidden away
@@ -9,6 +9,10 @@ Vetuvium is a DSL to support View to View Model binding (MVVM -> V2VM -> Ve-Tu-V
   * Removing the risk of misusing 1 way or 2 way binding
   * Remove the need for the user to think about having to cater for Bind vs BindCommand
 * Offer a structure that allows for more work to be done potentially with Source Generators to reduce reflection and improve the build time developer experience.
+
+## Current Status
+
+This is currently a proof of concept alpha. For understanding of the design reasoning please see https://www.dpvreony.com/articles/designing-vetuviem/
 
 ## Nuget Packages
 
