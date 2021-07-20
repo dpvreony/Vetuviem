@@ -1,15 +1,15 @@
 <Project>
   <PropertyGroup>
     <Company>DPVreony and Contributors</Company>
-	<StartYear>2020</StartYear>
-	<Copyright>© $(StartYear)-$([System.DateTime]::Now.Year) $(Company)</Copyright>
+    <StartYear>2020</StartYear>
+    <Copyright>© $(StartYear)-$([System.DateTime]::Now.Year) $(Company)</Copyright>
     <Product>Vetuviem ($(TargetFramework))</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>dpvreony</Authors>
     <Owners>dpvreony</Owners>
     <PackageTags>Source Generation</PackageTags>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/dpvreony/nucleotide</RepositoryUrl>
+    <RepositoryUrl>https://github.com/dpvreony/vetuviem</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>$(RepositoryUrl)/releases</PackageReleaseNotes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
