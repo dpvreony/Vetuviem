@@ -84,7 +84,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
                 vm => vm.AnswerFourLengthRemaining);
         }
 
-        private LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardLengthRemainingLabelViewBindingModel(
+        private static LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardLengthRemainingLabelViewBindingModel(
             Expression<Func<QuestionnaireView, Label>> controlExpression,
             Expression<Func<QuestionnaireViewModel, object>> viewModelObjectExpression,
             Expression<Func<QuestionnaireViewModel, int>> viewModelNumberExpression)

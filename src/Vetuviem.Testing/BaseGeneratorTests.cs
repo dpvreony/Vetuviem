@@ -18,7 +18,7 @@ namespace Vetuviem.Testing
     /// Unit Tests for a Source Generator.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class BaseGeneratorTests
+    public static class BaseGeneratorTests
     {
         /// <summary>
         /// Unit Tests for the Execute Method.
@@ -78,7 +78,7 @@ namespace Vetuviem.Testing
             /// from the csproj file, but you need to do it yourself in a test.
             /// </summary>
             /// <param name="metadataReferences"></param>
-            protected abstract void AddReferenceAssemblies(List<MetadataReference> metadataReferences);
+            protected abstract void AddReferenceAssemblies(IList<MetadataReference> metadataReferences);
 
             /// <summary>
             /// Gets the factory method for creating a source generator.

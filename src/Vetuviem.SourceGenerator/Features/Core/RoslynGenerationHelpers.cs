@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -223,7 +224,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         {
             var parameterIdentifier = SyntaxFactory.IdentifierName(SyntaxFactory.Identifier(parameterName));
             var condition = SyntaxFactory.BinaryExpression(SyntaxKind.LessThanExpression, parameterIdentifier,
-                SyntaxFactory.ParseExpression(minimumValue.ToString()));
+                SyntaxFactory.ParseExpression(minimumValue.ToString(NumberFormatInfo.InvariantInfo)));
 
             var returnStatement = SyntaxFactory.ReturnStatement(SyntaxFactory.ParseExpression(returnName));
             return SyntaxFactory.IfStatement(condition, returnStatement);

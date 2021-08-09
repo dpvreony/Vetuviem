@@ -27,7 +27,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Winforms
             }
 
             /// <inheritdoc />
-            protected override void AddReferenceAssemblies(List<MetadataReference> metadataReferences)
+            protected override void AddReferenceAssemblies(IList<MetadataReference> metadataReferences)
             {
                 var trustedAssembliesPaths = GetPlatformAssemblyPaths();
                 foreach (string trustedAssembliesPath in trustedAssembliesPaths)

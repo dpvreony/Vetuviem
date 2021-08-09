@@ -61,7 +61,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             LaunchInteraction = ReactiveCommand.CreateFromTask(() => OnLaunchInteraction());
         }
 
-        private Task<Unit> OnLaunchInteraction()
+        private static Task<Unit> OnLaunchInteraction()
         {
             return Task.FromResult(Unit.Default);
         }

@@ -110,7 +110,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return namespaceDeclaration;
         }
 
-        private INamespaceSymbol? GetGlobalNamespace(ISymbol assemblyOrModuleSymbol)
+        private static INamespaceSymbol? GetGlobalNamespace(ISymbol assemblyOrModuleSymbol)
         {
             switch (assemblyOrModuleSymbol)
             {
@@ -123,7 +123,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             }
         }
 
-        private void CheckTypeForUiType(INamedTypeSymbol namedTypeSymbol,
+        private static void CheckTypeForUiType(INamedTypeSymbol namedTypeSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
@@ -144,7 +144,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     return;
                 }
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch
+#pragma warning restore CA1031 // Do not catch general exception types
             {
                 return;
             }
@@ -157,7 +159,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
                      desiredBaseTypeIsInterface,
                      namedTypeSymbol) &&
                 !fullName.Equals(baseUiElement, StringComparison.Ordinal)) ||
-                previouslyGeneratedClasses.Any(pgc => pgc.Equals(fullName)))
+                previouslyGeneratedClasses.Any(pgc => pgc.Equals(fullName, StringComparison.Ordinal)))
             {
                 return;
             }
@@ -240,7 +242,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return null;
         }
 
-        private bool HasDesiredBaseType(
+        private static bool HasDesiredBaseType(
             string desiredBaseType,
             bool desiredBaseTypeIsInterface,
             INamedTypeSymbol namedTypeSymbol)

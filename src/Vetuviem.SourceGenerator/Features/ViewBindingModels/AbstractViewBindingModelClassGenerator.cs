@@ -102,7 +102,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
         protected abstract string GetConstructorSummaryText(string className);
 
-        protected abstract List<StatementSyntax> GetConstructorBody(bool isDerivedType);
+        protected abstract IReadOnlyCollection<StatementSyntax> GetConstructorBody(bool isDerivedType);
 
         protected abstract string GetConstructorControlTypeName(INamedTypeSymbol namedTypeSymbol);
 
@@ -117,8 +117,9 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             string controlClassFullName,
             INamedTypeSymbol namedTypeSymbol);
 
-        protected void ApplyTypeConstraintsFromNamedTypedSymbol(INamedTypeSymbol namedTypeSymbol,
-            List<TypeParameterConstraintClauseSyntax> typeParameterConstraintClauseSyntaxList)
+        protected static void ApplyTypeConstraintsFromNamedTypedSymbol(
+            INamedTypeSymbol namedTypeSymbol,
+            IList<TypeParameterConstraintClauseSyntax> typeParameterConstraintClauseSyntaxList)
         {
             if (!namedTypeSymbol.IsGenericType)
             {

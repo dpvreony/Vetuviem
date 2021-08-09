@@ -47,7 +47,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             return  $"Initializes a new instance of the <see cref=\"{className}{{TView, TViewModel, TControl, TValue}}\"/> class.";
         }
 
-        protected override List<StatementSyntax> GetConstructorBody(bool isDerivedType)
+        protected override IReadOnlyCollection<StatementSyntax> GetConstructorBody(bool isDerivedType)
         {
             var body = new List<StatementSyntax>();
             return body;
@@ -221,7 +221,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             return sep;
         }
 
-        private MemberDeclarationSyntax GetApplyBindingsMethod(
+        private static MemberDeclarationSyntax GetApplyBindingsMethod(
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string desiredCommandInterface)
@@ -250,7 +250,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             return declaration;
         }
 
-        private StatementSyntax[] GetApplyBindingMethodBody(
+        private static StatementSyntax[] GetApplyBindingMethodBody(
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string desiredCommandInterface)
