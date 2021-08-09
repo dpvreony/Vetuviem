@@ -19,7 +19,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             string platformName);
     }
 }

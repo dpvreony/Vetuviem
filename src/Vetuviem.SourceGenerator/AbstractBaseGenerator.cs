@@ -73,6 +73,10 @@ namespace Vetuviem.SourceGenerator
             }
         }
 
+        /// <summary>
+        /// Gets the name of the platform used in the namespaces for the generated code.
+        /// </summary>
+        /// <returns>Name identifier for the platform.</returns>
         protected abstract string GetPlatformName();
 
         /// <summary>
@@ -203,7 +207,7 @@ namespace Vetuviem.SourceGenerator
             }
         }
 
-        protected abstract MetadataReference CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest);
+        protected abstract MetadataReference? CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest);
 
         /// <summary>
         /// Gets the root namespace to place the generated code inside.

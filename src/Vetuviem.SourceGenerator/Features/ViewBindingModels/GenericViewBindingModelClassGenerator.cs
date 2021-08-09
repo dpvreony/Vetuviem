@@ -20,7 +20,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         protected override SyntaxList<MemberDeclarationSyntax> ApplyMembers(
             SyntaxList<MemberDeclarationSyntax> members,
             INamedTypeSymbol namedTypeSymbol,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             bool isDerivedType,
             string controlClassFullName,
             string platformName)
@@ -224,7 +224,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         private static MemberDeclarationSyntax GetApplyBindingsMethod(
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
-            string desiredCommandInterface)
+            string? desiredCommandInterface)
         {
             const string methodName = "ApplyBindings";
             var returnType = SyntaxFactory.ParseTypeName("void");
@@ -253,7 +253,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         private static StatementSyntax[] GetApplyBindingMethodBody(
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
-            string desiredCommandInterface)
+            string? desiredCommandInterface)
         {
             var body = new List<StatementSyntax>();
 
@@ -326,7 +326,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
         private static void AddInvocationStatementToRelevantCollection(
             IPropertySymbol prop,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             StatementSyntax invocation,
             ICollection<StatementSyntax> commandBindingStatements,
             ICollection<StatementSyntax> oneWayBindingStatements,

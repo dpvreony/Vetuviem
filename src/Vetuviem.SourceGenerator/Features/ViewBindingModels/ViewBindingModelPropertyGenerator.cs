@@ -22,7 +22,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         /// <returns>List of property declarations.</returns>
         public static SyntaxList<MemberDeclarationSyntax> GetProperties(
             INamedTypeSymbol namedTypeSymbol,
-            string desiredCommandInterface)
+            string? desiredCommandInterface)
         {
             var properties = namedTypeSymbol
                 .GetMembers()
@@ -109,7 +109,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             IPropertySymbol prop,
             AccessorDeclarationSyntax[] accessorList,
             IEnumerable<SyntaxTrivia> summary,
-            string desiredCommandInterface)
+            string? desiredCommandInterface)
         {
             TypeSyntax type = GetBindingTypeSyntax(prop, desiredCommandInterface);
 
@@ -126,7 +126,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
         private static TypeSyntax GetBindingTypeSyntax(
             IPropertySymbol prop,
-            string desiredCommandInterface)
+            string? desiredCommandInterface)
         {
             string bindingName = GetBindingInterfaceName(
                 prop,
@@ -139,7 +139,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
         private static string GetBindingInterfaceName(
             IPropertySymbol prop,
-            string desiredCommandInterface)
+            string? desiredCommandInterface)
         {
             if (!string.IsNullOrWhiteSpace(desiredCommandInterface))
             {

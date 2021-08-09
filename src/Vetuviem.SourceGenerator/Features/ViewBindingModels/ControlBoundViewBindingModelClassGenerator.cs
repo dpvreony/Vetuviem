@@ -17,7 +17,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         protected override SyntaxList<MemberDeclarationSyntax> ApplyMembers(
             SyntaxList<MemberDeclarationSyntax> members,
             INamedTypeSymbol namedTypeSymbol,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             bool isDerivedType,
             string controlClassFullName,
             string platformName)

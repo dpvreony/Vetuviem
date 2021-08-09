@@ -21,6 +21,6 @@
         /// Gets the fully qualified type that platform uses for commands.
         /// </summary>
         /// <returns>Fully qualified type name, or null if no command implementation in the platform.</returns>
-        string GetCommandInterface();
+        string? GetCommandInterface();
     }
 }

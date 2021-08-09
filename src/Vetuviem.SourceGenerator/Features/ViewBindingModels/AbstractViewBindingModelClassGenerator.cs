@@ -13,7 +13,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         public ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             string platformName)
         {
             var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
@@ -54,7 +54,10 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
         protected abstract SyntaxTokenList GetClassModifiers(SyntaxTokenList modifiers);
 
-        protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(SyntaxList<MemberDeclarationSyntax> members, INamedTypeSymbol namedTypeSymbol, string desiredCommandInterface, bool isDerivedType, string controlClassFullName, string platformName);
+        protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(
+            SyntaxList<MemberDeclarationSyntax> members,
+            INamedTypeSymbol namedTypeSymbol,
+            string? desiredCommandInterface, bool isDerivedType, string controlClassFullName, string platformName);
 
         protected abstract string GetClassNameIdentifier(INamedTypeSymbol namedTypeSymbol);
 

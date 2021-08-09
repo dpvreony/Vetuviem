@@ -21,7 +21,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             Action<Diagnostic> reportDiagnosticAction,
             string desiredBaseType,
             bool desiredBaseTypeIsInterface,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             string platformName)
         {
             var previouslyGeneratedClasses = new List<string>();
@@ -53,7 +53,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
             IList<string> previouslyGeneratedClasses,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             string platformName)
         {
             reportDiagnosticAction(ReportDiagnostics.StartingScanOfAssembly(metadataReference));
@@ -128,7 +128,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
             IList<string> previouslyGeneratedClasses,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             string platformName,
             Func<IClassGenerator>[] classGenerators,
             List<MemberDeclarationSyntax> memberDeclarationSyntaxes)
@@ -185,7 +185,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
             IList<string> previouslyGeneratedClasses,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             string platformName,
             Func<IClassGenerator>[] classGenerators)
         {

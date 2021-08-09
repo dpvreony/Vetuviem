@@ -7,6 +7,9 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
 {
     public sealed class QuestionnaireViewModel : ReactiveObject
     {
+        // this is here to remove the warning to make a property static if it's direct on the property instead of in a variable.
+        private readonly int _maxLength = 50;
+
         private string _forename;
         private readonly ObservableAsPropertyHelper<int> _forenameLengthRemaining;
 
@@ -124,7 +127,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
 
         public int AnswerFiveLengthRemaining => this._answerFiveLengthRemaining.Value;
 
-        public int MaxLength => 50;
+        public int MaxLength => _maxLength;
 
         private ObservableAsPropertyHelper<int> GetLengthRemainingObservable(
             Expression<Func<QuestionnaireViewModel, string>> stringInputExpression,
