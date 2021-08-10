@@ -24,6 +24,36 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string? desiredCommandInterface,
             string platformName)
         {
+            if (namespaceDeclaration == null)
+            {
+                throw new ArgumentNullException(nameof(namespaceDeclaration));
+            }
+
+            if (assembliesOfInterest == null)
+            {
+                throw new ArgumentNullException(nameof(assembliesOfInterest));
+            }
+
+            if (compilation == null)
+            {
+                throw new ArgumentNullException(nameof(compilation));
+            }
+
+            if (reportDiagnosticAction == null)
+            {
+                throw new ArgumentNullException(nameof(reportDiagnosticAction));
+            }
+
+            if (string.IsNullOrWhiteSpace(desiredBaseType))
+            {
+                throw new ArgumentNullException(nameof(desiredBaseType));
+            }
+
+            if (string.IsNullOrWhiteSpace(platformName))
+            {
+                throw new ArgumentNullException(nameof(platformName));
+            }
+
             var previouslyGeneratedClasses = new List<string>();
 
             foreach (var metadataReference in assembliesOfInterest)
