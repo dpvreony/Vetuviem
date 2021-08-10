@@ -28,9 +28,8 @@
     <EnableSourceControlManagerQueries>$(EnableSourceLink)</EnableSourceControlManagerQueries>
 	<!--
 	<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-	<WarningsAsErrors />
-	-->
 	<WarningsAsErrors>nullable</WarningsAsErrors>
+	-->
 	<Nullable>enable</Nullable>
 	<Packable>false</Packable>
 	<Packable Condition="$(IsTestProject) != 'true' and $(MSBuildProjectName.StartsWith('Vetuviem.'))">false</Packable>

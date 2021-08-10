@@ -146,30 +146,32 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                     typeParameterConstraintSyntaxList.Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
                 }
 
-
-                var constraintTypes = typeParameterSymbol.ConstraintTypes;
-                foreach (var constraintType in constraintTypes)
+                var hasNotNullConstraint = typeParameterSymbol.HasNotNullConstraint;
+                if (hasNotNullConstraint)
                 {
-                    typeParameterConstraintSyntaxList.Add(SyntaxFactory.TypeConstraint(
-                                SyntaxFactory.ParseTypeName(constraintType.ToDisplayString(
-                                    SymbolDisplayFormat.FullyQualifiedFormat))));
+                    var notNullIdentifierName = SyntaxFactory.IdentifierName("notnull");
+                    var notNullTypeConstraint = SyntaxFactory.TypeConstraint(notNullIdentifierName);
+
+                    typeParameterConstraintSyntaxList.Add(notNullTypeConstraint);
                 }
 
 #if TODO
                 var constraintNullableAnnotations = typeParameterSymbol.ConstraintNullableAnnotations;
                 var hasConstructorConstraint = typeParameterSymbol.HasConstructorConstraint;
-                var hasNotNullConstraint = typeParameterSymbol.HasNotNullConstraint;
                 var hasUnmanagedTypeConstraint = typeParameterSymbol.HasUnmanagedTypeConstraint;
                 var hasValueTypeConstraint = typeParameterSymbol.HasValueTypeConstraint;
-
                 var referenceTypeConstraintNullableAnnotation = typeParameterSymbol.ReferenceTypeConstraintNullableAnnotation;
-                if (referenceTypeConstraintNullableAnnotation == NullableAnnotation.Annotated)
-                {
-                    newTypeParameterContraint =
-                        newTypeParameterContraint
-                            .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
-                }
 #endif
+
+                var constraintTypes = typeParameterSymbol.ConstraintTypes;
+                foreach (var constraintType in constraintTypes)
+                {
+                    var constraintToAdd = SyntaxFactory.TypeConstraint(
+                        SyntaxFactory.ParseTypeName(constraintType.ToDisplayString(
+                            SymbolDisplayFormat.FullyQualifiedFormat)));
+                    typeParameterConstraintSyntaxList.Add(constraintToAdd);
+                }
+
                 if (typeParameterConstraintSyntaxList.Count < 1)
                 {
                     continue;
