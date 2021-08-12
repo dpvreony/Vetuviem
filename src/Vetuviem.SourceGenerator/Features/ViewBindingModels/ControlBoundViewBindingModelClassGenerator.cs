@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -27,6 +28,11 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
         protected override string GetClassNameIdentifier(INamedTypeSymbol namedTypeSymbol)
         {
+            if (namedTypeSymbol == null)
+            {
+                throw new ArgumentNullException(nameof(namedTypeSymbol));
+            }
+
             return $"{namedTypeSymbol.Name}ViewBindingModel";
         }
 
@@ -37,8 +43,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
         protected override IReadOnlyCollection<StatementSyntax> GetConstructorBody(bool isDerivedType)
         {
-            var body = new List<StatementSyntax>();
-            return body;
+            return Array.Empty<StatementSyntax>();
         }
 
         protected override string GetConstructorControlTypeName(INamedTypeSymbol namedTypeSymbol)
@@ -65,9 +70,19 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             ClassDeclarationSyntax classDeclaration,
             string platformName)
         {
+            if (namedTypeSymbol == null)
+            {
+                throw new ArgumentNullException(nameof(namedTypeSymbol));
+            }
+
+            if (classDeclaration == null)
+            {
+                throw new ArgumentNullException(nameof(classDeclaration));
+            }
+
             var typeParameters = GetTypeArgumentListSyntax(namedTypeSymbol);
 
-            // we dont use the full name of the type symbol as if the class is generic you end up with the type args in it.
+            // we don't use the full name of the type symbol as if the class is generic you end up with the type args in it.
             var subNameSpace =
                 namedTypeSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
                     .Replace("global::", string.Empty);

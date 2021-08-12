@@ -39,6 +39,11 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
         protected override string GetClassNameIdentifier(INamedTypeSymbol namedTypeSymbol)
         {
+            if (namedTypeSymbol == null)
+            {
+                throw new ArgumentNullException(nameof(namedTypeSymbol));
+            }
+
             return $"Unbound{namedTypeSymbol.Name}ViewBindingModel";
         }
 
@@ -78,6 +83,21 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             ClassDeclarationSyntax classDeclaration,
             string platformName)
         {
+            if (namedTypeSymbol == null)
+            {
+                throw new ArgumentNullException(nameof(namedTypeSymbol));
+            }
+
+            if (classDeclaration == null)
+            {
+                throw new ArgumentNullException(nameof(classDeclaration));
+            }
+
+            if (string.IsNullOrWhiteSpace(controlClassFullName))
+            {
+                throw new ArgumentNullException(nameof(controlClassFullName));
+            }
+
             if (controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase))
             {
                 // so we're at the core type we're generating for. so we put our interface on here.

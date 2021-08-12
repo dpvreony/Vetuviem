@@ -24,6 +24,11 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             INamedTypeSymbol namedTypeSymbol,
             string? desiredCommandInterface)
         {
+            if (namedTypeSymbol == null)
+            {
+                throw new ArgumentNullException(nameof(namedTypeSymbol));
+            }
+
             var properties = namedTypeSymbol
                 .GetMembers()
                 .Where(x => x.Kind == SymbolKind.Property)

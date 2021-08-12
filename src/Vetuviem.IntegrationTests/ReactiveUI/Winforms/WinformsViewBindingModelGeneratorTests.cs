@@ -29,7 +29,17 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Winforms
             /// <inheritdoc />
             protected override void AddReferenceAssemblies(IList<MetadataReference> metadataReferences)
             {
+                if (metadataReferences == null)
+                {
+                    throw new ArgumentNullException(nameof(metadataReferences));
+                }
+
                 var trustedAssembliesPaths = GetPlatformAssemblyPaths();
+                if (trustedAssembliesPaths == null)
+                {
+                    return;
+                }
+
                 foreach (string trustedAssembliesPath in trustedAssembliesPaths)
                 {
                     var metadataReference = MetadataReference.CreateFromFile(trustedAssembliesPath);
@@ -43,7 +53,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Winforms
                 return () => new WinformsViewBindingModelGenerator();
             }
 
-            private static string[] GetPlatformAssemblyPaths()
+            private static string[]? GetPlatformAssemblyPaths()
             {
                 if (AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") is string trustedPlatformAssemblies)
                 {

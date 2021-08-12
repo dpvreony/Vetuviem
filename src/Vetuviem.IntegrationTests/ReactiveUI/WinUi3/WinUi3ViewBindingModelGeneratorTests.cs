@@ -28,6 +28,11 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WinUi3
             /// <inheritdoc />
             protected override void AddReferenceAssemblies(IList<MetadataReference> metadataReferences)
             {
+                if (metadataReferences == null)
+                {
+                    throw new ArgumentNullException(nameof(metadataReferences));
+                }
+
                 metadataReferences.Add(MetadataReference.CreateFromFile("Microsoft.WinUI.dll"));
             }
 
