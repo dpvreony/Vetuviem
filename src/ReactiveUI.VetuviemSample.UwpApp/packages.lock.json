@@ -34,9 +34,9 @@
       },
       "Microsoft.NET.Test.Sdk": {
         "type": "Direct",
-        "requested": "[16.10.0, )",
-        "resolved": "16.10.0",
-        "contentHash": "/9x6TV1SUi+rtKi8UYa7ml7SEWhb0A5FuyeF0nwwUKVjdk5WaWuLPjntHVWoDuYP25KBruoxWxs7WdhDMjWxXw==",
+        "requested": "[16.11.0, )",
+        "resolved": "16.11.0",
+        "contentHash": "f4mbG1SUSkNWF5p7B3Y8ZxMsvKhxCmpZhdl+w6tMtLSUGE7Izi1syU6TkmKOvB2BV66pdbENConFAISOix4ohQ==",
         "dependencies": {
           "Newtonsoft.Json": "9.0.1",
           "System.ComponentModel.Primitives": "4.1.0",
@@ -68,9 +68,9 @@
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.4.220, )",
-        "resolved": "3.4.220",
-        "contentHash": "a4A8qKgM1OLmAEnP30qlA8AhVAutKfJtQbfhwXIeUE5QhWKlnGe6cThJik9aKAzZvhcdmUIaN4O0q+JSI6BU4A=="
+        "requested": "[3.4.231, )",
+        "resolved": "3.4.231",
+        "contentHash": "ifpSbv0sySgIVymTQQz0pjI6O7o/JxnIQMlj28JF5Ybr1LoUTcMfoKnAKwteRlhpQM9qJmONGy9M8BgrEcOteg=="
       },
       "NetTestRegimentation": {
         "type": "Direct",
