@@ -4,9 +4,9 @@
     ".NETStandard,Version=v2.0": {
       "Microsoft.ProjectReunion.WinUI": {
         "type": "Direct",
-        "requested": "[0.8.0, )",
-        "resolved": "0.8.0",
-        "contentHash": "dG4E29+4SZ+H9GWsRB04kfWojrhE6ljCMLQm6Y2tmgCtqn81HQnbBDTW/QFCwd/77qIRXJGqXy36yoi7xVErDw=="
+        "requested": "[0.8.3, )",
+        "resolved": "0.8.3",
+        "contentHash": "FI6vzuEiLk8JwFPvL0VrizlyChexzIon7vtnPyo06vZKXWz8AGUiY1i3tT+Hg6Qtjx4+Ryi3XIsYpO8jq/LtdA=="
       },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
@@ -20,9 +20,9 @@
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.4.220, )",
-        "resolved": "3.4.220",
-        "contentHash": "a4A8qKgM1OLmAEnP30qlA8AhVAutKfJtQbfhwXIeUE5QhWKlnGe6cThJik9aKAzZvhcdmUIaN4O0q+JSI6BU4A=="
+        "requested": "[3.4.231, )",
+        "resolved": "3.4.231",
+        "contentHash": "ifpSbv0sySgIVymTQQz0pjI6O7o/JxnIQMlj28JF5Ybr1LoUTcMfoKnAKwteRlhpQM9qJmONGy9M8BgrEcOteg=="
       },
       "NETStandard.Library": {
         "type": "Direct",
