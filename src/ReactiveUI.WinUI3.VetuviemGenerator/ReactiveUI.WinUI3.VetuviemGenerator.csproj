@@ -30,7 +30,7 @@
   -->
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.3" PrivateAssets="all" ReferenceOutputAssembly="true" />
+    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.4" PrivateAssets="all" ReferenceOutputAssembly="true" />
   </ItemGroup>
 
   <PropertyGroup>
