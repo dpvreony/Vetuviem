@@ -4,9 +4,9 @@
     ".NETStandard,Version=v2.0": {
       "Microsoft.ProjectReunion.WinUI": {
         "type": "Direct",
-        "requested": "[0.8.1, )",
-        "resolved": "0.8.1",
-        "contentHash": "jq0y/147/4fQlysgPS1o3O0LjLWr5BGAhxmThWVoBfz4HT8x39DDlx++AhWT0gTSKo1WqHxo83ysckwdv90I3w=="
+        "requested": "[0.8.3, )",
+        "resolved": "0.8.3",
+        "contentHash": "FI6vzuEiLk8JwFPvL0VrizlyChexzIon7vtnPyo06vZKXWz8AGUiY1i3tT+Hg6Qtjx4+Ryi3XIsYpO8jq/LtdA=="
       },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",

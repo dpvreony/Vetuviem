@@ -7,7 +7,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>dpvreony</Authors>
     <Owners>dpvreony</Owners>
-    <PackageTags>Source Generation</PackageTags>
+    <PackageTags>Source Generation,ReactiveUI,MVVM,MV2VM</PackageTags>
+    <PackageDescription>Vetuviem is a Roslyn source generation toolkit for View to ViewModel binding in ReactiveUI to aid in re-usuable binding logic.</PackageDescription>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/dpvreony/vetuviem</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -38,7 +39,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsTestProject)">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
     <PackageReference Include="Xunit.StaFact" Version="1.0.37" />
@@ -60,7 +61,7 @@
   </ItemGroup>
   
   <ItemGroup>	
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.231" PrivateAssets="all" />	
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.240" PrivateAssets="all" />	
   </ItemGroup>
 
   <ItemGroup Condition="$(IsWasmProject) == ''">
