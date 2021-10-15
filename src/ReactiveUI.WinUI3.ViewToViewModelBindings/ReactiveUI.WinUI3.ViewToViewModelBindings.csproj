@@ -20,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.4" />
     <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.4" />
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.4" />
+    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.5" />
   </ItemGroup>
 
   <ItemGroup>
