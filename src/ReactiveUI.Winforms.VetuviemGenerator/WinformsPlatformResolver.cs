@@ -23,7 +23,7 @@ namespace ReactiveUI.Winforms.VetuviemGenerator
         }
 
         /// <inheritdoc />
-        public string GetCommandInterface()
+        public string? GetCommandInterface()
         {
             return null;
         }

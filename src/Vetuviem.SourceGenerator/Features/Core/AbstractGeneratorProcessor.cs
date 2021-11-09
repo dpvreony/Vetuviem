@@ -21,9 +21,39 @@ namespace Vetuviem.SourceGenerator.Features.Core
             Action<Diagnostic> reportDiagnosticAction,
             string desiredBaseType,
             bool desiredBaseTypeIsInterface,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             string platformName)
         {
+            if (namespaceDeclaration == null)
+            {
+                throw new ArgumentNullException(nameof(namespaceDeclaration));
+            }
+
+            if (assembliesOfInterest == null)
+            {
+                throw new ArgumentNullException(nameof(assembliesOfInterest));
+            }
+
+            if (compilation == null)
+            {
+                throw new ArgumentNullException(nameof(compilation));
+            }
+
+            if (reportDiagnosticAction == null)
+            {
+                throw new ArgumentNullException(nameof(reportDiagnosticAction));
+            }
+
+            if (string.IsNullOrWhiteSpace(desiredBaseType))
+            {
+                throw new ArgumentNullException(nameof(desiredBaseType));
+            }
+
+            if (string.IsNullOrWhiteSpace(platformName))
+            {
+                throw new ArgumentNullException(nameof(platformName));
+            }
+
             var previouslyGeneratedClasses = new List<string>();
 
             foreach (var metadataReference in assembliesOfInterest)
@@ -53,7 +83,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
             IList<string> previouslyGeneratedClasses,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             string platformName)
         {
             reportDiagnosticAction(ReportDiagnostics.StartingScanOfAssembly(metadataReference));
@@ -110,7 +140,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return namespaceDeclaration;
         }
 
-        private INamespaceSymbol? GetGlobalNamespace(ISymbol assemblyOrModuleSymbol)
+        private static INamespaceSymbol? GetGlobalNamespace(ISymbol assemblyOrModuleSymbol)
         {
             switch (assemblyOrModuleSymbol)
             {
@@ -123,12 +153,12 @@ namespace Vetuviem.SourceGenerator.Features.Core
             }
         }
 
-        private void CheckTypeForUiType(INamedTypeSymbol namedTypeSymbol,
+        private static void CheckTypeForUiType(INamedTypeSymbol namedTypeSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
             IList<string> previouslyGeneratedClasses,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             string platformName,
             Func<IClassGenerator>[] classGenerators,
             List<MemberDeclarationSyntax> memberDeclarationSyntaxes)
@@ -144,7 +174,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     return;
                 }
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch
+#pragma warning restore CA1031 // Do not catch general exception types
             {
                 return;
             }
@@ -157,7 +189,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
                      desiredBaseTypeIsInterface,
                      namedTypeSymbol) &&
                 !fullName.Equals(baseUiElement, StringComparison.Ordinal)) ||
-                previouslyGeneratedClasses.Any(pgc => pgc.Equals(fullName)))
+                previouslyGeneratedClasses.Any(pgc => pgc.Equals(fullName, StringComparison.Ordinal)))
             {
                 return;
             }
@@ -183,7 +215,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
             IList<string> previouslyGeneratedClasses,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             string platformName,
             Func<IClassGenerator>[] classGenerators)
         {
@@ -240,7 +272,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return null;
         }
 
-        private bool HasDesiredBaseType(
+        private static bool HasDesiredBaseType(
             string desiredBaseType,
             bool desiredBaseTypeIsInterface,
             INamedTypeSymbol namedTypeSymbol)

@@ -26,8 +26,13 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.UWP
             }
 
             /// <inheritdoc />
-            protected override void AddReferenceAssemblies(List<MetadataReference> metadataReferences)
+            protected override void AddReferenceAssemblies(IList<MetadataReference> metadataReferences)
             {
+                if (metadataReferences == null)
+                {
+                    throw new ArgumentNullException(nameof(metadataReferences));
+                }
+
                 metadataReferences.Add(MetadataReference.CreateFromFile(@"C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.16299.0\Windows.winmd"));
             }
 

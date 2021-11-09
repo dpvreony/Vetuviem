@@ -7,7 +7,7 @@ namespace ReactiveUI.WPF.VetuviemGenerator
     [Generator]
     public sealed class WpfViewBindingModelGenerator : AbstractViewBindingModelGenerator
     {
-        protected override MetadataReference CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest)
+        protected override MetadataReference? CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest)
         {
             return null;
         }

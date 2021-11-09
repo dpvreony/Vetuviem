@@ -1,6 +1,11 @@
-﻿using System;
+﻿// Copyright (c) 2019 .NET Foundation and Contributors. All rights reserved.
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -14,6 +19,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
     {
         public static ParameterListSyntax GetParams(string[] argCollection)
         {
+            if (argCollection == null)
+            {
+                throw new ArgumentNullException(nameof(argCollection));
+            }
+
             var parameters = SyntaxFactory.SeparatedList<ParameterSyntax>();
 
             foreach (var s in argCollection)
@@ -116,6 +126,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="variableName"></param>
         /// <param name="fieldName"></param>
         /// <param name="methodName"></param>
+        /// <param name="args"></param>
         /// <returns></returns>
         public static LocalDeclarationStatementSyntax GetVariableAssignmentFromMethodOnFieldSyntax(string variableName, string fieldName, string methodName, string[] args)
         {
@@ -156,7 +167,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// </summary>
         /// <param name="variableName"></param>
         /// <param name="fieldName"></param>
-        /// <param name="methodName"></param>
+        /// <param name="propertyName"></param>
         /// <returns></returns>
         public static LocalDeclarationStatementSyntax GetVariableAssignmentFromVariablePropertyAccessSyntax(
             string variableName,
@@ -188,6 +199,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// Produces a null guard check for a parameter
         /// </summary>
         /// <param name="parameterName">parameter name</param>
+        /// <param name="returnName"></param>
         /// <returns>Roslyn syntax</returns>
         public static IfStatementSyntax GetReturnIfNullSyntax(string parameterName, string returnName)
         {
@@ -203,6 +215,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// Produces a false check for a parameter
         /// </summary>
         /// <param name="parameterName">parameter name</param>
+        /// <param name="returnName"></param>
         /// <returns>Roslyn syntax</returns>
         public static IfStatementSyntax GetReturnIfFalseSyntax(string parameterName, string returnName)
         {
@@ -218,12 +231,14 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// Produces a null guard check for a parameter
         /// </summary>
         /// <param name="parameterName">parameter name</param>
+        /// <param name="minimumValue"></param>
+        /// <param name="returnName"></param>
         /// <returns>Roslyn syntax</returns>
         public static IfStatementSyntax GetReturnIfLessThanSyntax(string parameterName, int minimumValue, string returnName)
         {
             var parameterIdentifier = SyntaxFactory.IdentifierName(SyntaxFactory.Identifier(parameterName));
             var condition = SyntaxFactory.BinaryExpression(SyntaxKind.LessThanExpression, parameterIdentifier,
-                SyntaxFactory.ParseExpression(minimumValue.ToString()));
+                SyntaxFactory.ParseExpression(minimumValue.ToString(NumberFormatInfo.InvariantInfo)));
 
             var returnStatement = SyntaxFactory.ReturnStatement(SyntaxFactory.ParseExpression(returnName));
             return SyntaxFactory.IfStatement(condition, returnStatement);
@@ -234,6 +249,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// </summary>
         /// <param name="variableToCreate"></param>
         /// <param name="variableToInvoke"></param>
+        /// <param name="isAsync"></param>
         /// <returns></returns>
         public static StatementSyntax GetVariableAssignmentFromVariableInvocationSyntax(string variableToCreate, string variableToInvoke, bool isAsync)
         {
@@ -322,6 +338,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// </summary>
         /// <param name="methodName"></param>
         /// <param name="args"></param>
+        /// <param name="isAsync"></param>
         /// <returns></returns>
         public static ExpressionSyntax GetMethodOnClassInvocationSyntax(string methodName, string[] args, bool isAsync)
         {
@@ -409,8 +426,10 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <summary>
         /// Gets the syntax for invoking a method on a field and passing in a value
         /// </summary>
+        /// <param name="className"></param>
         /// <param name="methodName"></param>
         /// <param name="args"></param>
+        /// <param name="isAsync"></param>
         /// <returns></returns>
         public static ExpressionSyntax GetStaticMethodInvocationSyntax(string className, string methodName, string[] args, bool isAsync)
         {
@@ -460,6 +479,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// </summary>
         /// <param name="methodName"></param>
         /// <param name="args"></param>
+        /// <param name="isAsync"></param>
         /// <returns></returns>
         public static ExpressionSyntax GetStaticMethodInvocationSyntax(string methodName, string[] args, bool isAsync)
         {
@@ -505,6 +525,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="fieldName"></param>
         /// <param name="methodName"></param>
         /// <param name="args"></param>
+        /// <param name="isAsync"></param>
         /// <returns></returns>
         public static StatementSyntax GetMethodOnFieldInvocationSyntax(string fieldName, string methodName, string[] args, bool isAsync)
         {
@@ -557,9 +578,10 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <summary>
         /// Gets the syntax for invoking a method on a field and passing in a value
         /// </summary>
-        /// <param name="fieldName"></param>
+        /// <param name="variableName"></param>
         /// <param name="methodName"></param>
         /// <param name="args"></param>
+        /// <param name="isAsync"></param>
         /// <returns></returns>
         public static StatementSyntax GetMethodOnVariableInvocationSyntax(
             string variableName,
@@ -611,7 +633,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <summary>
         /// Gets the syntax for invoking a method on a field and passing in a value
         /// </summary>
-        /// <param name="fieldName"></param>
+        /// <param name="variableName"></param>
+        /// <param name="propertyName"></param>
         /// <param name="methodName"></param>
         /// <param name="args"></param>
         /// <returns></returns>

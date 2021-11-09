@@ -7,25 +7,28 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
 {
     public sealed class QuestionnaireViewModel : ReactiveObject
     {
-        private string _forename;
+        // this is here to remove the warning to make a property static if it's direct on the property instead of in a variable.
+        private readonly int _maxLength = 50;
+
+        private string? _forename;
         private readonly ObservableAsPropertyHelper<int> _forenameLengthRemaining;
 
-        private string _surname;
+        private string? _surname;
         private readonly ObservableAsPropertyHelper<int> _surnameLengthRemaining;
 
-        private string _answerOne;
+        private string? _answerOne;
         private readonly ObservableAsPropertyHelper<int> _answerOneLengthRemaining;
 
-        private string _answerTwo;
+        private string? _answerTwo;
         private readonly ObservableAsPropertyHelper<int> _answerTwoLengthRemaining;
 
-        private string _answerThree;
+        private string? _answerThree;
         private readonly ObservableAsPropertyHelper<int> _answerThreeLengthRemaining;
 
-        private string _answerFour;
+        private string? _answerFour;
         private readonly ObservableAsPropertyHelper<int> _answerFourLengthRemaining;
 
-        private string _answerFive;
+        private string? _answerFive;
         private readonly ObservableAsPropertyHelper<int> _answerFiveLengthRemaining;
 
         public QuestionnaireViewModel()
@@ -61,12 +64,12 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             LaunchInteraction = ReactiveCommand.CreateFromTask(() => OnLaunchInteraction());
         }
 
-        private Task<Unit> OnLaunchInteraction()
+        private static Task<Unit> OnLaunchInteraction()
         {
             return Task.FromResult(Unit.Default);
         }
 
-        public string Forename
+        public string? Forename
         {
             get => _forename;
             set => this.RaiseAndSetIfChanged(ref _forename, value);
@@ -76,7 +79,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
 
         public ReactiveCommand<Unit, Unit> LaunchInteraction { get; set; }
 
-        public string Surname
+        public string? Surname
         {
             get => _surname;
             set => this.RaiseAndSetIfChanged(ref _surname, value);
@@ -84,7 +87,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
 
         public int SurnameLengthRemaining => this._surnameLengthRemaining.Value;
 
-        public string AnswerOne
+        public string? AnswerOne
         {
             get => _answerOne;
             set => this.RaiseAndSetIfChanged(ref _answerOne, value);
@@ -92,7 +95,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
 
         public int AnswerOneLengthRemaining => this._answerOneLengthRemaining.Value;
 
-        public string AnswerTwo
+        public string? AnswerTwo
         {
             get => _answerTwo;
             set => this.RaiseAndSetIfChanged(ref _answerTwo, value);
@@ -100,7 +103,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
 
         public int AnswerTwoLengthRemaining => this._answerTwoLengthRemaining.Value;
 
-        public string AnswerThree
+        public string? AnswerThree
         {
             get => _answerThree;
             set => this.RaiseAndSetIfChanged(ref _answerThree, value);
@@ -108,7 +111,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
 
         public int AnswerThreeLengthRemaining => this._answerThreeLengthRemaining.Value;
 
-        public string AnswerFour
+        public string? AnswerFour
         {
             get => _answerFour;
             set => this.RaiseAndSetIfChanged(ref _answerFour, value);
@@ -116,7 +119,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
 
         public int AnswerFourLengthRemaining => this._answerFourLengthRemaining.Value;
 
-        public string AnswerFive
+        public string? AnswerFive
         {
             get => _answerFive;
             set => this.RaiseAndSetIfChanged(ref _answerFive, value);
@@ -124,10 +127,10 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
 
         public int AnswerFiveLengthRemaining => this._answerFiveLengthRemaining.Value;
 
-        public int MaxLength => 50;
+        public int MaxLength => _maxLength;
 
         private ObservableAsPropertyHelper<int> GetLengthRemainingObservable(
-            Expression<Func<QuestionnaireViewModel, string>> stringInputExpression,
+            Expression<Func<QuestionnaireViewModel, string?>> stringInputExpression,
             Expression<Func<QuestionnaireViewModel, int>> targetPropertyExpression)
         {
             return this.WhenAnyValue(

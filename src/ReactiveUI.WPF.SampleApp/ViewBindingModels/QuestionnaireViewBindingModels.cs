@@ -10,8 +10,12 @@ using Vetuviem.Core;
 
 namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 {
+    /// <summary>
+    /// View Binding Model for the Questionnaire View Model.
+    /// </summary>
     public sealed class QuestionnaireViewBindingModels : AbstractEnableViewToViewModelBindings<QuestionnaireView, QuestionnaireViewModel>
     {
+        /// <inheritdoc />
         protected override IEnumerable<IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
         {
             // launch interaction
@@ -84,15 +88,15 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
                 vm => vm.AnswerFourLengthRemaining);
         }
 
-        private LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardLengthRemainingLabelViewBindingModel(
+        private static LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardLengthRemainingLabelViewBindingModel(
             Expression<Func<QuestionnaireView, Label>> controlExpression,
-            Expression<Func<QuestionnaireViewModel, object>> viewModelObjectExpression,
+            Expression<Func<QuestionnaireViewModel, object?>> viewModelObjectExpression,
             Expression<Func<QuestionnaireViewModel, int>> viewModelNumberExpression)
         {
             return new(controlExpression)
             {
                 // TODO: explore the ability to pass in an object and not apply a vm convertor. this is doing boxing we can probably avoid
-                Content = new OneWayBind<QuestionnaireViewModel, object>(viewModelObjectExpression, o => o?.ToString()),
+                Content = new OneWayBind<QuestionnaireViewModel, object>(viewModelObjectExpression, o => o?.ToString() ?? string.Empty),
                 Foreground = new OneWayBindingWithConversionOnOneOrTwoWay<QuestionnaireViewModel, Brush, int>(viewModelNumberExpression, lengthRemaining => GetBrushForLengthRemaining(lengthRemaining))
                 //Foreground = new OneWayBind<QuestionnaireViewModel, Brush>()
             };
@@ -111,7 +115,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 
         private static TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardTextBoxViewModel(
             Expression<Func<QuestionnaireView, TextBox>> controlExpression,
-            Expression<Func<QuestionnaireViewModel, string>> viewModelTextExpression)
+            Expression<Func<QuestionnaireViewModel, string?>> viewModelTextExpression)
         {
             return new(controlExpression)
             {

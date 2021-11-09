@@ -7,7 +7,7 @@ namespace ReactiveUI.Blazor.VetuviemGenerator
     [Generator]
     public sealed class BlazorViewBindingModelGenerator : AbstractViewBindingModelGenerator
     {
-        protected override MetadataReference CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest)
+        protected override MetadataReference? CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest)
         {
             return null;
         }

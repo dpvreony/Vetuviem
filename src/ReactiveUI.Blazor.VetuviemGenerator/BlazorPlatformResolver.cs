@@ -26,7 +26,7 @@ namespace ReactiveUI.Blazor.VetuviemGenerator
         }
 
         /// <inheritdoc />
-        public string GetCommandInterface()
+        public string? GetCommandInterface()
         {
             return null;
         }

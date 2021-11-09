@@ -13,7 +13,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
         public ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
-            string desiredCommandInterface,
+            string? desiredCommandInterface,
             string platformName)
         {
             var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
@@ -54,7 +54,10 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
         protected abstract SyntaxTokenList GetClassModifiers(SyntaxTokenList modifiers);
 
-        protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(SyntaxList<MemberDeclarationSyntax> members, INamedTypeSymbol namedTypeSymbol, string desiredCommandInterface, bool isDerivedType, string controlClassFullName, string platformName);
+        protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(
+            SyntaxList<MemberDeclarationSyntax> members,
+            INamedTypeSymbol namedTypeSymbol,
+            string? desiredCommandInterface, bool isDerivedType, string controlClassFullName, string platformName);
 
         protected abstract string GetClassNameIdentifier(INamedTypeSymbol namedTypeSymbol);
 
@@ -102,7 +105,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 
         protected abstract string GetConstructorSummaryText(string className);
 
-        protected abstract List<StatementSyntax> GetConstructorBody(bool isDerivedType);
+        protected abstract IReadOnlyCollection<StatementSyntax> GetConstructorBody(bool isDerivedType);
 
         protected abstract string GetConstructorControlTypeName(INamedTypeSymbol namedTypeSymbol);
 
@@ -117,8 +120,9 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             string controlClassFullName,
             INamedTypeSymbol namedTypeSymbol);
 
-        protected void ApplyTypeConstraintsFromNamedTypedSymbol(INamedTypeSymbol namedTypeSymbol,
-            List<TypeParameterConstraintClauseSyntax> typeParameterConstraintClauseSyntaxList)
+        protected static void ApplyTypeConstraintsFromNamedTypedSymbol(
+            INamedTypeSymbol namedTypeSymbol,
+            IList<TypeParameterConstraintClauseSyntax> typeParameterConstraintClauseSyntaxList)
         {
             if (!namedTypeSymbol.IsGenericType)
             {
@@ -142,30 +146,32 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                     typeParameterConstraintSyntaxList.Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
                 }
 
-
-                var constraintTypes = typeParameterSymbol.ConstraintTypes;
-                foreach (var constraintType in constraintTypes)
+                var hasNotNullConstraint = typeParameterSymbol.HasNotNullConstraint;
+                if (hasNotNullConstraint)
                 {
-                    typeParameterConstraintSyntaxList.Add(SyntaxFactory.TypeConstraint(
-                                SyntaxFactory.ParseTypeName(constraintType.ToDisplayString(
-                                    SymbolDisplayFormat.FullyQualifiedFormat))));
+                    var notNullIdentifierName = SyntaxFactory.IdentifierName("notnull");
+                    var notNullTypeConstraint = SyntaxFactory.TypeConstraint(notNullIdentifierName);
+
+                    typeParameterConstraintSyntaxList.Add(notNullTypeConstraint);
                 }
 
 #if TODO
                 var constraintNullableAnnotations = typeParameterSymbol.ConstraintNullableAnnotations;
                 var hasConstructorConstraint = typeParameterSymbol.HasConstructorConstraint;
-                var hasNotNullConstraint = typeParameterSymbol.HasNotNullConstraint;
                 var hasUnmanagedTypeConstraint = typeParameterSymbol.HasUnmanagedTypeConstraint;
                 var hasValueTypeConstraint = typeParameterSymbol.HasValueTypeConstraint;
-
                 var referenceTypeConstraintNullableAnnotation = typeParameterSymbol.ReferenceTypeConstraintNullableAnnotation;
-                if (referenceTypeConstraintNullableAnnotation == NullableAnnotation.Annotated)
-                {
-                    newTypeParameterContraint =
-                        newTypeParameterContraint
-                            .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
-                }
 #endif
+
+                var constraintTypes = typeParameterSymbol.ConstraintTypes;
+                foreach (var constraintType in constraintTypes)
+                {
+                    var constraintToAdd = SyntaxFactory.TypeConstraint(
+                        SyntaxFactory.ParseTypeName(constraintType.ToDisplayString(
+                            SymbolDisplayFormat.FullyQualifiedFormat)));
+                    typeParameterConstraintSyntaxList.Add(constraintToAdd);
+                }
+
                 if (typeParameterConstraintSyntaxList.Count < 1)
                 {
                     continue;
