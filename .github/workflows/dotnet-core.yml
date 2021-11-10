@@ -71,7 +71,6 @@ jobs:
     - name: Run Build
       run: |
         dotnet build ${{ env.solutionpath }} --configuration Release --no-restore /bl:artifacts\\binlog\\build.binlog /p:ContinuousIntegrationBuild=true
-      working-directory: src
 
     - name: Run Unit Tests
       run: |
