@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
     outputs:
       nbgv: ${{ steps.nbgv.outputs.SemVer2 }}
     env:
@@ -35,8 +35,22 @@ jobs:
       with:
         dotnet-version: 5.0.x
 
-    - name: Add MSBuild to PATH
-      uses: glennawatson/setup-msbuild@v1.0.3
+    - name: Setup .NET 6
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Install Windows SDK 10.0.16299
+      shell: pwsh
+      run: |
+        Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/p/?linkid=864422 -OutFile winsdk.exe
+        $startInfo = New-Object System.Diagnostics.ProcessStartInfo
+        $startInfo.FileName = "winsdk.exe"
+        $startInfo.Arguments = "/norestart /quiet"
+        $process = New-Object System.Diagnostics.Process
+        $process.StartInfo = $startInfo
+        $process.Start()
+        $process.WaitForExit()
 
     - name: NBGV
       id: nbgv
@@ -62,14 +76,21 @@ jobs:
         mkdir artifacts\omd
         mkdir artifacts\docfx
 
+    - name: Add MSBuild to PATH
+      uses: glennawatson/setup-msbuild@v1.0.3
+      with:
+        prerelease: true
+
     - name: Restore Packages
       run: |
         dotnet restore ${{ env.solutionpath }} /bl:artifacts\\binlog\\restore.binlog
 
+    # msbuild used because we run targets not supported by dotnet build
     - name: Run Build
-      run: msbuild /t:build /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release
+      run: |
+        msbuild /t:build /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release
       working-directory: src
-
+      
     - name: Run Unit Tests
       run: |
         dotnet test ${{ env.unittestprojectpath }} --configuration Release --no-build /bl:artifacts\\binlog\\unittest.binlog --nologo --logger GitHubActions --blame-hang-timeout 60000 --results-directory artifacts\opencover --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover

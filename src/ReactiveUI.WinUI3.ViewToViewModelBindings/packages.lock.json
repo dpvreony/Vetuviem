@@ -1,88 +1,88 @@
 {
   "version": 1,
   "dependencies": {
-    ".NETCoreApp,Version=v5.0": {
+    "net5.0-windows10.0.19041": {
       "Microsoft.ProjectReunion": {
         "type": "Direct",
-        "requested": "[0.8.3, )",
-        "resolved": "0.8.3",
-        "contentHash": "AcCpV47awOAfGRnQXuSBK68Euh/MUquLFkcjm66VWLpAoJuCpImtGcXp7YrjI6/L5Ap0mPuDOIl4lUg1B0yL6g==",
+        "requested": "[0.8.5, )",
+        "resolved": "0.8.5",
+        "contentHash": "ULnfd2gjbFG51btQCGTsx8/HCVvWUc09XJmwz3U5eLmVSLCOSdI6hqyJSzux7rXlXD5kJPqoR7i+aiO1QeuaZg==",
         "dependencies": {
-          "Microsoft.ProjectReunion.DWrite": "0.8.3",
-          "Microsoft.ProjectReunion.Foundation": "0.8.3",
-          "Microsoft.ProjectReunion.InteractiveExperiences": "0.8.3",
-          "Microsoft.ProjectReunion.WinUI": "0.8.3"
+          "Microsoft.ProjectReunion.DWrite": "0.8.5",
+          "Microsoft.ProjectReunion.Foundation": "0.8.5",
+          "Microsoft.ProjectReunion.InteractiveExperiences": "0.8.5",
+          "Microsoft.ProjectReunion.WinUI": "0.8.5"
         }
       },
       "Microsoft.ProjectReunion.Foundation": {
         "type": "Direct",
-        "requested": "[0.8.3, )",
-        "resolved": "0.8.3",
-        "contentHash": "YJfOgBxsXQMwVJZN3PZRvc0jh2moi4ng2VAOSEag0AiLpiziQJRvStvtyAWIPSdnToYY9YuGN7HBHxYcRih7cQ=="
+        "requested": "[0.8.5, )",
+        "resolved": "0.8.5",
+        "contentHash": "xS6bTOK86G5T53eGszWv5A2BQLo56JlFvxHxKnJCkTDs9kjUxYYoa4X5TL21BDWT4ik4NLW6ggHW7/O9jCLXwA=="
       },
       "Microsoft.ProjectReunion.WinUI": {
         "type": "Direct",
-        "requested": "[0.8.3, )",
-        "resolved": "0.8.3",
-        "contentHash": "FI6vzuEiLk8JwFPvL0VrizlyChexzIon7vtnPyo06vZKXWz8AGUiY1i3tT+Hg6Qtjx4+Ryi3XIsYpO8jq/LtdA=="
+        "requested": "[0.8.5, )",
+        "resolved": "0.8.5",
+        "contentHash": "TQa3xXYVNXI7KU6ItMKCywDZs27t2ptvVrL9ztTnkMVl5xC92rvePQzzgz53O6T1BDoggef3oKDTnEKBpwvNig=="
       },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "aZyGyGg2nFSxix+xMkPmlmZSsnGQ3w+mIG23LTxJZHN+GPwTQ5FpPgDo7RMOq+Kcf5D4hFWfXkGhoGstawX13Q==",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "DD/LF81k5ODHCfPnBCds97N6KKSS1X1NiDcJYUUpiTu5mmuPktZplhYFrAPQPktMBKvNMdwFrwJ7Fqa3tyTIuA==",
         "dependencies": {
-          "Microsoft.Build.Tasks.Git": "1.0.0",
-          "Microsoft.SourceLink.Common": "1.0.0"
+          "Microsoft.Build.Tasks.Git": "1.1.0",
+          "Microsoft.SourceLink.Common": "1.1.0"
         }
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.4.231, )",
-        "resolved": "3.4.231",
-        "contentHash": "ifpSbv0sySgIVymTQQz0pjI6O7o/JxnIQMlj28JF5Ybr1LoUTcMfoKnAKwteRlhpQM9qJmONGy9M8BgrEcOteg=="
+        "requested": "[3.4.244, )",
+        "resolved": "3.4.244",
+        "contentHash": "L+xHZiYgIvMEbHo1X49HxgfUhfh52/TWLOuUDsOP3OAY0QAn+W6SRNA5bvIRBQ4291SlTZUXPbCRPX8bn7H86Q=="
       },
       "DynamicData": {
         "type": "Transitive",
-        "resolved": "7.3.1",
-        "contentHash": "E9oTvWlAgzct0MuWt6k+0s+nSDA3LkFVvDwkMUTklIZZnva314KZAEF2vG4XX9I98ia+EpMqjte67jWEBJlsRw==",
+        "resolved": "7.4.3",
+        "contentHash": "7eGyREbtzyaRutMa+iToi2e41JboEVK9c1ZBcTvJOfEoTRIZX3hChIsxIvV0ErzMXtGHAIS2O0I8jLDUIds5wg==",
         "dependencies": {
           "System.Reactive": "5.0.0"
         }
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
-        "resolved": "1.0.0",
-        "contentHash": "z2fpmmt+1Jfl+ZnBki9nSP08S1/tbEOxFdsK1rSR+LBehIJz1Xv9/6qOOoGNqlwnAGGVGis1Oj6S8Kt9COEYlQ=="
+        "resolved": "1.1.0",
+        "contentHash": "DD84CsvKf+hfDBbYXIvBXeY7JGfbtoIMMjlPGVaKIp6aWoIdL5EJbWvk+skGkM7/Weezj3q1a89nTPAcGlGcpw=="
       },
       "Microsoft.ProjectReunion.DWrite": {
         "type": "Transitive",
-        "resolved": "0.8.3",
-        "contentHash": "P7cY+kAjzg4Fn3x0dJWxzsKXNGoWPPwQEBVG/A+X9vKoaWb2CrigtvGN9+wZIRWtvqBKvo/Rd61Ef89vAAXSHg=="
+        "resolved": "0.8.5",
+        "contentHash": "35JLFDuThe8yhrTW537EurydrlkwslSbwZWcqGSPgfDtAdpCU+XGF2beGZH+VO04a5voDdx1Ocy8ao0H1SsqAQ=="
       },
       "Microsoft.ProjectReunion.InteractiveExperiences": {
         "type": "Transitive",
-        "resolved": "0.8.3",
-        "contentHash": "dj61eMG5K+0XncF2s87rCphOVGBGyTvf0IALO9SadOphbP7nykSMQNnAwmFUvKg+HXT2BxGok5ZYdjdeXAN8tA=="
+        "resolved": "0.8.5",
+        "contentHash": "qni6T6RlajHrN4JeW/WK5hyjA6KrsF75dG66E8+FCxAaaQUqWZ+GAr51ySjqjLKcTfqCorYtrKNzbv5B7ZT+6g=="
       },
       "Microsoft.SourceLink.Common": {
         "type": "Transitive",
-        "resolved": "1.0.0",
-        "contentHash": "G8DuQY8/DK5NN+3jm5wcMcd9QYD90UV7MiLmdljSJixi3U/vNaeBKmmXUqI4DJCOeWizIUEh4ALhSt58mR+5eg=="
+        "resolved": "1.1.0",
+        "contentHash": "TyGnSaCanfxunClp2af9jpXY127q7g5tiOv0XN/JGcalyKwYusYp06BUGSmCopg/GhmJJSiR/9PS0suXHCGxtw=="
       },
       "ReactiveUI": {
         "type": "Transitive",
-        "resolved": "16.2.1",
-        "contentHash": "nfhLpK7D/LQF3EA2UY9GU1MsFs+VJaLLVX3yFv2xL9p/WZzZWIyNWd0Irwcoc5yhomg6Xv7Mk/MAB7IclHpr4Q==",
+        "resolved": "16.3.10",
+        "contentHash": "NH9bg8BROqRrTp6YLpPDsJrfNDzRWNmP63fQ68CBAM+i7YHi6wcPeOkxyKpoemUxKEY4QECuicaTblJnxgbWmA==",
         "dependencies": {
-          "DynamicData": "7.3.1",
-          "Splat": "13.1.1"
+          "DynamicData": "7.4.3",
+          "Splat": "13.1.42"
         }
       },
       "Splat": {
         "type": "Transitive",
-        "resolved": "13.1.1",
-        "contentHash": "Hv41NNJwYEoxjpCrUw0BdzN17YLZrduhrnHgJyXatSgT6Dq/N/viVkPLfohCeoXf7MqA6ppB/AxtUGU3vJ7YEA=="
+        "resolved": "13.1.42",
+        "contentHash": "a/NkGyoSsmvH2YZGgjFxt0dsXkRTgQRMgoUDN8WpBhTUr3wnPTdeQTOLLr2Jc/BCAdOA7cK2+E4Io8I1/q3f3Q=="
       },
       "System.Reactive": {
         "type": "Transitive",
@@ -95,11 +95,11 @@
       "vetuviem.core": {
         "type": "Project",
         "dependencies": {
-          "ReactiveUI": "16.2.1"
+          "ReactiveUI": "16.3.10"
         }
       }
     },
-    ".NETCoreApp,Version=v5.0/win10-x64": {},
-    ".NETCoreApp,Version=v5.0/win10-x86": {}
+    "net5.0-windows10.0.19041/win10-x64": {},
+    "net5.0-windows10.0.19041/win10-x86": {}
   }
 }

@@ -1,63 +1,63 @@
 {
   "version": 1,
   "dependencies": {
-    ".NETCoreApp,Version=v5.0": {
+    "net5.0-windows7.0": {
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "aZyGyGg2nFSxix+xMkPmlmZSsnGQ3w+mIG23LTxJZHN+GPwTQ5FpPgDo7RMOq+Kcf5D4hFWfXkGhoGstawX13Q==",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "DD/LF81k5ODHCfPnBCds97N6KKSS1X1NiDcJYUUpiTu5mmuPktZplhYFrAPQPktMBKvNMdwFrwJ7Fqa3tyTIuA==",
         "dependencies": {
-          "Microsoft.Build.Tasks.Git": "1.0.0",
-          "Microsoft.SourceLink.Common": "1.0.0"
+          "Microsoft.Build.Tasks.Git": "1.1.0",
+          "Microsoft.SourceLink.Common": "1.1.0"
         }
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.4.231, )",
-        "resolved": "3.4.231",
-        "contentHash": "ifpSbv0sySgIVymTQQz0pjI6O7o/JxnIQMlj28JF5Ybr1LoUTcMfoKnAKwteRlhpQM9qJmONGy9M8BgrEcOteg=="
+        "requested": "[3.4.244, )",
+        "resolved": "3.4.244",
+        "contentHash": "L+xHZiYgIvMEbHo1X49HxgfUhfh52/TWLOuUDsOP3OAY0QAn+W6SRNA5bvIRBQ4291SlTZUXPbCRPX8bn7H86Q=="
       },
       "ReactiveUI.WPF": {
         "type": "Direct",
-        "requested": "[16.2.1, )",
-        "resolved": "16.2.1",
-        "contentHash": "/jSHwzj40sQsJVd3WREXQUbKlaTZ31f/CwUNdE9SvZTzevVk8oct6UYbW39qdLioN1zTl6lbMrIghNZQ8ZmyKQ==",
+        "requested": "[16.3.10, )",
+        "resolved": "16.3.10",
+        "contentHash": "0O003zWScTLKzkK6wT135ZPWcQo4Fx3VNNFlshneeC+X2y5PIb26onpfjz7JdbaC4JzWty3yW5MEYSNELtd7/w==",
         "dependencies": {
-          "ReactiveUI": "16.2.1"
+          "ReactiveUI": "16.3.10"
         }
       },
       "DynamicData": {
         "type": "Transitive",
-        "resolved": "7.3.1",
-        "contentHash": "E9oTvWlAgzct0MuWt6k+0s+nSDA3LkFVvDwkMUTklIZZnva314KZAEF2vG4XX9I98ia+EpMqjte67jWEBJlsRw==",
+        "resolved": "7.4.3",
+        "contentHash": "7eGyREbtzyaRutMa+iToi2e41JboEVK9c1ZBcTvJOfEoTRIZX3hChIsxIvV0ErzMXtGHAIS2O0I8jLDUIds5wg==",
         "dependencies": {
           "System.Reactive": "5.0.0"
         }
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
-        "resolved": "1.0.0",
-        "contentHash": "z2fpmmt+1Jfl+ZnBki9nSP08S1/tbEOxFdsK1rSR+LBehIJz1Xv9/6qOOoGNqlwnAGGVGis1Oj6S8Kt9COEYlQ=="
+        "resolved": "1.1.0",
+        "contentHash": "DD84CsvKf+hfDBbYXIvBXeY7JGfbtoIMMjlPGVaKIp6aWoIdL5EJbWvk+skGkM7/Weezj3q1a89nTPAcGlGcpw=="
       },
       "Microsoft.SourceLink.Common": {
         "type": "Transitive",
-        "resolved": "1.0.0",
-        "contentHash": "G8DuQY8/DK5NN+3jm5wcMcd9QYD90UV7MiLmdljSJixi3U/vNaeBKmmXUqI4DJCOeWizIUEh4ALhSt58mR+5eg=="
+        "resolved": "1.1.0",
+        "contentHash": "TyGnSaCanfxunClp2af9jpXY127q7g5tiOv0XN/JGcalyKwYusYp06BUGSmCopg/GhmJJSiR/9PS0suXHCGxtw=="
       },
       "ReactiveUI": {
         "type": "Transitive",
-        "resolved": "16.2.1",
-        "contentHash": "nfhLpK7D/LQF3EA2UY9GU1MsFs+VJaLLVX3yFv2xL9p/WZzZWIyNWd0Irwcoc5yhomg6Xv7Mk/MAB7IclHpr4Q==",
+        "resolved": "16.3.10",
+        "contentHash": "NH9bg8BROqRrTp6YLpPDsJrfNDzRWNmP63fQ68CBAM+i7YHi6wcPeOkxyKpoemUxKEY4QECuicaTblJnxgbWmA==",
         "dependencies": {
-          "DynamicData": "7.3.1",
-          "Splat": "13.1.1"
+          "DynamicData": "7.4.3",
+          "Splat": "13.1.42"
         }
       },
       "Splat": {
         "type": "Transitive",
-        "resolved": "13.1.1",
-        "contentHash": "Hv41NNJwYEoxjpCrUw0BdzN17YLZrduhrnHgJyXatSgT6Dq/N/viVkPLfohCeoXf7MqA6ppB/AxtUGU3vJ7YEA=="
+        "resolved": "13.1.42",
+        "contentHash": "a/NkGyoSsmvH2YZGgjFxt0dsXkRTgQRMgoUDN8WpBhTUr3wnPTdeQTOLLr2Jc/BCAdOA7cK2+E4Io8I1/q3f3Q=="
       },
       "System.Reactive": {
         "type": "Transitive",
@@ -67,14 +67,14 @@
       "reactiveui.wpf.viewtoviewmodelbindings": {
         "type": "Project",
         "dependencies": {
-          "ReactiveUI.WPF": "16.2.1",
+          "ReactiveUI.WPF": "16.3.10",
           "Vetuviem.Core": "1.0.0"
         }
       },
       "vetuviem.core": {
         "type": "Project",
         "dependencies": {
-          "ReactiveUI": "16.2.1"
+          "ReactiveUI": "16.3.10"
         }
       }
     }
