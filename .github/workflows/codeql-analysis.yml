@@ -62,6 +62,23 @@ jobs:
       with:
         dotnet-version: 5.0.*
 
+    - name: Setup .NET 6
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Install Windows SDK 10.0.16299
+      shell: pwsh
+      run: |
+        Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/p/?linkid=864422 -OutFile winsdk.exe
+        $startInfo = New-Object System.Diagnostics.ProcessStartInfo
+        $startInfo.FileName = "winsdk.exe"
+        $startInfo.Arguments = "/norestart /quiet"
+        $process = New-Object System.Diagnostics.Process
+        $process.StartInfo = $startInfo
+        $process.Start()
+        $process.WaitForExit()
+
     - name: Add MSBuild to PATH
       uses: glennawatson/setup-msbuild@v1.0.3
 
