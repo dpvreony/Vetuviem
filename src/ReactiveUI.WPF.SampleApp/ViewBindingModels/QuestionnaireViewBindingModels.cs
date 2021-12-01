@@ -16,7 +16,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
     public sealed class QuestionnaireViewBindingModels : AbstractEnableViewToViewModelBindings<QuestionnaireView, QuestionnaireViewModel>
     {
         /// <inheritdoc />
-        protected override IEnumerable<IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
+        protected override IEnumerable<IControlBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
         {
             // launch interaction
             yield return new ButtonControlBindingModel<QuestionnaireView, QuestionnaireViewModel>(vw => vw.LaunchInteraction)
