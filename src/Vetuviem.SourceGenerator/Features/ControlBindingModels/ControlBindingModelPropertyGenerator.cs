@@ -7,12 +7,12 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
+namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 {
     /// <summary>
-    /// Generates a ViewBindingModel for the discovered types.
+    /// Generates a Control Binding Model for the discovered types.
     /// </summary>
-    public static class ViewBindingModelPropertyGenerator
+    public static class ControlBindingModelPropertyGenerator
     {
         /// <summary>
         /// Gets the properties to be generated.

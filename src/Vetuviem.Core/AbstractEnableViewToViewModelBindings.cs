@@ -23,6 +23,6 @@ namespace Vetuviem.Core
             }
         }
 
-        protected abstract IEnumerable<IViewBindingModel<TView, TViewModel>> GetBindings();
+        protected abstract IEnumerable<IControlBindingModel<TView, TViewModel>> GetBindings();
     }
 }

@@ -6,9 +6,9 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
+namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 {
-    public abstract class AbstractViewBindingModelClassGenerator : IClassGenerator
+    public abstract class AbstractControlBindingModelClassGenerator : IClassGenerator
     {
         public ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,
@@ -47,7 +47,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 .WithTypeParameterList(typeParameterList)
                 .WithConstraintClauses(constraintClauses)
                 .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
-                    "A class that contains View Bindings for the {0} control.",
+                    "A class that contains Viewmodel bindings for the {0} control.",
                     controlClassFullName))
                 .WithMembers(members);
         }

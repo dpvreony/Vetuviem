@@ -8,7 +8,7 @@ namespace ReactiveUI.UWP.VetuviemGenerator
     /// Source Generator for UWP View Binding Models.
     /// </summary>
     [Generator]
-    public sealed class UwpViewBindingModelGenerator : AbstractViewBindingModelGenerator
+    public sealed class UwpControlBindingModelGenerator : AbstractControlBindingModelGenerator
     {
         protected override MetadataReference CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest)
         {

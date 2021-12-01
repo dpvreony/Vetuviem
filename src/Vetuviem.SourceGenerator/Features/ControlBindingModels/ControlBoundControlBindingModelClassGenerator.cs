@@ -6,9 +6,9 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
+namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 {
-    public class ControlBoundViewBindingModelClassGenerator : AbstractViewBindingModelClassGenerator
+    public class ControlBoundControlBindingModelClassGenerator : AbstractControlBindingModelClassGenerator
     {
         protected override SyntaxTokenList GetClassModifiers(SyntaxTokenList modifiers)
         {
@@ -33,7 +33,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 throw new ArgumentNullException(nameof(namedTypeSymbol));
             }
 
-            return $"{namedTypeSymbol.Name}ViewBindingModel";
+            return $"{namedTypeSymbol.Name}ControlBindingModel";
         }
 
         protected override string GetConstructorSummaryText(string className)
@@ -88,7 +88,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                     .Replace("global::", string.Empty);
 
             var baseViewBindingModelClassName =
-                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.Unbound{namedTypeSymbol.Name}ViewBindingModel";
+                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.Unbound{namedTypeSymbol.Name}ControlBindingModel";
 
             var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
 

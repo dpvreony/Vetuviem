@@ -2,12 +2,12 @@
 
 namespace Vetuviem.Core
 {
-    public abstract class AbstractViewBindingModel<TView, TViewModel, TControl>
-        : IViewBindingModel<TView, TViewModel>
+    public abstract class AbstractControlBindingModel<TView, TViewModel, TControl>
+        : IControlBindingModel<TView, TViewModel>
         where TView : class, ReactiveUI.IViewFor<TViewModel>
         where TViewModel : class, ReactiveUI.IReactiveObject
     {
-        protected AbstractViewBindingModel(global::System.Linq.Expressions.Expression<Func<TView, TControl>> vetuviemControlBindingExpression)
+        protected AbstractControlBindingModel(global::System.Linq.Expressions.Expression<Func<TView, TControl>> vetuviemControlBindingExpression)
         {
             VetuviemControlBindingExpression = vetuviemControlBindingExpression ?? throw new ArgumentNullException(nameof(vetuviemControlBindingExpression));
         }

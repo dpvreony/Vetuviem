@@ -6,9 +6,9 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
+namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 {
-    public class GenericViewBindingModelClassGenerator : AbstractViewBindingModelClassGenerator
+    public class GenericControlBindingModelClassGenerator : AbstractControlBindingModelClassGenerator
     {
         protected override SyntaxTokenList GetClassModifiers(SyntaxTokenList modifiers)
         {
@@ -25,7 +25,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
             string controlClassFullName,
             string platformName)
         {
-            members = members.AddRange(ViewBindingModelPropertyGenerator.GetProperties(
+            members = members.AddRange(ControlBindingModelPropertyGenerator.GetProperties(
                 namedTypeSymbol,
                 desiredCommandInterface));
 
@@ -44,7 +44,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                 throw new ArgumentNullException(nameof(namedTypeSymbol));
             }
 
-            return $"Unbound{namedTypeSymbol.Name}ViewBindingModel";
+            return $"Unbound{namedTypeSymbol.Name}ControlBindingModel";
         }
 
         protected override string GetConstructorSummaryText(string className)
@@ -104,7 +104,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 #pragma warning disable SA1129 // Do not use default value type constructor
                 var interfaceTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
-                interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.AbstractViewBindingModel<TView, TViewModel, TControl>")));
+                interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.AbstractControlBindingModel<TView, TViewModel, TControl>")));
                 var interfaceList = SyntaxFactory.BaseList(interfaceTypesList);
                 classDeclaration = classDeclaration.WithBaseList(interfaceList);
 
@@ -120,7 +120,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
 #pragma warning disable SA1129 // Do not use default value type constructor
                 var interfaceTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
-                interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.AbstractViewBindingModel<TView, TViewModel, TControl>")));
+                interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.AbstractControlBindingModel<TView, TViewModel, TControl>")));
                 var interfaceList = SyntaxFactory.BaseList(interfaceTypesList);
                 classDeclaration = classDeclaration.WithBaseList(interfaceList);
 
@@ -135,7 +135,7 @@ namespace Vetuviem.SourceGenerator.Features.ViewBindingModels
                     .Replace("global::", string.Empty);
 
             var baseViewBindingModelClassName =
-                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.Unbound{baseClass.Name}ViewBindingModel";
+                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.Unbound{baseClass.Name}ControlBindingModel";
 
             var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
 
