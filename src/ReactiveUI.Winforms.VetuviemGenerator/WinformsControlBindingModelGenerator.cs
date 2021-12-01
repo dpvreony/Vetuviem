@@ -2,27 +2,24 @@
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.WinUI3.VetuviemGenerator
+namespace ReactiveUI.Winforms.VetuviemGenerator
 {
     [Generator]
-    public sealed class WinUi3ViewBindingModelGenerator : AbstractViewBindingModelGenerator
+    public sealed class WinformsControlBindingModelGenerator : AbstractControlBindingModelGenerator
     {
-        /// <inheritdoc />
         protected override MetadataReference? CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest)
         {
             return null;
         }
 
-        /// <inheritdoc />
         protected override string GetPlatformName()
         {
-            return "WinUi3";
+            return "Winforms";
         }
 
-        /// <inheritdoc />
         protected override IPlatformResolver GetPlatformResolver()
         {
-            return new WinUi3PlatformResolver();
+            return new WinformsPlatformResolver();
         }
     }
 }

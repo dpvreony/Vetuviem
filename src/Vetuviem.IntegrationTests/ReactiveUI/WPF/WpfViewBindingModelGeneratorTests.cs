@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.CodeAnalysis;
 using ReactiveUI.WPF.VetuviemGenerator;
-using Vetuviem.SourceGenerator.Features.ViewBindingModels;
+using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.Testing;
 using Xunit.Abstractions;
 
@@ -15,7 +15,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
     public static class WpfViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WpfViewBindingModelGenerator, ViewBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WpfControlBindingModelGenerator, ControlBindingModelGeneratorProcessor>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
@@ -43,9 +43,9 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
             }
 
             /// <inheritdoc />
-            protected override Func<WpfViewBindingModelGenerator> GetFactory()
+            protected override Func<WpfControlBindingModelGenerator> GetFactory()
             {
-                return () => new WpfViewBindingModelGenerator();
+                return () => new WpfControlBindingModelGenerator();
             }
 
             private static string[]? GetPlatformAssemblyPaths()

@@ -78,8 +78,8 @@
       },
       "Foundatio": {
         "type": "Transitive",
-        "resolved": "10.2.2",
-        "contentHash": "HKSpX0Nf2/9OlaKjLnpwJQRPFHG/h8VW3A91eBGsQ8lnQC8XL5VbNfXvVQczTNuZsoC0fqWu3K5u4gx292u+HQ==",
+        "resolved": "10.2.3",
+        "contentHash": "snrb5I8NGnI+QPsm0tTtBXIbW9CmgKYfPLXaMkw4CtBUteOG0oOBqYs6bkvtsdq2I7WmLPUP1YVrjFXSKN2hTQ==",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "5.0.0",
           "Microsoft.Extensions.DependencyInjection": "5.0.2",
@@ -90,10 +90,10 @@
       },
       "Foundatio.Xunit": {
         "type": "Transitive",
-        "resolved": "10.2.2",
-        "contentHash": "K5dYAXVtjWn1iSsfkxbSopDtWex3gBDMcp2KwlMspo5BmZAMSi1KzbnwCT+F0Ux0yyAyWak161+603QtlnsUIg==",
+        "resolved": "10.2.3",
+        "contentHash": "kkWD/r8AU5a1/t6mua6zQ+5wUocmwZCl610tla7oIsc6QBq224xInAtFo2DYk9YlqbHYJXarGsMitmGWSX7tfw==",
         "dependencies": {
-          "Foundatio": "10.2.2",
+          "Foundatio": "10.2.3",
           "System.Collections.Immutable": "5.0.0",
           "xunit.core": "2.4.1"
         }
@@ -110,8 +110,8 @@
       },
       "Microsoft.CodeAnalysis.Common": {
         "type": "Transitive",
-        "resolved": "3.11.0",
-        "contentHash": "FDKSkRRXnaEWMa2ONkLMo0ZAt/uiV1XIXyodwKIgP1AMIKA7JJKXx/OwFVsvkkUT4BeobLwokoxFw70fICahNg==",
+        "resolved": "4.0.1",
+        "contentHash": "SMREwaVD5SzatlWhh9aahQAtSWdb63NcE//f+bQzgHSECU6xtDtaxk0kwV+asdFfr6HtW38UeO6jvqdfzudg3w==",
         "dependencies": {
           "Microsoft.CodeAnalysis.Analyzers": "3.3.2",
           "System.Collections.Immutable": "5.0.0",
@@ -124,10 +124,10 @@
       },
       "Microsoft.CodeAnalysis.CSharp": {
         "type": "Transitive",
-        "resolved": "3.11.0",
-        "contentHash": "aDRRb7y/sXoJyDqFEQ3Il9jZxyUMHkShzZeCRjQf3SS84n2J0cTEi3TbwVZE9XJvAeMJhGfVVxwOdjYBg6ljmw==",
+        "resolved": "4.0.1",
+        "contentHash": "Q9RxxydPpUElj/x1/qykDTUGsRoKbJG8H5XUSeMGmMu54fBiuX1xyanom9caa1oQfh5JIW1BgLxobSaWs4WyHQ==",
         "dependencies": {
-          "Microsoft.CodeAnalysis.Common": "[3.11.0]"
+          "Microsoft.CodeAnalysis.Common": "[4.0.1]"
         }
       },
       "Microsoft.CodeCoverage": {
@@ -1335,15 +1335,15 @@
       "vetuviem.sourcegenerator": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp": "3.11.0"
+          "Microsoft.CodeAnalysis.CSharp": "4.0.1"
         }
       },
       "vetuviem.testing": {
         "type": "Project",
         "dependencies": {
-          "Foundatio.Xunit": "10.2.2",
-          "Microsoft.CodeAnalysis.CSharp": "3.11.0",
-          "Microsoft.CodeAnalysis.Common": "3.11.0",
+          "Foundatio.Xunit": "10.2.3",
+          "Microsoft.CodeAnalysis.CSharp": "4.0.1",
+          "Microsoft.CodeAnalysis.Common": "4.0.1",
           "Moq": "4.16.1",
           "NetTestRegimentation": "1.5.3",
           "Vetuviem.SourceGenerator": "1.0.0",

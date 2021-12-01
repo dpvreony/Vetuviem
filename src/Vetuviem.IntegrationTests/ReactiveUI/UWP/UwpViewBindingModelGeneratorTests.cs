@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using ReactiveUI.UWP.VetuviemGenerator;
-using Vetuviem.SourceGenerator.Features.ViewBindingModels;
+using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.Testing;
 using Xunit.Abstractions;
 
@@ -14,7 +14,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.UWP
     public static class UwpViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<UwpViewBindingModelGenerator, ViewBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<UwpControlBindingModelGenerator, ControlBindingModelGeneratorProcessor>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
@@ -37,9 +37,9 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.UWP
             }
 
             /// <inheritdoc />
-            protected override Func<UwpViewBindingModelGenerator> GetFactory()
+            protected override Func<UwpControlBindingModelGenerator> GetFactory()
             {
-                return () => new UwpViewBindingModelGenerator();
+                return () => new UwpControlBindingModelGenerator();
             }
         }
     }

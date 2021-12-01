@@ -2,24 +2,24 @@
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.Winforms.VetuviemGenerator
+namespace ReactiveUI.Blazor.VetuviemGenerator
 {
     [Generator]
-    public sealed class WinformsViewBindingModelGenerator : AbstractViewBindingModelGenerator
+    public sealed class BlazorControlBindingModelGenerator : AbstractControlBindingModelGenerator
     {
         protected override MetadataReference? CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest)
         {
             return null;
         }
 
-        protected override string GetPlatformName()
-        {
-            return "Winforms";
-        }
-
         protected override IPlatformResolver GetPlatformResolver()
         {
-            return new WinformsPlatformResolver();
+            return new BlazorPlatformResolver();
+        }
+
+        protected override string GetPlatformName()
+        {
+            return "Blazor";
         }
     }
 }
