@@ -384,7 +384,7 @@
         }
       }
     },
-    ".NETCoreApp,Version=v5.0": {
+    "net6.0": {
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
         "requested": "[1.1.1, )",

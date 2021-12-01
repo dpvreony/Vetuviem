@@ -19,7 +19,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         protected override IEnumerable<IViewBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
         {
             // launch interaction
-            yield return new ButtonViewBindingModel<QuestionnaireView, QuestionnaireViewModel>(vw => vw.LaunchInteraction)
+            yield return new ButtonControlBindingModel<QuestionnaireView, QuestionnaireViewModel>(vw => vw.LaunchInteraction)
             {
                 Command = new CommandBinding<QuestionnaireViewModel>(vm => vm.LaunchInteraction)
             };
@@ -88,7 +88,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
                 vm => vm.AnswerFourLengthRemaining);
         }
 
-        private static LabelViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardLengthRemainingLabelViewBindingModel(
+        private static LabelControlBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardLengthRemainingLabelViewBindingModel(
             Expression<Func<QuestionnaireView, Label>> controlExpression,
             Expression<Func<QuestionnaireViewModel, object?>> viewModelObjectExpression,
             Expression<Func<QuestionnaireViewModel, int>> viewModelNumberExpression)
@@ -113,7 +113,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
             };
         }
 
-        private static TextBoxViewBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardTextBoxViewModel(
+        private static TextBoxControlBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardTextBoxViewModel(
             Expression<Func<QuestionnaireView, TextBox>> controlExpression,
             Expression<Func<QuestionnaireViewModel, string?>> viewModelTextExpression)
         {
