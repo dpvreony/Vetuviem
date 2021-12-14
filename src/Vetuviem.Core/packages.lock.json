@@ -29,12 +29,12 @@
       },
       "ReactiveUI": {
         "type": "Direct",
-        "requested": "[16.4.1, )",
-        "resolved": "16.4.1",
-        "contentHash": "g8zOSoE76UZMCd09G8StudiELQyNpMxniUodBaL8IMGK3tuuIywQF0qrsjAIeguX74wTopz7tQATedsp4i3pFQ==",
+        "requested": "[17.0.1, )",
+        "resolved": "17.0.1",
+        "contentHash": "9VCFd/aXIpU9lC+b1QdCXSNeHwAhF3QSe2kt+ATs0RfV1YS2N67qGmGBnQQg6Prd5uulIpMhvO+UjwfROWcfuw==",
         "dependencies": {
           "DynamicData": "7.4.3",
-          "Splat": "13.1.63",
+          "Splat": "14.1.1",
           "System.ComponentModel": "4.3.0",
           "System.Diagnostics.Contracts": "4.3.0",
           "System.Dynamic.Runtime": "4.3.0",
@@ -71,8 +71,8 @@
       },
       "Splat": {
         "type": "Transitive",
-        "resolved": "13.1.63",
-        "contentHash": "7iW45RA7AbSlQPCgdokmysva5PGd6iBUhuNkC0XD73LF9dxfTkKeo3wZkohU7nvspDhJ7PJsYHvDtxIt5bMQ8Q=="
+        "resolved": "14.1.1",
+        "contentHash": "bKQtKu57w+iJ1T+WDyDdNq+LBNVdmNu2i0vGNyUdtmg4TEIEFiX2GfPusNEAW2QOfxyDE7i4+xTxbOKZr/4jhg=="
       },
       "System.Collections": {
         "type": "Transitive",
