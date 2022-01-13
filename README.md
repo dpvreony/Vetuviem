@@ -16,7 +16,16 @@ This is currently a proof of concept alpha. For understanding of the design reas
 
 ## Nuget Packages
 
-Coming Soon
+[VetuviemCoreNuget]: https://www.nuget.org/packages/Vetuviem.Core/
+[VetuviemCoreBadge]: https://img.shields.io/nuget/v/Vetuviem.Core.svg
+[VetuviemSourceGeneratorNuGet]: https://www.nuget.org/packages/Vetuviem.SourceGenerator/
+[VetuviemSourceGeneratorBadge]: https://img.shields.io/nuget/v/Vetuviem.SourceGenerator.svg
+
+| Purpose | Package | NuGet |
+|---------|-------|------|
+| Command Line Generation | Coming soon | Coming Soon
+| Visual Studio Integration | [Vetuviem.SourceGenerator][VetuviemSourceGeneratorNuGet] | [![VetuviemSourceGeneratorBadge]][VetuviemSourceGeneratorNuGet] |
+| Core Functionality | [Vetuviem.Core][VetuviemCoreNuget] | [![VetuviemCoreBadge]][VetuviemCoreNuget] |
 
 ## An example
 
