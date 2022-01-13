@@ -4,17 +4,17 @@ using ReactiveUI;
 
 namespace Vetuviem.Core
 {
-    public class OneWayBind<TViewModel, TViewProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
+    public class OneWayBindingOnOneOrTwoWayBind<TViewModel, TViewProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
         where TViewModel : class
     {
         private readonly Expression<Func<TViewModel, TViewProp?>> _viewModelBinding;
         private readonly Func<TViewProp?, TViewProp> _vmToViewConverter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OneWayBind{TViewModel, TViewProp}"/> class.
+        /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBindingOnOneOrTwoWayBind{TViewModel,TViewProp}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
-        public OneWayBind(
+        public OneWayBindingOnOneOrTwoWayBind(
             Expression<Func<TViewModel, TViewProp?>> viewModelBinding,
             Func<TViewProp?, TViewProp> vmToViewConverter)
         {

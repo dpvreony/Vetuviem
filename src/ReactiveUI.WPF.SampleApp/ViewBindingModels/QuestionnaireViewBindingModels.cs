@@ -96,9 +96,9 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
             return new(controlExpression)
             {
                 // TODO: explore the ability to pass in an object and not apply a vm convertor. this is doing boxing we can probably avoid
-                Content = new OneWayBind<QuestionnaireViewModel, object>(viewModelObjectExpression, o => o?.ToString() ?? string.Empty),
-                Foreground = new OneWayBindingWithConversionOnOneOrTwoWay<QuestionnaireViewModel, Brush, int>(viewModelNumberExpression, lengthRemaining => GetBrushForLengthRemaining(lengthRemaining))
-                //Foreground = new OneWayBind<QuestionnaireViewModel, Brush>()
+                Content = new OneWayBindingOnOneOrTwoWayBind<QuestionnaireViewModel, object>(viewModelObjectExpression, o => o?.ToString() ?? string.Empty),
+                Foreground = new OneWayBindingWithConversionOnOneOrTwoWayBind<QuestionnaireViewModel, Brush, int>(viewModelNumberExpression, lengthRemaining => GetBrushForLengthRemaining(lengthRemaining))
+                //Foreground = new OneWayBindingOnOneOrTwoWayBind<QuestionnaireViewModel, Brush>()
             };
         }
 
@@ -124,7 +124,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
                 // we actually set the control max length slightly longer than the desired max length
                 // this is to do with capturing a bad paste from the user. where it would cap at the max length of the
                 // control, and they wouldn't be aware they passed the limit and lost data.
-                MaxLength = new OneWayBind<QuestionnaireViewModel, int>(vm => vm.MaxLength, x => x + 10),
+                MaxLength = new OneWayBindingOnOneOrTwoWayBind<QuestionnaireViewModel, int>(vm => vm.MaxLength, x => x + 10),
                 Text = new TwoWayBinding<QuestionnaireViewModel, string>(viewModelTextExpression),
             };
         }
