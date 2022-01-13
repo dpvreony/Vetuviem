@@ -17,7 +17,7 @@ namespace Vetuviem.Core
         where TViewModel : class
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OneWayBinding{TViewModel, TViewProp}"/> class.
+        /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBind{TViewModel,TViewProp,TOut}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
         public OneWayBinding(Expression<Func<TViewModel, TViewProp?>> viewModelBinding)
@@ -61,7 +61,7 @@ namespace Vetuviem.Core
         where TViewModel : class
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OneWayBinding{TViewModel, TViewProp}"/> class.
+        /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBind{TViewModel,TViewProp,TOut}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
         /// <param name="selector">Conversion selector function.</param>
@@ -111,15 +111,15 @@ namespace Vetuviem.Core
     /// <typeparam name="TViewModel">The type for the ViewModel.</typeparam>
     /// <typeparam name="TViewProp">The type for the View.</typeparam>
     /// <typeparam name="TOut">The type for the control binding.</typeparam>
-    public class OneWayBindingWithConversionOnOneOrTwoWay<TViewModel, TViewProp, TVMProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
+    public class OneWayBindingWithConversionOnOneOrTwoWayBind<TViewModel, TViewProp, TVMProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
         where TViewModel : class
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OneWayBinding{TViewModel, TViewProp}"/> class.
+        /// Initializes a new instance of the <see cref="OneWayBindingWithConversionOnOneOrTwoWayBind{TViewModel,TViewProp,TOut}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
         /// <param name="selector">Conversion selector function.</param>
-        public OneWayBindingWithConversionOnOneOrTwoWay(
+        public OneWayBindingWithConversionOnOneOrTwoWayBind(
             Expression<Func<TViewModel, TVMProp?>> viewModelBinding,
             Func<TVMProp?, TViewProp> selector)
         {

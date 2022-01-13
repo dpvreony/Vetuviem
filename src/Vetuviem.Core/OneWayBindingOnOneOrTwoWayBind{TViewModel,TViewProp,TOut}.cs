@@ -14,7 +14,7 @@ namespace Vetuviem.Core
     /// <typeparam name="TViewModel">The type for the ViewModel.</typeparam>
     /// <typeparam name="TViewProp">The type for the View.</typeparam>
     /// <typeparam name="TOut">The type for the conversion.</typeparam>
-    public class OneWayBinding<TViewModel, TViewProp, TOut> : IOneOrTwoWayBind<TViewModel, TOut>
+    public class OneWayBindingOnOneOrTwoWayBind<TViewModel, TViewProp, TOut> : IOneOrTwoWayBind<TViewModel, TOut>
         where TViewModel : class
     {
         private readonly Expression<Func<TViewModel, TViewProp?>> _viewModelBinding;
@@ -22,11 +22,11 @@ namespace Vetuviem.Core
         private readonly Expression<Func<TViewProp, TOut>> _converterBinding;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OneWayBinding{TViewModel, TProp, TOut}"/> class.
+        /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBindOnOneOrTwoWayBind{TViewModel,TViewProp,TOut}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">View to ViewModel binding expression.</param>
         /// <param name="converterBinding">View Property Conversion binding expression.</param>
-        public OneWayBinding(
+        public OneWayBindingOnOneOrTwoWayBind(
             Expression<Func<TViewModel, TViewProp?>> viewModelBinding,
             Expression<Func<TViewProp, TOut>> converterBinding)
         {
