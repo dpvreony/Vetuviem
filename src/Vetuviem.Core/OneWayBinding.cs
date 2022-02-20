@@ -104,6 +104,4 @@ namespace Vetuviem.Core
                 Selector));
         }
     }
-
-
 }
