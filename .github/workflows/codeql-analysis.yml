@@ -65,7 +65,7 @@ jobs:
     - name: Setup .NET 6
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.100
+        dotnet-version: 6.0.x
 
     - name: Install Windows SDK 10.0.16299
       shell: pwsh
