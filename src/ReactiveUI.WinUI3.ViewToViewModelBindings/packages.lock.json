@@ -4,27 +4,27 @@
     "net5.0-windows10.0.19041": {
       "Microsoft.ProjectReunion": {
         "type": "Direct",
-        "requested": "[0.8.5, )",
-        "resolved": "0.8.5",
-        "contentHash": "ULnfd2gjbFG51btQCGTsx8/HCVvWUc09XJmwz3U5eLmVSLCOSdI6hqyJSzux7rXlXD5kJPqoR7i+aiO1QeuaZg==",
+        "requested": "[0.8.6, )",
+        "resolved": "0.8.6",
+        "contentHash": "CKkEBtsxDGvuxTtwikI7p9cv+a9I0hZ9CHCn/e2bVZzTKHrNCfEDP6ypqXqPIAbKAh94G4ysbXdRnJv6rMH4KA==",
         "dependencies": {
-          "Microsoft.ProjectReunion.DWrite": "0.8.5",
-          "Microsoft.ProjectReunion.Foundation": "0.8.5",
-          "Microsoft.ProjectReunion.InteractiveExperiences": "0.8.5",
-          "Microsoft.ProjectReunion.WinUI": "0.8.5"
+          "Microsoft.ProjectReunion.DWrite": "0.8.6",
+          "Microsoft.ProjectReunion.Foundation": "0.8.6",
+          "Microsoft.ProjectReunion.InteractiveExperiences": "0.8.6",
+          "Microsoft.ProjectReunion.WinUI": "0.8.6"
         }
       },
       "Microsoft.ProjectReunion.Foundation": {
         "type": "Direct",
-        "requested": "[0.8.5, )",
-        "resolved": "0.8.5",
-        "contentHash": "xS6bTOK86G5T53eGszWv5A2BQLo56JlFvxHxKnJCkTDs9kjUxYYoa4X5TL21BDWT4ik4NLW6ggHW7/O9jCLXwA=="
+        "requested": "[0.8.6, )",
+        "resolved": "0.8.6",
+        "contentHash": "ojlzmBSj1LLd2OO7vPeed/BA1648J+BEIqk7x8pOZN0l2F0GakPP0Z67y0m1n+6OGzmpYW4azX67FzvREbLgeQ=="
       },
       "Microsoft.ProjectReunion.WinUI": {
         "type": "Direct",
-        "requested": "[0.8.5, )",
-        "resolved": "0.8.5",
-        "contentHash": "TQa3xXYVNXI7KU6ItMKCywDZs27t2ptvVrL9ztTnkMVl5xC92rvePQzzgz53O6T1BDoggef3oKDTnEKBpwvNig=="
+        "requested": "[0.8.6, )",
+        "resolved": "0.8.6",
+        "contentHash": "/rZgiPXLsnK/nLpHYA1goHVmANIHhVOM9+6g9GKnXVHFFvjWM4TppWBCz80HgK+epqH7p0NOWjJTgGZPd8JOIA=="
       },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
@@ -38,14 +38,14 @@
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.4.244, )",
-        "resolved": "3.4.244",
-        "contentHash": "L+xHZiYgIvMEbHo1X49HxgfUhfh52/TWLOuUDsOP3OAY0QAn+W6SRNA5bvIRBQ4291SlTZUXPbCRPX8bn7H86Q=="
+        "requested": "[3.4.255, )",
+        "resolved": "3.4.255",
+        "contentHash": "7aJa6+VzdKNDVJqGIWGtvIDh2HsIx8DIDfUg4yWViXc798awhSohPMk1oiAZqSntnrKThKJtn4vAMRdsCj8dtg=="
       },
       "DynamicData": {
         "type": "Transitive",
-        "resolved": "7.4.3",
-        "contentHash": "7eGyREbtzyaRutMa+iToi2e41JboEVK9c1ZBcTvJOfEoTRIZX3hChIsxIvV0ErzMXtGHAIS2O0I8jLDUIds5wg==",
+        "resolved": "7.4.9",
+        "contentHash": "bzw9n1WgfflkhsScIaC7tzPlKFTJkfWVTOg2pjJjqzVqxF63ztaJ7HH306Iyx6bs+pC77fQbtE53UoPTpt+8dQ==",
         "dependencies": {
           "System.Reactive": "5.0.0"
         }
@@ -67,13 +67,13 @@
       },
       "Microsoft.ProjectReunion.DWrite": {
         "type": "Transitive",
-        "resolved": "0.8.5",
-        "contentHash": "35JLFDuThe8yhrTW537EurydrlkwslSbwZWcqGSPgfDtAdpCU+XGF2beGZH+VO04a5voDdx1Ocy8ao0H1SsqAQ=="
+        "resolved": "0.8.6",
+        "contentHash": "uqYkThj6szP/PC0Y7HtdDQZ3A/h1UIATewg7JX0qyiJ7FH+8+aDW4ft4r5PEOB7VE8Iipv+HIJNlU1+cEp1LJw=="
       },
       "Microsoft.ProjectReunion.InteractiveExperiences": {
         "type": "Transitive",
-        "resolved": "0.8.5",
-        "contentHash": "qni6T6RlajHrN4JeW/WK5hyjA6KrsF75dG66E8+FCxAaaQUqWZ+GAr51ySjqjLKcTfqCorYtrKNzbv5B7ZT+6g=="
+        "resolved": "0.8.6",
+        "contentHash": "0p2gZJNQ4X5nFeLiElbdhfBZ+1XorvzTVkVeykIukbl4ItS0rN87zQQC5qy54obsEdmOAoGlvT94gk7TVqXvcw=="
       },
       "Microsoft.SourceLink.Common": {
         "type": "Transitive",
@@ -82,11 +82,11 @@
       },
       "ReactiveUI": {
         "type": "Transitive",
-        "resolved": "17.0.1",
-        "contentHash": "9VCFd/aXIpU9lC+b1QdCXSNeHwAhF3QSe2kt+ATs0RfV1YS2N67qGmGBnQQg6Prd5uulIpMhvO+UjwfROWcfuw==",
+        "resolved": "17.1.17",
+        "contentHash": "0DLq44k4CVvfXcWHE4uigQa/wySOzxOTnWg50j2qZDpWzl9OP7QfIDJo39X3ffEjaVcCUFcbF9xAmm7fRX/q2g==",
         "dependencies": {
-          "DynamicData": "7.4.3",
-          "Splat": "14.1.1",
+          "DynamicData": "7.4.9",
+          "Splat": "14.1.17",
           "System.ComponentModel": "4.3.0",
           "System.Diagnostics.Contracts": "4.3.0",
           "System.Dynamic.Runtime": "4.3.0",
@@ -95,8 +95,8 @@
       },
       "Splat": {
         "type": "Transitive",
-        "resolved": "14.1.1",
-        "contentHash": "bKQtKu57w+iJ1T+WDyDdNq+LBNVdmNu2i0vGNyUdtmg4TEIEFiX2GfPusNEAW2QOfxyDE7i4+xTxbOKZr/4jhg=="
+        "resolved": "14.1.17",
+        "contentHash": "orBlJcQS4b1VZUlT+sJIensH0MsTYyCJlStT6bRwt71OFqNYD6V1SpkoIt6vKSf8YXgDT7QH/LuwWdLfTyHPrw=="
       },
       "System.Collections": {
         "type": "Transitive",
@@ -380,7 +380,7 @@
       "vetuviem.core": {
         "type": "Project",
         "dependencies": {
-          "ReactiveUI": "17.0.1"
+          "ReactiveUI": "17.1.17"
         }
       }
     },
