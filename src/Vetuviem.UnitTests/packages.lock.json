@@ -1354,7 +1354,7 @@
       "vetuviem.sourcegenerator": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp": "4.1.0"
+          "Microsoft.CodeAnalysis.CSharp": "4.0.1"
         }
       },
       "vetuviem.testing": {
