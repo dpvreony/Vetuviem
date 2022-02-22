@@ -7,7 +7,12 @@ namespace Vetuviem.Core
         where TView : class, ReactiveUI.IViewFor<TViewModel>
         where TViewModel : class, ReactiveUI.IReactiveObject
     {
-        protected AbstractControlBindingModel(global::System.Linq.Expressions.Expression<Func<TView, TControl>> vetuviemControlBindingExpression)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vetuviemControlBindingExpression"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected AbstractControlBindingModel(System.Linq.Expressions.Expression<Func<TView, TControl>> vetuviemControlBindingExpression)
         {
             VetuviemControlBindingExpression = vetuviemControlBindingExpression ?? throw new ArgumentNullException(nameof(vetuviemControlBindingExpression));
         }
