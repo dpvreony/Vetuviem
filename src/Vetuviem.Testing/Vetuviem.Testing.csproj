@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Foundatio.Xunit" Version="10.3.1" />
+    <PackageReference Include="Foundatio.Xunit" Version="10.4.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" />
     <PackageReference Include="Moq" Version="4.17.2" />
