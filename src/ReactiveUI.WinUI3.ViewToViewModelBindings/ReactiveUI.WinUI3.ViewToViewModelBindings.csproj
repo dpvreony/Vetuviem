@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <WindowsSdkPackageVersion>10.0.19041.23</WindowsSdkPackageVersion>
+    <WindowsSdkPackageVersion>10.0.19041.24</WindowsSdkPackageVersion>
     <LangVersion>9</LangVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>True</DebugSymbols>
@@ -19,9 +19,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.6" />
-    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.6" />
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.6" />
+    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.7" />
+    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.7" />
+    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.7" />
   </ItemGroup>
 
   <ItemGroup>

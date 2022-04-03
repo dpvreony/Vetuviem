@@ -4,27 +4,27 @@
     "net6.0-windows10.0.19041": {
       "Microsoft.ProjectReunion": {
         "type": "Direct",
-        "requested": "[0.8.6, )",
-        "resolved": "0.8.6",
-        "contentHash": "CKkEBtsxDGvuxTtwikI7p9cv+a9I0hZ9CHCn/e2bVZzTKHrNCfEDP6ypqXqPIAbKAh94G4ysbXdRnJv6rMH4KA==",
+        "requested": "[0.8.7, )",
+        "resolved": "0.8.7",
+        "contentHash": "eHRWGFzbMI18v1YScZtZXU86TDf/VjEE9Oezf4uijW353cq60f6VN1yfimpW1IeVDUk0W8bVpR3gxPAkuGj3Yg==",
         "dependencies": {
-          "Microsoft.ProjectReunion.DWrite": "0.8.6",
-          "Microsoft.ProjectReunion.Foundation": "0.8.6",
-          "Microsoft.ProjectReunion.InteractiveExperiences": "0.8.6",
-          "Microsoft.ProjectReunion.WinUI": "0.8.6"
+          "Microsoft.ProjectReunion.DWrite": "0.8.7",
+          "Microsoft.ProjectReunion.Foundation": "0.8.7",
+          "Microsoft.ProjectReunion.InteractiveExperiences": "0.8.7",
+          "Microsoft.ProjectReunion.WinUI": "0.8.7"
         }
       },
       "Microsoft.ProjectReunion.Foundation": {
         "type": "Direct",
-        "requested": "[0.8.6, )",
-        "resolved": "0.8.6",
-        "contentHash": "ojlzmBSj1LLd2OO7vPeed/BA1648J+BEIqk7x8pOZN0l2F0GakPP0Z67y0m1n+6OGzmpYW4azX67FzvREbLgeQ=="
+        "requested": "[0.8.7, )",
+        "resolved": "0.8.7",
+        "contentHash": "Moby9XfnveV0Mzu4gYcM9gicje4Mtehw/2Yj8nTzxMl50kpLzToghDCPM4N2UhP12EWHivIRExCIZnXduqUbIQ=="
       },
       "Microsoft.ProjectReunion.WinUI": {
         "type": "Direct",
-        "requested": "[0.8.6, )",
-        "resolved": "0.8.6",
-        "contentHash": "/rZgiPXLsnK/nLpHYA1goHVmANIHhVOM9+6g9GKnXVHFFvjWM4TppWBCz80HgK+epqH7p0NOWjJTgGZPd8JOIA=="
+        "requested": "[0.8.7, )",
+        "resolved": "0.8.7",
+        "contentHash": "3QcZgxssooFONr+75nghVEimNEGnxZKdHMgFjkLAp1yhUcvN7QMXNJO5u+UsHdDBp4PSFxTXZuT/EA3tu2EcDA=="
       },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
@@ -57,13 +57,13 @@
       },
       "Microsoft.ProjectReunion.DWrite": {
         "type": "Transitive",
-        "resolved": "0.8.6",
-        "contentHash": "uqYkThj6szP/PC0Y7HtdDQZ3A/h1UIATewg7JX0qyiJ7FH+8+aDW4ft4r5PEOB7VE8Iipv+HIJNlU1+cEp1LJw=="
+        "resolved": "0.8.7",
+        "contentHash": "UZnlAxi5tQX2sSsQLvS9nPoQg9dogh0XjYJ1xkHa6FjrmYWVDap1LqVZ7EHvsUUV30VUFebH1U6tZhEZSLw8PQ=="
       },
       "Microsoft.ProjectReunion.InteractiveExperiences": {
         "type": "Transitive",
-        "resolved": "0.8.6",
-        "contentHash": "0p2gZJNQ4X5nFeLiElbdhfBZ+1XorvzTVkVeykIukbl4ItS0rN87zQQC5qy54obsEdmOAoGlvT94gk7TVqXvcw=="
+        "resolved": "0.8.7",
+        "contentHash": "tq71tRZlPSRe+13ERQk53jMoTFchYYcaN35c1MCR+RqWG3dpugt55ceW0u/MTD/M5hAZ3Luaw1zmgcGDMv1ERw=="
       },
       "Microsoft.SourceLink.Common": {
         "type": "Transitive",
