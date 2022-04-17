@@ -27,15 +27,13 @@
     <!-- disable sourcelink on mono, to workaround https://github.com/dotnet/sourcelink/issues/155 -->
     <EnableSourceLink Condition=" '$(OS)' != 'Windows_NT' AND '$(MSBuildRuntimeType)' != 'Core' ">false</EnableSourceLink>
     <EnableSourceControlManagerQueries>$(EnableSourceLink)</EnableSourceControlManagerQueries>
-	<!--
-	<TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-	<WarningsAsErrors>nullable</WarningsAsErrors>
-	-->
-	<Nullable>enable</Nullable>
-	<Packable>false</Packable>
-	<Packable Condition="$(IsTestProject) != 'true' and $(MSBuildProjectName.StartsWith('Vetuviem.'))">false</Packable>
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-	<RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode>
+    <!--
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+    -->
+    <Nullable>enable</Nullable>
+    <Packable>false</Packable>
+    <Packable Condition="$(IsTestProject) != 'true' and $(MSBuildProjectName.StartsWith('Vetuviem.'))">false</Packable>
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsTestProject)">
