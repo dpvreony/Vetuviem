@@ -66,13 +66,6 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
-    - name: Install Visual Studio 2022
-      shell: bash
-      run: |
-        dotnet tool update -g dotnet-vs
-        vs install Enterprise +mobile +desktop +uwp +web
-        echo "##vso[task.prependpath]$(vs where preview --prop=InstallationPath)\MSBuild\Current\Bin"
-
     - name: Install Windows SDK 10.0.16299
       shell: pwsh
       run: |
@@ -93,7 +86,7 @@ jobs:
         dotnet restore ${{ env.SOLUTION_PATH }} /bl:artifacts\\binlog\\restore.binlog
 
     - name: Run Build
-      run: msbuild /t:build /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release /p:UseSharedCompilation=false
+      run: dotnet build
       working-directory: src
 
     - name: Perform CodeQL Analysis
