@@ -14,10 +14,14 @@ namespace ReactiveUI.WPF.SampleApp.Views
     /// </summary>
     public partial class QuestionnaireView
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QuestionnaireView"/> class.
+        /// </summary>
         public QuestionnaireView()
         {
             InitializeComponent();
 
+            // ReSharper disable once ConvertClosureToMethodGroup
             this.WhenActivated(action => this.OnWhenActivated(action));
         }
 
@@ -26,7 +30,7 @@ namespace ReactiveUI.WPF.SampleApp.Views
             new QuestionnaireViewBindingModels().ApplyBindings(
                 disposeWithAction,
                 this,
-                this.ViewModel);
+                this.ViewModel!);
         }
     }
 }

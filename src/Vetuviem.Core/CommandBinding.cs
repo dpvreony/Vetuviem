@@ -6,6 +6,10 @@ using ReactiveUI;
 
 namespace Vetuviem.Core
 {
+    /// <summary>
+    /// Represents a command binding between a control and a viewmodel.
+    /// </summary>
+    /// <typeparam name="TViewModel">The type for the viewmodel.</typeparam>
     public sealed class CommandBinding<TViewModel> : ICommandBinding<TViewModel, ICommand>
         where TViewModel : class
     {
