@@ -56,7 +56,6 @@ jobs:
         # Prefix the list here with "+" to use these queries and those in the config file.
         # queries: ./path/to/local/query, your-org/your-repo/queries@main
 
-
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
@@ -66,6 +65,14 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
+
+    - name: Update Visual Studio preview
+      shell: bash
+      run: |
+        dotnet tool update -g dotnet-vs
+        vs update release
+        vs modify release +mobile +desktop +uwp +web
+        echo "##vso[task.prependpath]$(vs where preview --prop=InstallationPath)\MSBuild\Current\Bin"
 
     - name: Install Windows SDK 10.0.16299
       shell: pwsh
