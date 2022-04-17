@@ -66,12 +66,11 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
-    - name: Update Visual Studio preview
+    - name: Install Visual Studio 2022
       shell: bash
       run: |
         dotnet tool update -g dotnet-vs
-        vs update preview
-        vs modify preview +mobile +desktop +uwp +web
+        vs install Enterprise +mobile +desktop +uwp +web
         echo "##vso[task.prependpath]$(vs where preview --prop=InstallationPath)\MSBuild\Current\Bin"
 
     - name: Install Windows SDK 10.0.16299
@@ -96,18 +95,6 @@ jobs:
     - name: Run Build
       run: msbuild /t:build /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release /p:UseSharedCompilation=false
       working-directory: src
-
-
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 https://git.io/JvXDl
-
-    # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
-    #    and modify them (or add more) to build your code if your project
-    #    uses a compiled language
-
-    #- run: |
-    #   make bootstrap
-    #   make release
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
