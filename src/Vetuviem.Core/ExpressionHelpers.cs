@@ -23,7 +23,6 @@ namespace Vetuviem.Core
                     viewPropExpression.Parameters);
 
             return propertyExpression;
-
         }
 
         /// <summary>
@@ -43,7 +42,6 @@ namespace Vetuviem.Core
                 viewPropExpression.Parameters);
 
             return propertyExpression;
-
         }
     }
 }

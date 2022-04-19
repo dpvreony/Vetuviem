@@ -22,7 +22,7 @@ namespace Vetuviem.Core
         private readonly Expression<Func<TViewProp, TOut>> _converterBinding;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBindOnOneOrTwoWayBind{TViewModel,TViewProp,TOut}"/> class.
+        /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBind{TViewModel, TViewProp, TOut}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">View to ViewModel binding expression.</param>
         /// <param name="converterBinding">View Property Conversion binding expression.</param>

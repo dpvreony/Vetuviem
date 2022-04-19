@@ -9,29 +9,38 @@ using ReactiveUI;
 namespace Vetuviem.Core
 {
     /// <summary>
-    /// Represents a one way View and ViewModel binding.
+    /// Represents a one way View and ViewModel binding that applies a selection.
     /// </summary>
     /// <typeparam name="TViewModel">The type for the ViewModel.</typeparam>
     /// <typeparam name="TViewProp">The type for the View.</typeparam>
-    public class OneWayBinding<TViewModel, TViewProp> : IOneWayBind<TViewModel, TViewProp>
+    /// <typeparam name="TViewModelProp">The type for the View Model Property.</typeparam>
+    public class OneWayBindingWithConversionOnOneOrTwoWayBind<TViewModel, TViewProp, TViewModelProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
         where TViewModel : class
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBind{TViewModel,TViewProp,TOut}"/> class.
+        /// Initializes a new instance of the <see cref="OneWayBindingWithConversionOnOneOrTwoWayBind{TViewModel,TViewProp,TOut}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
-        public OneWayBinding(Expression<Func<TViewModel, TViewProp?>> viewModelBinding)
+        /// <param name="selector">Conversion selector function.</param>
+        public OneWayBindingWithConversionOnOneOrTwoWayBind(
+            Expression<Func<TViewModel, TViewModelProp?>> viewModelBinding,
+            Func<TViewModelProp?, TViewProp> selector)
         {
             ViewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
+            Selector = selector ?? throw new ArgumentNullException(nameof(selector));
         }
 
+        /// <summary>
+        /// Gets the conversion selector function.
+        /// </summary>
+        public Func<TViewModelProp?, TViewProp> Selector { get; }
+
         /// <inheritdoc/>
-        public Expression<Func<TViewModel, TViewProp?>> ViewModelBinding
+        public Expression<Func<TViewModel, TViewModelProp?>> ViewModelBinding
         {
             get;
         }
 
-        /// <inheritdoc/>
         public void ApplyBinding<TView>(
             Action<IDisposable> d,
             TView view,
@@ -47,7 +56,8 @@ namespace Vetuviem.Core
             d(view.OneWayBind(
                 viewModel,
                 ViewModelBinding,
-                viewBinding));
+                viewBinding,
+                Selector));
         }
     }
 }

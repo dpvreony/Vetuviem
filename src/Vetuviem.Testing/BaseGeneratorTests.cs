@@ -35,7 +35,8 @@ namespace Vetuviem.Testing
             /// Initializes a new instance of the <see cref="BaseExecuteMethod{TGenerator, TGeneratorProcessor}"/> class.
             /// </summary>
             /// <param name="output">Test Output Helper.</param>
-            protected BaseExecuteMethod(ITestOutputHelper output) : base(output)
+            protected BaseExecuteMethod(ITestOutputHelper output)
+                : base(output)
             {
             }
 
@@ -94,15 +95,13 @@ namespace Vetuviem.Testing
                 assemblyName: "compilation",
                 syntaxTrees: new[] { CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Preview)) },
                 references: reference,
-                options: new CSharpCompilationOptions(OutputKind.ConsoleApplication)
-            );
+                options: new CSharpCompilationOptions(OutputKind.ConsoleApplication));
 
             private static GeneratorDriver CreateDriver(Compilation compilation, params ISourceGenerator[] generators) => CSharpGeneratorDriver.Create(
                 generators: ImmutableArray.Create(generators),
                 additionalTexts: ImmutableArray<AdditionalText>.Empty,
                 parseOptions: (CSharpParseOptions)compilation.SyntaxTrees.First().Options,
-                optionsProvider: null
-            );
+                optionsProvider: null);
 
             private static Compilation RunGenerators(Compilation compilation, out ImmutableArray<Diagnostic> diagnostics, params ISourceGenerator[] generators)
             {
