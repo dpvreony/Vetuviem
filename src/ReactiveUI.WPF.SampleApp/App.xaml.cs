@@ -18,7 +18,7 @@ namespace ReactiveUI.WPF.SampleApp
                 ViewModel = new QuestionnaireViewModel()
             };
 
-            this.MainWindow = view;
+            MainWindow = view;
 
             view.Show();
         }

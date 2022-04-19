@@ -75,7 +75,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _forename, value);
         }
 
-        public int ForenameLengthRemaining => this._forenameLengthRemaining.Value;
+        public int ForenameLengthRemaining => _forenameLengthRemaining.Value;
 
         public ReactiveCommand<Unit, Unit> LaunchInteraction { get; set; }
 
@@ -85,7 +85,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _surname, value);
         }
 
-        public int SurnameLengthRemaining => this._surnameLengthRemaining.Value;
+        public int SurnameLengthRemaining => _surnameLengthRemaining.Value;
 
         public string? AnswerOne
         {
@@ -93,7 +93,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _answerOne, value);
         }
 
-        public int AnswerOneLengthRemaining => this._answerOneLengthRemaining.Value;
+        public int AnswerOneLengthRemaining => _answerOneLengthRemaining.Value;
 
         public string? AnswerTwo
         {
@@ -101,7 +101,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _answerTwo, value);
         }
 
-        public int AnswerTwoLengthRemaining => this._answerTwoLengthRemaining.Value;
+        public int AnswerTwoLengthRemaining => _answerTwoLengthRemaining.Value;
 
         public string? AnswerThree
         {
@@ -109,7 +109,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _answerThree, value);
         }
 
-        public int AnswerThreeLengthRemaining => this._answerThreeLengthRemaining.Value;
+        public int AnswerThreeLengthRemaining => _answerThreeLengthRemaining.Value;
 
         public string? AnswerFour
         {
@@ -117,7 +117,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _answerFour, value);
         }
 
-        public int AnswerFourLengthRemaining => this._answerFourLengthRemaining.Value;
+        public int AnswerFourLengthRemaining => _answerFourLengthRemaining.Value;
 
         public string? AnswerFive
         {
@@ -125,7 +125,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _answerFive, value);
         }
 
-        public int AnswerFiveLengthRemaining => this._answerFiveLengthRemaining.Value;
+        public int AnswerFiveLengthRemaining => _answerFiveLengthRemaining.Value;
 
         public int MaxLength => _maxLength;
 

@@ -6,7 +6,6 @@ namespace ReactiveUI.WPF.SampleApp.Views
 {
     public class ReactiveQuestionnaireWindow : ReactiveWindow<QuestionnaireViewModel>
     {
-
     }
 
     /// <summary>
@@ -22,7 +21,7 @@ namespace ReactiveUI.WPF.SampleApp.Views
             InitializeComponent();
 
             // ReSharper disable once ConvertClosureToMethodGroup
-            this.WhenActivated(action => this.OnWhenActivated(action));
+            this.WhenActivated(action => OnWhenActivated(action));
         }
 
         private void OnWhenActivated(Action<IDisposable> disposeWithAction)
@@ -30,7 +29,7 @@ namespace ReactiveUI.WPF.SampleApp.Views
             new QuestionnaireViewBindingModels().ApplyBindings(
                 disposeWithAction,
                 this,
-                this.ViewModel!);
+                ViewModel!);
         }
     }
 }
