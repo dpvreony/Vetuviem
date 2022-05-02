@@ -12,7 +12,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Vetuviem.SourceGenerator.Features.Core
 {
     /// <summary>
-    /// Helpers for generating roslyn expression sytax
+    /// Helpers for generating roslyn expression syntax.
     /// </summary>
     public static class RoslynGenerationHelpers
     {
@@ -53,16 +53,15 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return argumentList;
         }
 
-
         /// <summary>
-        /// Produces the Invocation Syntax for using the nameof operator
+        /// Produces the Invocation Syntax for using the nameof operator.
         /// </summary>
-        /// <param name="parameterName">parameter name</param>
-        /// <returns>Roslyn syntax</returns>
+        /// <param name="parameterName">parameter name.</param>
+        /// <returns>Roslyn syntax.</returns>
         public static InvocationExpressionSyntax GetNameOfInvocationSyntax(string parameterName)
         {
             var nameOfIdentifier = SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("nameof"));
-            var nameOfArgumentList = new SeparatedSyntaxList<ArgumentSyntax>();
+            var nameOfArgumentList = default(SeparatedSyntaxList<ArgumentSyntax>);
             nameOfArgumentList = nameOfArgumentList.Add(
                 SyntaxFactory.Argument(
                     SyntaxFactory.IdentifierName(SyntaxFactory.Identifier(parameterName))));
@@ -70,15 +69,15 @@ namespace Vetuviem.SourceGenerator.Features.Core
         }
 
         /// <summary>
-        /// Produces the Throw Statement Syntax for an ArgumentNullException
+        /// Produces the Throw Statement Syntax for an ArgumentNullException.
         /// </summary>
-        /// <param name="parameterName">parameter name</param>
-        /// <returns>Roslyn syntax</returns>
+        /// <param name="parameterName">parameter name.</param>
+        /// <returns>Roslyn syntax.</returns>
         public static ThrowStatementSyntax GetThrowArgumentNullExceptionSyntax(string parameterName)
         {
             var nameOfInvocation = GetNameOfInvocationSyntax(parameterName);
 
-            SeparatedSyntaxList<ArgumentSyntax> argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            SeparatedSyntaxList<ArgumentSyntax> argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             argsList = argsList.Add(SyntaxFactory.Argument(nameOfInvocation));
 
             var objectCreationEx = SyntaxFactory.ObjectCreationExpression(
@@ -90,9 +89,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
         }
 
         /// <summary>
-        /// Produces the Throw Statement Syntax for an NotImplementedException
+        /// Produces the Throw Statement Syntax for an NotImplementedException.
         /// </summary>
-        /// <returns>Roslyn syntax</returns>
+        /// <returns>Roslyn syntax.</returns>
         public static ThrowStatementSyntax GetThrowNotImplementedExceptionSyntax()
         {
             var objectCreationEx = SyntaxFactory.ObjectCreationExpression(
@@ -104,10 +103,10 @@ namespace Vetuviem.SourceGenerator.Features.Core
         }
 
         /// <summary>
-        /// Produces a null guard check for a parameter
+        /// Produces a null guard check for a parameter.
         /// </summary>
-        /// <param name="parameterName">parameter name</param>
-        /// <returns>Roslyn syntax</returns>
+        /// <param name="parameterName">parameter name.</param>
+        /// <returns>Roslyn syntax.</returns>
         public static IfStatementSyntax GetNullGuardCheckSyntax(string parameterName)
         {
             var parameterIdentifier = SyntaxFactory.IdentifierName(SyntaxFactory.Identifier(parameterName));
@@ -139,7 +138,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
                   fieldMemberAccess,
                   name: SyntaxFactory.IdentifierName(methodName));
 
-            SeparatedSyntaxList<ArgumentSyntax> argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            var argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             if (args != null && args.Length > 0)
             {
                 foreach (var s in args)
@@ -154,7 +153,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             var equalsValueClause = SyntaxFactory.EqualsValueClause(
                 SyntaxFactory.Token(SyntaxKind.EqualsToken),
                 getCommandInvocation);
-            var variableSyntax = new SeparatedSyntaxList<VariableDeclaratorSyntax>();
+            var variableSyntax = default(SeparatedSyntaxList<VariableDeclaratorSyntax>);
             variableSyntax = variableSyntax.Add(SyntaxFactory.VariableDeclarator(variableName).WithInitializer(equalsValueClause));
             var variableDeclaration =
                 SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("var")), variableSyntax);
@@ -182,12 +181,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 SyntaxKind.SimpleMemberAccessExpression,
                 fieldMemberAccess,
                 name: SyntaxFactory.IdentifierName(propertyName));
-            //var getCommandInvocation = SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, getAddCommandInvocation,) .InvocationExpression(getAddCommandInvocation);
 
             var equalsValueClause = SyntaxFactory.EqualsValueClause(
                 SyntaxFactory.Token(SyntaxKind.EqualsToken),
                 getAddCommandInvocation);
-            var variableSyntax = new SeparatedSyntaxList<VariableDeclaratorSyntax>();
+            var variableSyntax = default(SeparatedSyntaxList<VariableDeclaratorSyntax>);
             variableSyntax = variableSyntax.Add(SyntaxFactory.VariableDeclarator(variableName).WithInitializer(equalsValueClause));
             var variableDeclaration =
                 SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("var")), variableSyntax);
@@ -195,15 +193,17 @@ namespace Vetuviem.SourceGenerator.Features.Core
         }
 
         /// <summary>
-        /// Produces a null guard check for a parameter
+        /// Produces a null guard check for a parameter.
         /// </summary>
-        /// <param name="parameterName">parameter name</param>
-        /// <param name="returnName"></param>
-        /// <returns>Roslyn syntax</returns>
+        /// <param name="parameterName">parameter name.</param>
+        /// <param name="returnName">name of the return variable.</param>
+        /// <returns>Roslyn syntax.</returns>
         public static IfStatementSyntax GetReturnIfNullSyntax(string parameterName, string returnName)
         {
             var parameterIdentifier = SyntaxFactory.IdentifierName(SyntaxFactory.Identifier(parameterName));
-            var condition = SyntaxFactory.BinaryExpression(SyntaxKind.EqualsExpression, parameterIdentifier,
+            var condition = SyntaxFactory.BinaryExpression(
+                SyntaxKind.EqualsExpression,
+                parameterIdentifier,
                 SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression));
 
             var returnStatement = SyntaxFactory.ReturnStatement(SyntaxFactory.ParseExpression(returnName));
@@ -211,32 +211,33 @@ namespace Vetuviem.SourceGenerator.Features.Core
         }
 
         /// <summary>
-        /// Produces a false check for a parameter
+        /// Produces a false check for a parameter.
         /// </summary>
-        /// <param name="parameterName">parameter name</param>
-        /// <param name="returnName"></param>
-        /// <returns>Roslyn syntax</returns>
+        /// <param name="parameterName">parameter name.</param>
+        /// <param name="returnName">name of the return variable.</param>
+        /// <returns>Roslyn syntax.</returns>
         public static IfStatementSyntax GetReturnIfFalseSyntax(string parameterName, string returnName)
         {
             var parameterIdentifier = SyntaxFactory.IdentifierName(SyntaxFactory.Identifier(parameterName));
             var condition = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, parameterIdentifier);
-            //var condition = SyntaxFactory.ParseExpression(parameterName);
 
             var returnStatement = SyntaxFactory.ReturnStatement(SyntaxFactory.ParseExpression(returnName));
             return SyntaxFactory.IfStatement(condition, returnStatement);
         }
 
         /// <summary>
-        /// Produces a null guard check for a parameter
+        /// Produces a null guard check for a parameter.
         /// </summary>
-        /// <param name="parameterName">parameter name</param>
+        /// <param name="parameterName">parameter name.</param>
         /// <param name="minimumValue"></param>
         /// <param name="returnName"></param>
-        /// <returns>Roslyn syntax</returns>
+        /// <returns>Roslyn syntax.</returns>
         public static IfStatementSyntax GetReturnIfLessThanSyntax(string parameterName, int minimumValue, string returnName)
         {
             var parameterIdentifier = SyntaxFactory.IdentifierName(SyntaxFactory.Identifier(parameterName));
-            var condition = SyntaxFactory.BinaryExpression(SyntaxKind.LessThanExpression, parameterIdentifier,
+            var condition = SyntaxFactory.BinaryExpression(
+                SyntaxKind.LessThanExpression,
+                parameterIdentifier,
                 SyntaxFactory.ParseExpression(minimumValue.ToString(NumberFormatInfo.InvariantInfo)));
 
             var returnStatement = SyntaxFactory.ReturnStatement(SyntaxFactory.ParseExpression(returnName));
@@ -244,7 +245,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         }
 
         /// <summary>
-        /// Gets syntax to create and assign a variable from invoking another variable
+        /// Gets syntax to create and assign a variable from invoking another variable.
         /// </summary>
         /// <param name="variableToCreate"></param>
         /// <param name="variableToInvoke"></param>
@@ -259,7 +260,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             var equalsValueClause = SyntaxFactory.EqualsValueClause(
                 SyntaxFactory.Token(SyntaxKind.EqualsToken),
                 getCommandInvocation);
-            var variableSyntax = new SeparatedSyntaxList<VariableDeclaratorSyntax>();
+            var variableSyntax = default(SeparatedSyntaxList<VariableDeclaratorSyntax>);
             variableSyntax = variableSyntax.Add(SyntaxFactory.VariableDeclarator(variableToCreate).WithInitializer(equalsValueClause));
             var variableDeclaration =
                 SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("var")), variableSyntax);
@@ -275,15 +276,18 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     getCommandInvocation,
                     name: SyntaxFactory.IdentifierName("ConfigureAwait"));
 
-                var configureAwaitArgsList = new SeparatedSyntaxList<ArgumentSyntax>();
+                var configureAwaitArgsList = default(SeparatedSyntaxList<ArgumentSyntax>);
                 configureAwaitArgsList =
                     configureAwaitArgsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseExpression("false")));
-                getCommandInvocation = SyntaxFactory.InvocationExpression(configureAwaitMemberAccessExpression,
+                getCommandInvocation = SyntaxFactory.InvocationExpression(
+                    configureAwaitMemberAccessExpression,
                     SyntaxFactory.ArgumentList(configureAwaitArgsList));
 
-                getCommandInvocation = SyntaxFactory.AwaitExpression(SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
+                getCommandInvocation = SyntaxFactory.AwaitExpression(
+                    SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
                     getCommandInvocation);
             }
+
             return getCommandInvocation;
         }
 
@@ -306,10 +310,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 SyntaxFactory.IdentifierName(variableToReference),
                 SyntaxFactory.IdentifierName(methodToInvoke));
 
-            var argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            var argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             if (arguments != null && arguments.Length > 0)
             {
-
                 foreach (var s in arguments)
                 {
                     argsList = argsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseName(s)));
@@ -325,7 +328,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             var equalsValueClause = SyntaxFactory.EqualsValueClause(
                 SyntaxFactory.Token(SyntaxKind.EqualsToken),
                 getCommandInvocation);
-            var variableSyntax = new SeparatedSyntaxList<VariableDeclaratorSyntax>();
+            var variableSyntax = default(SeparatedSyntaxList<VariableDeclaratorSyntax>);
             variableSyntax = variableSyntax.Add(SyntaxFactory.VariableDeclarator(variableToCreate).WithInitializer(equalsValueClause));
             var variableDeclaration =
                 SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("var")), variableSyntax);
@@ -346,10 +349,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 SyntaxFactory.IdentifierName("this"),
                 name: SyntaxFactory.IdentifierName(methodName));
 
-            SeparatedSyntaxList<ArgumentSyntax> argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            SeparatedSyntaxList<ArgumentSyntax> argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             if (args != null && args.Length > 0)
             {
-
                 foreach (var s in args)
                 {
                     argsList = argsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseName(s)));
@@ -358,12 +360,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
             var getCommandInvocation = SyntaxFactory.InvocationExpression(getAddCommandInvocation, SyntaxFactory.ArgumentList(argsList));
 
-
             if (!isAsync)
             {
-                //var configureAwaitInvocation = SyntaxFactory.MemberAccessExpression()
-                //getAddCommandInvocation.WithExpression()
-
                 return getCommandInvocation;
             }
 
@@ -372,7 +370,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 getCommandInvocation,
                 name: SyntaxFactory.IdentifierName("ConfigureAwait"));
 
-            var configureAwaitArgsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            var configureAwaitArgsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             configureAwaitArgsList =
                 configureAwaitArgsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseExpression("false")));
             getCommandInvocation = SyntaxFactory.InvocationExpression(configureAwaitMemberAccessExpression, SyntaxFactory.ArgumentList(configureAwaitArgsList));
@@ -393,17 +391,13 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 SyntaxFactory.IdentifierName(className),
                 name: SyntaxFactory.IdentifierName(methodName));
 
-            SeparatedSyntaxList<ArgumentSyntax> argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            SeparatedSyntaxList<ArgumentSyntax> argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             argsList = argsList.Add(SyntaxFactory.Argument(nestedSyntax));
 
             var getCommandInvocation = SyntaxFactory.InvocationExpression(getAddCommandInvocation, SyntaxFactory.ArgumentList(argsList));
 
-
             if (!isAsync)
             {
-                //var configureAwaitInvocation = SyntaxFactory.MemberAccessExpression()
-                //getAddCommandInvocation.WithExpression()
-
                 return getCommandInvocation;
             }
 
@@ -412,18 +406,21 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 getCommandInvocation,
                 name: SyntaxFactory.IdentifierName("ConfigureAwait"));
 
-            var configureAwaitArgsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            var configureAwaitArgsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             configureAwaitArgsList =
                 configureAwaitArgsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseExpression("false")));
-            getCommandInvocation = SyntaxFactory.InvocationExpression(configureAwaitMemberAccessExpression, SyntaxFactory.ArgumentList(configureAwaitArgsList));
+            getCommandInvocation = SyntaxFactory.InvocationExpression(
+                configureAwaitMemberAccessExpression,
+                SyntaxFactory.ArgumentList(configureAwaitArgsList));
 
-            var awaitCommand = SyntaxFactory.AwaitExpression(SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
+            var awaitCommand = SyntaxFactory.AwaitExpression(
+                SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
                 getCommandInvocation);
             return awaitCommand;
         }
 
         /// <summary>
-        /// Gets the syntax for invoking a method on a field and passing in a value
+        /// Gets the syntax for invoking a method on a field and passing in a value.
         /// </summary>
         /// <param name="className"></param>
         /// <param name="methodName"></param>
@@ -437,10 +434,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 SyntaxFactory.IdentifierName(className),
                 name: SyntaxFactory.IdentifierName(methodName));
 
-            SeparatedSyntaxList<ArgumentSyntax> argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            SeparatedSyntaxList<ArgumentSyntax> argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             if (args != null && args.Length > 0)
             {
-
                 foreach (var s in args)
                 {
                     argsList = argsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseName(s)));
@@ -449,12 +445,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
             var getCommandInvocation = SyntaxFactory.InvocationExpression(getAddCommandInvocation, SyntaxFactory.ArgumentList(argsList));
 
-
             if (!isAsync)
             {
-                //var configureAwaitInvocation = SyntaxFactory.MemberAccessExpression()
-                //getAddCommandInvocation.WithExpression()
-
                 return getCommandInvocation;
             }
 
@@ -463,13 +455,17 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 getCommandInvocation,
                 name: SyntaxFactory.IdentifierName("ConfigureAwait"));
 
-            var configureAwaitArgsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            var configureAwaitArgsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             configureAwaitArgsList =
                 configureAwaitArgsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseExpression("false")));
-            getCommandInvocation = SyntaxFactory.InvocationExpression(configureAwaitMemberAccessExpression, SyntaxFactory.ArgumentList(configureAwaitArgsList));
+            getCommandInvocation = SyntaxFactory.InvocationExpression(
+                configureAwaitMemberAccessExpression,
+                SyntaxFactory.ArgumentList(configureAwaitArgsList));
 
-            var awaitCommand = SyntaxFactory.AwaitExpression(SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
+            var awaitCommand = SyntaxFactory.AwaitExpression(
+                SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
                 getCommandInvocation);
+
             return awaitCommand;
         }
 
@@ -482,10 +478,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <returns></returns>
         public static ExpressionSyntax GetStaticMethodInvocationSyntax(string methodName, string[] args, bool isAsync)
         {
-            SeparatedSyntaxList<ArgumentSyntax> argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            SeparatedSyntaxList<ArgumentSyntax> argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             if (args != null && args.Length > 0)
             {
-
                 foreach (var s in args)
                 {
                     argsList = argsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseName(s)));
@@ -494,12 +489,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
             var getCommandInvocation = SyntaxFactory.InvocationExpression(SyntaxFactory.IdentifierName(methodName), SyntaxFactory.ArgumentList(argsList));
 
-
             if (!isAsync)
             {
-                //var configureAwaitInvocation = SyntaxFactory.MemberAccessExpression()
-                //getAddCommandInvocation.WithExpression()
-
                 return getCommandInvocation;
             }
 
@@ -508,13 +499,15 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 getCommandInvocation,
                 name: SyntaxFactory.IdentifierName("ConfigureAwait"));
 
-            var configureAwaitArgsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            var configureAwaitArgsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             configureAwaitArgsList =
                 configureAwaitArgsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseExpression("false")));
             getCommandInvocation = SyntaxFactory.InvocationExpression(configureAwaitMemberAccessExpression, SyntaxFactory.ArgumentList(configureAwaitArgsList));
 
-            var awaitCommand = SyntaxFactory.AwaitExpression(SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
+            var awaitCommand = SyntaxFactory.AwaitExpression(
+                SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
                 getCommandInvocation);
+
             return awaitCommand;
         }
 
@@ -538,10 +531,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
                   fieldMemberAccess,
                   name: SyntaxFactory.IdentifierName(methodName));
 
-            SeparatedSyntaxList<ArgumentSyntax> argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            SeparatedSyntaxList<ArgumentSyntax> argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             if (args != null && args.Length > 0)
             {
-
                 foreach (var s in args)
                 {
                     argsList = argsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseName(s)));
@@ -550,12 +542,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
             var getCommandInvocation = SyntaxFactory.InvocationExpression(getAddCommandInvocation, SyntaxFactory.ArgumentList(argsList));
 
-
             if (!isAsync)
             {
-                //var configureAwaitInvocation = SyntaxFactory.MemberAccessExpression()
-                //getAddCommandInvocation.WithExpression()
-
                 return SyntaxFactory.ExpressionStatement(getCommandInvocation);
             }
 
@@ -564,13 +552,15 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 getCommandInvocation,
                 name: SyntaxFactory.IdentifierName("ConfigureAwait"));
 
-            var configureAwaitArgsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            var configureAwaitArgsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             configureAwaitArgsList =
                 configureAwaitArgsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseExpression("false")));
             getCommandInvocation = SyntaxFactory.InvocationExpression(configureAwaitMemberAccessExpression, SyntaxFactory.ArgumentList(configureAwaitArgsList));
 
-            var awaitCommand = SyntaxFactory.AwaitExpression(SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
+            var awaitCommand = SyntaxFactory.AwaitExpression(
+                SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
                 getCommandInvocation);
+
             return SyntaxFactory.ExpressionStatement(awaitCommand);
         }
 
@@ -593,10 +583,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
                   SyntaxFactory.IdentifierName(variableName),
                   SyntaxFactory.IdentifierName(methodName));
 
-            SeparatedSyntaxList<ArgumentSyntax> argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            SeparatedSyntaxList<ArgumentSyntax> argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             if (args != null && args.Length > 0)
             {
-
                 foreach (var s in args)
                 {
                     argsList = argsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseName(s)));
@@ -605,12 +594,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
             var getCommandInvocation = SyntaxFactory.InvocationExpression(getAddCommandInvocation, SyntaxFactory.ArgumentList(argsList));
 
-
             if (!isAsync)
             {
-                //var configureAwaitInvocation = SyntaxFactory.MemberAccessExpression()
-                //getAddCommandInvocation.WithExpression()
-
                 return SyntaxFactory.ExpressionStatement(getCommandInvocation);
             }
 
@@ -619,13 +604,15 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 getCommandInvocation,
                 name: SyntaxFactory.IdentifierName("ConfigureAwait"));
 
-            var configureAwaitArgsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            var configureAwaitArgsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             configureAwaitArgsList =
                 configureAwaitArgsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseExpression("false")));
             getCommandInvocation = SyntaxFactory.InvocationExpression(configureAwaitMemberAccessExpression, SyntaxFactory.ArgumentList(configureAwaitArgsList));
 
-            var awaitCommand = SyntaxFactory.AwaitExpression(SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
+            var awaitCommand = SyntaxFactory.AwaitExpression(
+                SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
                 getCommandInvocation);
+
             return SyntaxFactory.ExpressionStatement(awaitCommand);
         }
 
@@ -648,10 +635,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
                   SyntaxFactory.IdentifierName(variableName),
                   SyntaxFactory.IdentifierName(propertyName));
 
-            SeparatedSyntaxList<ArgumentSyntax> argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            SeparatedSyntaxList<ArgumentSyntax> argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             if (args != null && args.Length > 0)
             {
-
                 foreach (var s in args)
                 {
                     argsList = argsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseName(s)));
@@ -672,10 +658,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
                   SyntaxFactory.IdentifierName(variableName),
                   SyntaxFactory.IdentifierName(methodName));
 
-            SeparatedSyntaxList<ArgumentSyntax> argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            SeparatedSyntaxList<ArgumentSyntax> argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             if (args != null && args.Length > 0)
             {
-
                 foreach (var s in args)
                 {
                     argsList = argsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseName(s)));
@@ -684,12 +669,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
             var getCommandInvocation = SyntaxFactory.InvocationExpression(getAddCommandInvocation, SyntaxFactory.ArgumentList(argsList));
 
-
             if (!isAsync)
             {
-                //var configureAwaitInvocation = SyntaxFactory.MemberAccessExpression()
-                //getAddCommandInvocation.WithExpression()
-
                 return getCommandInvocation;
             }
 
@@ -698,13 +679,15 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 getCommandInvocation,
                 name: SyntaxFactory.IdentifierName("ConfigureAwait"));
 
-            var configureAwaitArgsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            var configureAwaitArgsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             configureAwaitArgsList =
                 configureAwaitArgsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseExpression("false")));
             getCommandInvocation = SyntaxFactory.InvocationExpression(configureAwaitMemberAccessExpression, SyntaxFactory.ArgumentList(configureAwaitArgsList));
 
-            var awaitCommand = SyntaxFactory.AwaitExpression(SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
+            var awaitCommand = SyntaxFactory.AwaitExpression(
+                SyntaxFactory.Token(SyntaxKind.AwaitKeyword),
                 getCommandInvocation);
+
             return awaitCommand;
         }
 
@@ -715,10 +698,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 fluentApiInvocation,
                 SyntaxFactory.IdentifierName(name));
 
-            SeparatedSyntaxList<ArgumentSyntax> argsList = new SeparatedSyntaxList<ArgumentSyntax>();
+            SeparatedSyntaxList<ArgumentSyntax> argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
             if (args != null && args.Length > 0)
             {
-
                 foreach (var s in args)
                 {
                     argsList = argsList.Add(SyntaxFactory.Argument(SyntaxFactory.ParseName(s)));

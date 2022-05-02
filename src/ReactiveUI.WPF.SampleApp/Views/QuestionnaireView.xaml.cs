@@ -4,16 +4,11 @@
 
 using System;
 using ReactiveUI.WPF.SampleApp.ViewBindingModels;
-using ReactiveUI.WPF.SampleApp.ViewModels;
 
 namespace ReactiveUI.WPF.SampleApp.Views
 {
-    public class ReactiveQuestionnaireWindow : ReactiveWindow<QuestionnaireViewModel>
-    {
-    }
-
     /// <summary>
-    /// Interaction logic for QuestionnaireView.xaml
+    /// Interaction logic for Questionnaire View.
     /// </summary>
     public partial class QuestionnaireView
     {

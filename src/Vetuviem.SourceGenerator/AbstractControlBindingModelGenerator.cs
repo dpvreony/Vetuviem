@@ -8,6 +8,7 @@ namespace Vetuviem.SourceGenerator
 {
     public abstract class AbstractControlBindingModelGenerator : AbstractBaseGenerator<ControlBindingModelGeneratorProcessor>
     {
+        /// <inheritdoc />
         protected override string GetNamespace() => $"ReactiveUI.{GetPlatformName()}.ViewToViewModelBindings";
     }
 }
