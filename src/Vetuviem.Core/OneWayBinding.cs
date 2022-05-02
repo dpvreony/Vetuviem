@@ -17,7 +17,7 @@ namespace Vetuviem.Core
         where TViewModel : class
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBind{TViewModel,TViewProp,TOut}"/> class.
+        /// Initializes a new instance of the <see cref="OneWayBinding{TViewModel,TViewProp}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
         public OneWayBinding(Expression<Func<TViewModel, TViewProp?>> viewModelBinding)

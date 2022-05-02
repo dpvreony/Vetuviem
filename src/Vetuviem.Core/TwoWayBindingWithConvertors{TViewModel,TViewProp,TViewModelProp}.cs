@@ -12,8 +12,8 @@ namespace Vetuviem.Core
     /// Represents a Two way binding on a View Property that supports One or Two way binding.
     /// </summary>
     /// <typeparam name="TViewModel">The type for the ViewModel.</typeparam>
-    /// <typeparam name="TViewProp">The type for the View.</typeparam>
-    /// <typeparam name="TViewModelProp">The type for the View Model Property</typeparam>
+    /// <typeparam name="TViewProp">The type for the View Property.</typeparam>
+    /// <typeparam name="TViewModelProp">The type for the View Model Property.</typeparam>
     public class TwoWayBindingWithConvertors<TViewModel, TViewProp, TViewModelProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
         where TViewModel : class
     {

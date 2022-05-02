@@ -102,6 +102,7 @@ namespace Vetuviem.SourceGenerator
 
             var platformResolver = GetPlatformResolver();
 
+#if PLATFORMASSEMBLIES
             //// we work on assumption we have the references already in the build chain
             //var trustedAssembliesPaths = GetPlatformAssemblyPaths(context);
             //if (trustedAssembliesPaths == null || trustedAssembliesPaths.Length == 0)
@@ -112,6 +113,7 @@ namespace Vetuviem.SourceGenerator
             //    // for now we drop out
             //    return namespaceDeclaration;
             //}
+#endif
 
             var assembliesOfInterest = platformResolver.GetAssemblyNames();
 

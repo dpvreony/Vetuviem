@@ -153,7 +153,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             }
         }
 
-        private static void CheckTypeForUiType(INamedTypeSymbol namedTypeSymbol,
+        private static void CheckTypeForUiType(
+            INamedTypeSymbol namedTypeSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
@@ -210,7 +211,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             }
         }
 
-        private NamespaceDeclarationSyntax? CheckNamespaceForUiTypes(INamespaceSymbol namespaceSymbol,
+        private NamespaceDeclarationSyntax? CheckNamespaceForUiTypes(
+            INamespaceSymbol namespaceSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
             bool desiredBaseTypeIsInterface,

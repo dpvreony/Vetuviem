@@ -16,6 +16,12 @@ namespace Vetuviem.Core
         where TView : class, IViewFor<TViewModel>
         where TViewModel : class, IReactiveObject
     {
+        /// <summary>
+        /// Applies the binding between the view and the view model.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="viewModel">The viewmodel.</param>
+        /// <param name="disposeAction">The action to register disposals against.</param>
         void ApplyBindings(TView view, TViewModel viewModel, Action<IDisposable> disposeAction);
     }
 }
