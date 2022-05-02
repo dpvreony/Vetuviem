@@ -25,6 +25,8 @@ namespace Vetuviem.Core
         /// Initializes a new instance of the <see cref="TwoWayBindingWithConvertors{TViewModel, TViewProp, TViewModelProp}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
+        /// <param name="vmToViewConverter">Function for converting the ViewModel property to the type of the View Property.</param>
+        /// <param name="viewToVmConverter">Function for converting the View property to the type of the ViewModel Property.</param>
         public TwoWayBindingWithConvertors(
             Expression<Func<TViewModel, TViewModelProp?>> viewModelBinding,
             Func<TViewModelProp?, TViewProp> vmToViewConverter,

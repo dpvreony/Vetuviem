@@ -1,21 +1,87 @@
-﻿namespace Vetuviem.SourceGenerator.Features.Core
+﻿// Copyright (c) 2022 DPVreony and Contributors. All rights reserved.
+// DPVreony and Contributors licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+namespace Vetuviem.SourceGenerator.Features.Core
 {
+    /// <summary>
+    /// Diagnostic ID string constants.
+    /// </summary>
     public static class ReportDiagnosticIds
     {
-        public static string StartingSourceGenerator => "VET-001";
-        public static string ReferencesOfInterestCountMismatch => "VET-002";
-        public static string MatchedBaseUiElement => "VET-003";
-        public static string UnhandledException => "VET-004";
-        public static string HasDesiredBaseType => "VET-005";
-        public static string StartingScanOfNamespace => "VET-006";
-        public static string MetadataReferenceNotAssemblySymbol => "VET-007";
-        public static string StartingScanOfAssembly => "VET-008";
-        public static string NoAssemblyOrModuleSybmol => "VET-009";
-        public static string NoGlobalNamespaceInAssemblyOrModule => "VET-010";
-        public static string DesiredBaseTypeSymbolNotInterfaceOrClass => "VET-011";
-        public static string StartingCheckOfType => "VET-012";
-        public static string FailedToFindDesiredBaseTypeSymbol => "VET-013";
-        public static string DesiredBaseTypeSymbolSearchResultNotUnique => "VET-014";
-        public static string DesiredBaseTypeSymbolSearchNotNamedTypeSymbol => "VET-015";
+        /// <summary>
+        /// Diagnostic ID for when the source generator is being started.
+        /// </summary>
+        public const string StartingSourceGenerator = "VET-001";
+
+        /// <summary>
+        /// Diagnostic ID for when there in a mismatch in the search for the references of interest.
+        /// </summary>
+        public const string ReferencesOfInterestCountMismatch = "VET-002";
+
+        /// <summary>
+        /// Diagnostic ID for when a Base UI element for a framework has been matched.
+        /// </summary>
+        public const string MatchedBaseUiElement = "VET-003";
+
+        /// <summary>
+        /// Diagnostic ID for when an internal unhandled exception has occurred.
+        /// </summary>
+        public const string UnhandledException = "VET-004";
+
+        /// <summary>
+        /// Diagnostic ID for when a type has a desired base type.
+        /// </summary>
+        public const string HasDesiredBaseType = "VET-005";
+
+        /// <summary>
+        /// Diagnostic ID for when the scan of a namespace is starting.
+        /// </summary>
+        public const string StartingScanOfNamespace = "VET-006";
+
+        /// <summary>
+        /// Diagnostic ID for when a metadata reference is not an assembly symbol.
+        /// </summary>
+        public const string MetadataReferenceNotAssemblySymbol = "VET-007";
+
+        /// <summary>
+        /// Diagnostic ID for when the scan of an assembly is started.
+        /// </summary>
+        public const string StartingScanOfAssembly = "VET-008";
+
+        /// <summary>
+        /// Diagnostic ID for when there is no assembly or module symbol.
+        /// </summary>
+        public const string NoAssemblyOrModuleSybmol = "VET-009";
+
+        /// <summary>
+        /// Diagnostic ID for when there is no global namespace in an assembly or module.
+        /// </summary>
+        public const string NoGlobalNamespaceInAssemblyOrModule = "VET-010";
+
+        /// <summary>
+        /// Diagnostic ID for when the desired base type symbol is not an interface or class.
+        /// </summary>
+        public const string DesiredBaseTypeSymbolNotInterfaceOrClass = "VET-011";
+
+        /// <summary>
+        /// Diagnostic ID for when the scan of a type is starting.
+        /// </summary>
+        public const string StartingCheckOfType = "VET-012";
+
+        /// <summary>
+        /// Diagnostic ID for when the desired base type symbol has not been found during a search of the framework.
+        /// </summary>
+        public const string FailedToFindDesiredBaseTypeSymbol = "VET-013";
+
+        /// <summary>
+        /// Diagnostic ID for when more than 1 result has been found during the desired base type search.
+        /// </summary>
+        public const string DesiredBaseTypeSymbolSearchResultNotUnique = "VET-014";
+
+        /// <summary>
+        /// Diagnostic ID for when the desired base type symbol has not been found on a type.
+        /// </summary>
+        public const string DesiredBaseTypeSymbolSearchNotNamedTypeSymbol = "VET-015";
     }
 }
