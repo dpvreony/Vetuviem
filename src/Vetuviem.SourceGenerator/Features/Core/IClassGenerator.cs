@@ -13,7 +13,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
     public interface IClassGenerator
     {
         /// <summary>
-        /// Generates the Roslyn model for a class based upon an input Named Type Symbol
+        /// Generates the Roslyn model for a class based upon an input Named Type Symbol.
         /// </summary>
         /// <param name="namedTypeSymbol">The named type symbol to generate the class around.</param>
         /// <param name="baseUiElement">The fully qualified name for the Base UI element for the platform.</param>

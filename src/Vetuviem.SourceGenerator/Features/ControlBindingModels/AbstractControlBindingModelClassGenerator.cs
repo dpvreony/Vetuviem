@@ -56,74 +56,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 .WithMembers(members);
         }
 
-        protected abstract SyntaxTokenList GetClassModifiers(SyntaxTokenList modifiers);
-
-        protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(
-            SyntaxList<MemberDeclarationSyntax> members,
-            INamedTypeSymbol namedTypeSymbol,
-            string? desiredCommandInterface, bool isDerivedType, string controlClassFullName, string platformName);
-
-        protected abstract string GetClassNameIdentifier(INamedTypeSymbol namedTypeSymbol);
-
-        private MemberDeclarationSyntax GetConstructorMethod(
-            INamedTypeSymbol namedTypeSymbol,
-            bool isDerivedType)
-        {
-            var className = GetClassNameIdentifier(namedTypeSymbol);
-            var body = GetConstructorBody(isDerivedType);
-
-            var constructorControlTypeName = GetConstructorControlTypeName(namedTypeSymbol);
-
-            var parameters = RoslynGenerationHelpers.GetParams(new []
-            {
-                $"global::System.Linq.Expressions.Expression<global::System.Func<TView, {constructorControlTypeName}>> viewExpression",
-            });
-
-            var seperatedSyntaxList = new SeparatedSyntaxList<ArgumentSyntax>();
-
-            seperatedSyntaxList = seperatedSyntaxList.Add(
-                SyntaxFactory.Argument(
-                    SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("viewExpression"))));
-
-            var baseInitializerArgumentList = SyntaxFactory.ArgumentList(seperatedSyntaxList);
-
-            var initializer = SyntaxFactory.ConstructorInitializer(
-                SyntaxKind.BaseConstructorInitializer,
-                baseInitializerArgumentList);
-
-            var summaryText = GetConstructorSummaryText(className);
-            var summaryParameters = new (string paramName, string paramText)[]
-            {
-                ("viewExpression", "expression representing the control on the view to bind to.")
-            };
-
-            var declaration = SyntaxFactory.ConstructorDeclaration(className)
-                .WithInitializer(initializer)
-                .WithParameterList(parameters)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
-                .AddBodyStatements(body.ToArray())
-                .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummaryComment(summaryText, summaryParameters));
-
-            return declaration;
-        }
-
-        protected abstract string GetConstructorSummaryText(string className);
-
-        protected abstract IReadOnlyCollection<StatementSyntax> GetConstructorBody(bool isDerivedType);
-
-        protected abstract string GetConstructorControlTypeName(INamedTypeSymbol namedTypeSymbol);
-
-        protected abstract ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
-            INamedTypeSymbol namedTypeSymbol,
-            string baseUiElement,
-            string controlClassFullName,
-            ClassDeclarationSyntax classDeclaration,
-            string platformName);
-
-        protected abstract SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(
-            string controlClassFullName,
-            INamedTypeSymbol namedTypeSymbol);
-
         protected static void ApplyTypeConstraintsFromNamedTypedSymbol(
             INamedTypeSymbol namedTypeSymbol,
             IList<TypeParameterConstraintClauseSyntax> typeParameterConstraintClauseSyntaxList)
@@ -191,18 +123,49 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             }
         }
 
-        private TypeParameterListSyntax GetTypeParameterListSyntax(INamedTypeSymbol namedTypeSymbol)
+        protected static IEnumerable<TypeSyntax> GetTypeArgumentsFromTypeParameters(INamedTypeSymbol baseClass)
         {
-            var sep = GetTypeParameterSyntaxes();
-
-            if (namedTypeSymbol.IsGenericType)
+            foreach (var typeParameterSymbol in baseClass.TypeArguments)
             {
-                sep = sep.AddRange(GetTypeParameterSeparatedSyntaxList(namedTypeSymbol));
-            }
+                if (typeParameterSymbol.Name.Equals("TViewModel", StringComparison.Ordinal))
+                {
+                    // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
+                    // in theory they should be the same type anyway, but not guaranteed.
+                    continue;
+                }
 
-            var typeParameterList = SyntaxFactory.TypeParameterList(sep);
-            return typeParameterList;
+                yield return SyntaxFactory.ParseTypeName(typeParameterSymbol.ToDisplayString());
+            }
         }
+
+        protected abstract SyntaxTokenList GetClassModifiers(SyntaxTokenList modifiers);
+
+        protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(
+            SyntaxList<MemberDeclarationSyntax> members,
+            INamedTypeSymbol namedTypeSymbol,
+            string? desiredCommandInterface,
+            bool isDerivedType,
+            string controlClassFullName,
+            string platformName);
+
+        protected abstract string GetClassNameIdentifier(INamedTypeSymbol namedTypeSymbol);
+
+        protected abstract string GetConstructorSummaryText(string className);
+
+        protected abstract IReadOnlyCollection<StatementSyntax> GetConstructorBody(bool isDerivedType);
+
+        protected abstract string GetConstructorControlTypeName(INamedTypeSymbol namedTypeSymbol);
+
+        protected abstract ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
+            INamedTypeSymbol namedTypeSymbol,
+            string baseUiElement,
+            string controlClassFullName,
+            ClassDeclarationSyntax classDeclaration,
+            string platformName);
+
+        protected abstract SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(
+            string controlClassFullName,
+            INamedTypeSymbol namedTypeSymbol);
 
         protected abstract SeparatedSyntaxList<TypeParameterSyntax> GetTypeParameterSyntaxes();
 
@@ -221,19 +184,59 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             }
         }
 
-        protected static IEnumerable<TypeSyntax> GetTypeArgumentsFromTypeParameters(INamedTypeSymbol baseClass)
+        private MemberDeclarationSyntax GetConstructorMethod(
+            INamedTypeSymbol namedTypeSymbol,
+            bool isDerivedType)
         {
-            foreach (var typeParameterSymbol in baseClass.TypeArguments)
-            {
-                if (typeParameterSymbol.Name.Equals("TViewModel", StringComparison.Ordinal))
-                {
-                    // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
-                    // in theory they should be the same type anyway, but not guaranteed.
-                    continue;
-                }
+            var className = GetClassNameIdentifier(namedTypeSymbol);
+            var body = GetConstructorBody(isDerivedType);
 
-                yield return SyntaxFactory.ParseTypeName(typeParameterSymbol.ToDisplayString());
+            var constructorControlTypeName = GetConstructorControlTypeName(namedTypeSymbol);
+
+            var parameters = RoslynGenerationHelpers.GetParams(new[]
+            {
+                $"global::System.Linq.Expressions.Expression<global::System.Func<TView, {constructorControlTypeName}>> viewExpression",
+            });
+
+            var seperatedSyntaxList = default(SeparatedSyntaxList<ArgumentSyntax>);
+
+            seperatedSyntaxList = seperatedSyntaxList.Add(
+                SyntaxFactory.Argument(
+                    SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("viewExpression"))));
+
+            var baseInitializerArgumentList = SyntaxFactory.ArgumentList(seperatedSyntaxList);
+
+            var initializer = SyntaxFactory.ConstructorInitializer(
+                SyntaxKind.BaseConstructorInitializer,
+                baseInitializerArgumentList);
+
+            var summaryText = GetConstructorSummaryText(className);
+            var summaryParameters = new (string paramName, string paramText)[]
+            {
+                ("viewExpression", "expression representing the control on the view to bind to.")
+            };
+
+            var declaration = SyntaxFactory.ConstructorDeclaration(className)
+                .WithInitializer(initializer)
+                .WithParameterList(parameters)
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddBodyStatements(body.ToArray())
+                .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummaryComment(summaryText, summaryParameters));
+
+            return declaration;
+        }
+
+        private TypeParameterListSyntax GetTypeParameterListSyntax(INamedTypeSymbol namedTypeSymbol)
+        {
+            var sep = GetTypeParameterSyntaxes();
+
+            if (namedTypeSymbol.IsGenericType)
+            {
+                sep = sep.AddRange(GetTypeParameterSeparatedSyntaxList(namedTypeSymbol));
             }
+
+            var typeParameterList = SyntaxFactory.TypeParameterList(sep);
+            return typeParameterList;
         }
     }
 }

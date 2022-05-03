@@ -27,6 +27,8 @@ namespace Vetuviem.Testing
         /// <summary>
         /// Unit Tests for the Execute Method.
         /// </summary>
+        /// <typeparam name="TGenerator">The type for the source generator.</typeparam>
+        /// <typeparam name="TGeneratorProcessor">The type for the source generator processor.</typeparam>
         public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor> : Foundatio.Xunit.TestWithLoggingBase
             where TGenerator : AbstractBaseGenerator<TGeneratorProcessor>
             where TGeneratorProcessor : AbstractGeneratorProcessor, new()

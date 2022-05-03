@@ -53,7 +53,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
         protected override string GetConstructorSummaryText(string className)
         {
-            return  $"Initializes a new instance of the <see cref=\"{className}{{TView, TViewModel, TControl}}\"/> class.";
+            return $"Initializes a new instance of the <see cref=\"{className}{{TView, TViewModel, TControl}}\"/> class.";
         }
 
         protected override IReadOnlyCollection<StatementSyntax> GetConstructorBody(bool isDerivedType)
@@ -76,7 +76,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 #pragma warning disable SA1129 // Do not use default value type constructor
             var sep = new SeparatedSyntaxList<TypeParameterSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
-            sep = sep.AddRange(new[] {viewForParameter, viewModelParameter, controlParameter});
+            sep = sep.AddRange(new[] { viewForParameter, viewModelParameter, controlParameter });
             return sep;
         }
 
@@ -235,9 +235,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 #pragma warning disable SA1129 // Do not use default value type constructor
             var sep = new SeparatedSyntaxList<TypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
-            sep = sep.AddRange(new[] {viewForParameter, viewModelParameter, controlParameter});
+            sep = sep.AddRange(new[] { viewForParameter, viewModelParameter, controlParameter });
 
-            if (baseClass is {IsGenericType: true})
+            if (baseClass is { IsGenericType: true })
             {
                 sep = sep.AddRange(GetTypeArgumentsFromTypeParameters(baseClass));
             }
@@ -258,7 +258,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 isDerivedType,
                 desiredCommandInterface);
 
-            var parameters = RoslynGenerationHelpers.GetParams(new []
+            var parameters = RoslynGenerationHelpers.GetParams(new[]
             {
                 "TView view",
                 "TViewModel viewModel",
@@ -266,7 +266,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             });
 
             var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+                .AddModifiers(
+                    SyntaxFactory.Token(SyntaxKind.PublicKeyword),
                     SyntaxFactory.Token(SyntaxKind.OverrideKeyword))
                 .WithParameterList(parameters)
                 .AddBodyStatements(methodBody)

@@ -63,7 +63,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 #pragma warning disable SA1129 // Do not use default value type constructor
             var sep = new SeparatedSyntaxList<TypeParameterSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
-            sep = sep.AddRange(new[] {viewForParameter, viewModelParameter});
+            sep = sep.AddRange(new[] { viewForParameter, viewModelParameter });
             return sep;
         }
 
@@ -112,7 +112,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             return classDeclaration;
         }
-
 
         protected override SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(
             string controlClassFullName, INamedTypeSymbol namedTypeSymbol)
@@ -177,9 +176,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 #pragma warning disable SA1129 // Do not use default value type constructor
             var sep = new SeparatedSyntaxList<TypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
-            sep = sep.AddRange(new[] {viewForParameter, viewModelParameter, controlParameter});
+            sep = sep.AddRange(new[] { viewForParameter, viewModelParameter, controlParameter });
 
-            if (namedTypeSymbol is {IsGenericType: true})
+            if (namedTypeSymbol is { IsGenericType: true })
             {
                 sep = sep.AddRange(GetTypeArgumentsFromTypeParameters(namedTypeSymbol));
             }

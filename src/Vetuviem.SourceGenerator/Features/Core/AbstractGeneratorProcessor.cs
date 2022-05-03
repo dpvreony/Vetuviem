@@ -74,71 +74,6 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
         protected abstract Func<IClassGenerator>[] GetClassGenerators();
 
-        private NamespaceDeclarationSyntax CheckAssemblyForUiTypes(
-            NamespaceDeclarationSyntax namespaceDeclaration,
-            MetadataReference metadataReference,
-            Compilation compilation,
-            Action<Diagnostic> reportDiagnosticAction,
-            string baseUiElement,
-            bool desiredBaseTypeIsInterface,
-            IList<string> previouslyGeneratedClasses,
-            string? desiredCommandInterface,
-            string platformName)
-        {
-            reportDiagnosticAction(ReportDiagnostics.StartingScanOfAssembly(metadataReference));
-
-            var assemblyOrModuleSymbol = compilation.GetAssemblyOrModuleSymbol(metadataReference);
-
-            if (assemblyOrModuleSymbol == null)
-            {
-                reportDiagnosticAction(ReportDiagnostics.NoAssemblyOrModuleSybmol(metadataReference));
-                return namespaceDeclaration;
-            }
-
-            var globalNamespace = GetGlobalNamespace(assemblyOrModuleSymbol);
-            if (globalNamespace == null)
-            {
-                reportDiagnosticAction(ReportDiagnostics.NoGlobalNamespaceInAssemblyOrModule(metadataReference));
-                return namespaceDeclaration;
-            }
-
-            var classGenerators = GetClassGenerators();
-
-            // we skip building the global namespace as gives an empty name
-            foreach (var namespaceMember in globalNamespace.GetNamespaceMembers())
-            {
-                var nestedDeclarationSyntax = CheckNamespaceForUiTypes(
-                    namespaceMember,
-                    reportDiagnosticAction,
-                    baseUiElement,
-                    desiredBaseTypeIsInterface,
-                    previouslyGeneratedClasses,
-                    desiredCommandInterface,
-                    platformName,
-                    classGenerators);
-
-                if (nestedDeclarationSyntax != null)
-                {
-                    namespaceDeclaration = namespaceDeclaration
-                        .AddMembers(nestedDeclarationSyntax);
-                }
-            }
-
-
-            /*
-            var typesInAssembly = assemblySymbol.get;
-            foreach (string currentType in typesInAssembly)
-            {
-                CheckTypeForUiType(
-                    assemblySymbol,
-                    currentType,
-                    reportDiagnosticAction);
-            }
-            */
-
-            return namespaceDeclaration;
-        }
-
         private static INamespaceSymbol? GetGlobalNamespace(ISymbol assemblyOrModuleSymbol)
         {
             switch (assemblyOrModuleSymbol)
@@ -210,6 +145,108 @@ namespace Vetuviem.SourceGenerator.Features.Core
             }
         }
 
+        private static bool HasDesiredBaseType(
+            string desiredBaseType,
+            bool desiredBaseTypeIsInterface,
+            INamedTypeSymbol namedTypeSymbol)
+        {
+            var baseType = namedTypeSymbol;
+
+            while (baseType != null)
+            {
+                var baseTypeFullName = baseType.GetFullName();
+                if (desiredBaseTypeIsInterface)
+                {
+                    var interfaces = baseType.Interfaces;
+                    if (interfaces != null && baseType.Interfaces.Any(i => i.GetFullName().Equals(desiredBaseType, StringComparison.Ordinal)))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (baseTypeFullName.Equals(desiredBaseType, StringComparison.Ordinal))
+                    {
+                        return true;
+                    }
+                }
+
+                if (baseTypeFullName.Equals("global::System.Object", StringComparison.Ordinal))
+                {
+                    // we can drop out 1 iteration early
+                    return false;
+                }
+
+                baseType = baseType.BaseType;
+            }
+
+            return false;
+        }
+
+        private NamespaceDeclarationSyntax CheckAssemblyForUiTypes(
+            NamespaceDeclarationSyntax namespaceDeclaration,
+            MetadataReference metadataReference,
+            Compilation compilation,
+            Action<Diagnostic> reportDiagnosticAction,
+            string baseUiElement,
+            bool desiredBaseTypeIsInterface,
+            IList<string> previouslyGeneratedClasses,
+            string? desiredCommandInterface,
+            string platformName)
+        {
+            reportDiagnosticAction(ReportDiagnostics.StartingScanOfAssembly(metadataReference));
+
+            var assemblyOrModuleSymbol = compilation.GetAssemblyOrModuleSymbol(metadataReference);
+
+            if (assemblyOrModuleSymbol == null)
+            {
+                reportDiagnosticAction(ReportDiagnostics.NoAssemblyOrModuleSybmol(metadataReference));
+                return namespaceDeclaration;
+            }
+
+            var globalNamespace = GetGlobalNamespace(assemblyOrModuleSymbol);
+            if (globalNamespace == null)
+            {
+                reportDiagnosticAction(ReportDiagnostics.NoGlobalNamespaceInAssemblyOrModule(metadataReference));
+                return namespaceDeclaration;
+            }
+
+            var classGenerators = GetClassGenerators();
+
+            // we skip building the global namespace as gives an empty name
+            foreach (var namespaceMember in globalNamespace.GetNamespaceMembers())
+            {
+                var nestedDeclarationSyntax = CheckNamespaceForUiTypes(
+                    namespaceMember,
+                    reportDiagnosticAction,
+                    baseUiElement,
+                    desiredBaseTypeIsInterface,
+                    previouslyGeneratedClasses,
+                    desiredCommandInterface,
+                    platformName,
+                    classGenerators);
+
+                if (nestedDeclarationSyntax != null)
+                {
+                    namespaceDeclaration = namespaceDeclaration
+                        .AddMembers(nestedDeclarationSyntax);
+                }
+            }
+
+            /*
+            var typesInAssembly = assemblySymbol.get;
+            foreach (string currentType in typesInAssembly)
+            {
+                CheckTypeForUiType(
+                    assemblySymbol,
+                    currentType,
+                    reportDiagnosticAction);
+            }
+            */
+
+            return namespaceDeclaration;
+        }
+
         private NamespaceDeclarationSyntax? CheckNamespaceForUiTypes(
             INamespaceSymbol namespaceSymbol,
             Action<Diagnostic> reportDiagnosticAction,
@@ -271,44 +308,6 @@ namespace Vetuviem.SourceGenerator.Features.Core
             }
 
             return null;
-        }
-
-        private static bool HasDesiredBaseType(
-            string desiredBaseType,
-            bool desiredBaseTypeIsInterface,
-            INamedTypeSymbol namedTypeSymbol)
-        {
-            var baseType = namedTypeSymbol;
-
-            while (baseType != null)
-            {
-                var baseTypeFullName = baseType.GetFullName();
-                if (desiredBaseTypeIsInterface)
-                {
-                    var interfaces = baseType.Interfaces;
-                    if (interfaces != null && baseType.Interfaces.Any(i => i.GetFullName().Equals(desiredBaseType, StringComparison.Ordinal)))
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    if (baseTypeFullName.Equals(desiredBaseType, StringComparison.Ordinal))
-                    {
-                        return true;
-                    }
-                }
-
-                if (baseTypeFullName.Equals("global::System.Object", StringComparison.Ordinal))
-                {
-                    // we can drop out 1 iteration early
-                    return false;
-                }
-
-                baseType = baseType.BaseType;
-            }
-
-            return false;
         }
     }
 }

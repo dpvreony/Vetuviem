@@ -102,7 +102,6 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
                 // TODO: explore the ability to pass in an object and not apply a vm convertor. this is doing boxing we can probably avoid
                 Content = new OneWayBindingOnOneOrTwoWayBind<QuestionnaireViewModel, object>(viewModelObjectExpression, o => o?.ToString() ?? string.Empty),
                 Foreground = new OneWayBindingWithConversionOnOneOrTwoWayBind<QuestionnaireViewModel, Brush, int>(viewModelNumberExpression, lengthRemaining => GetBrushForLengthRemaining(lengthRemaining))
-                //Foreground = new OneWayBindingOnOneOrTwoWayBind<QuestionnaireViewModel, Brush>()
             };
         }
 
