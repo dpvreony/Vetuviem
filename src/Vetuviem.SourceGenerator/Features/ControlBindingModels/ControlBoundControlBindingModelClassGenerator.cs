@@ -12,13 +12,18 @@ using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 {
+    /// <summary>
+    /// Class Generator for a "Bound" Binding Model Class.
+    /// </summary>
     public class ControlBoundControlBindingModelClassGenerator : AbstractControlBindingModelClassGenerator
     {
+        /// <inheritdoc />
         protected override SyntaxTokenList GetClassModifiers(SyntaxTokenList modifiers)
         {
             return modifiers;
         }
 
+        /// <inheritdoc />
         protected override SyntaxList<MemberDeclarationSyntax> ApplyMembers(
             SyntaxList<MemberDeclarationSyntax> members,
             INamedTypeSymbol namedTypeSymbol,
@@ -30,6 +35,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return members;
         }
 
+        /// <inheritdoc />
         protected override string GetClassNameIdentifier(INamedTypeSymbol namedTypeSymbol)
         {
             if (namedTypeSymbol == null)
@@ -40,21 +46,25 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return $"{namedTypeSymbol.Name}ControlBindingModel";
         }
 
+        /// <inheritdoc />
         protected override string GetConstructorSummaryText(string className)
         {
             return $"Initializes a new instance of the <see cref=\"{className}{{TView, TViewModel}}\"/> class.";
         }
 
+        /// <inheritdoc />
         protected override IReadOnlyCollection<StatementSyntax> GetConstructorBody(bool isDerivedType)
         {
             return Array.Empty<StatementSyntax>();
         }
 
+        /// <inheritdoc />
         protected override string GetConstructorControlTypeName(INamedTypeSymbol namedTypeSymbol)
         {
             return namedTypeSymbol.GetFullName();
         }
 
+        /// <inheritdoc />
         protected override SeparatedSyntaxList<TypeParameterSyntax> GetTypeParameterSyntaxes()
         {
             var viewForParameter = SyntaxFactory.TypeParameter("TView");
@@ -67,6 +77,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return sep;
         }
 
+        /// <inheritdoc />
         protected override ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
@@ -113,6 +124,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return classDeclaration;
         }
 
+        /// <inheritdoc />
         protected override SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(
             string controlClassFullName, INamedTypeSymbol namedTypeSymbol)
         {

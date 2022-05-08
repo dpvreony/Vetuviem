@@ -60,6 +60,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 .WithMembers(members);
         }
 
+        /// <summary>
+        /// Adds type constraints to the collection based on the named type.
+        /// </summary>
+        /// <param name="namedTypeSymbol">Named type to process.</param>
+        /// <param name="typeParameterConstraintClauseSyntaxList">Collection of type parameter constraints to add to.</param>
         protected static void ApplyTypeConstraintsFromNamedTypedSymbol(
             INamedTypeSymbol namedTypeSymbol,
             IList<TypeParameterConstraintClauseSyntax> typeParameterConstraintClauseSyntaxList)
@@ -127,6 +132,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             }
         }
 
+        /// <summary>
+        /// Gets the Type Arguments based on the type symbol of a base class.
+        /// </summary>
+        /// <param name="baseClass">Base class to check.</param>
+        /// <returns>Collection of Tye Arguments.</returns>
         protected static IEnumerable<TypeSyntax> GetTypeArgumentsFromTypeParameters(INamedTypeSymbol baseClass)
         {
             foreach (var typeParameterSymbol in baseClass.TypeArguments)
