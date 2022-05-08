@@ -7,7 +7,10 @@ using Microsoft.CodeAnalysis;
 
 namespace Vetuviem.SourceGenerator.Features.Core
 {
-    public static class ReportDiagnostics
+    /// <summary>
+    /// Helper class for producing reporting diagnostic events.
+    /// </summary>
+    public static class ReportDiagnosticFactory
     {
         public static Diagnostic HasDesiredBaseType(string desiredBaseType, INamedTypeSymbol namedTypeSymbol)
         {

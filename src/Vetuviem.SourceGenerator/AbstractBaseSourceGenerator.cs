@@ -20,7 +20,7 @@ namespace Vetuviem.SourceGenerator
     /// Base logic for a source generator.
     /// </summary>
     /// <typeparam name="TGeneratorProcessor">The type for the generator processor.</typeparam>
-    public abstract class AbstractBaseGenerator<TGeneratorProcessor> : ISourceGenerator
+    public abstract class AbstractBaseSourceGenerator<TGeneratorProcessor> : ISourceGenerator
         where TGeneratorProcessor : AbstractGeneratorProcessor, new()
     {
         /// <inheritdoc />
@@ -33,7 +33,7 @@ namespace Vetuviem.SourceGenerator
         {
             try
             {
-                context.ReportDiagnostic(ReportDiagnostics.StartingSourceGenerator());
+                context.ReportDiagnostic(ReportDiagnosticFactory.StartingSourceGenerator());
 
                 var memberDeclarationSyntax = GenerateAsync(context, context.CancellationToken);
 
@@ -72,7 +72,7 @@ namespace Vetuviem.SourceGenerator
             catch (Exception e)
 #pragma warning restore CA1031 // Do not catch general exception types
             {
-                context.ReportDiagnostic(ReportDiagnostics.UnhandledException(e));
+                context.ReportDiagnostic(ReportDiagnosticFactory.UnhandledException(e));
             }
         }
 
@@ -88,6 +88,11 @@ namespace Vetuviem.SourceGenerator
         /// <returns>Platform specific resolver.</returns>
         protected abstract IPlatformResolver GetPlatformResolver();
 
+        /// <summary>
+        /// Works out if a assembly reference should be included if it's found to be missing.
+        /// </summary>
+        /// <param name="assemblyOfInterest">Name of the assembly.</param>
+        /// <returns>A metadata reference for an assembly, if required.</returns>
         protected abstract MetadataReference? CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest);
 
         /// <summary>
@@ -145,7 +150,7 @@ namespace Vetuviem.SourceGenerator
             if (referencesOfInterest.Length != assembliesOfInterest.Length)
             {
                 // not got the expected count back, drop out.
-                context.ReportDiagnostic(ReportDiagnostics.ReferencesOfInterestCountMismatch(assembliesOfInterest.Length, referencesOfInterest.Length));
+                context.ReportDiagnostic(ReportDiagnosticFactory.ReferencesOfInterestCountMismatch(assembliesOfInterest.Length, referencesOfInterest.Length));
                 return namespaceDeclaration;
             }
 
@@ -155,7 +160,7 @@ namespace Vetuviem.SourceGenerator
 
             if (desiredBaseTypeSymbolMatch == null)
             {
-                context.ReportDiagnostic(ReportDiagnostics.FailedToFindDesiredBaseTypeSymbol(desiredBaseType));
+                context.ReportDiagnostic(ReportDiagnosticFactory.FailedToFindDesiredBaseTypeSymbol(desiredBaseType));
                 return namespaceDeclaration;
             }
 
@@ -169,7 +174,7 @@ namespace Vetuviem.SourceGenerator
                 case TypeKind.Class:
                     break;
                 default:
-                    context.ReportDiagnostic(ReportDiagnostics.DesiredBaseTypeSymbolNotInterfaceOrClass(desiredBaseType));
+                    context.ReportDiagnostic(ReportDiagnosticFactory.DesiredBaseTypeSymbolNotInterfaceOrClass(desiredBaseType));
                     return namespaceDeclaration;
             }
 
@@ -179,7 +184,7 @@ namespace Vetuviem.SourceGenerator
 
             var platformName = GetPlatformName();
 
-            var result = generatorProcessor.GenerateObjects(
+            var result = generatorProcessor.GenerateNamespaceDeclaration(
                 namespaceDeclaration,
                 referencesOfInterest,
                 compilation,

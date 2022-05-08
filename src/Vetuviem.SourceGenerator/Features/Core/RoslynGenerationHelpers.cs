@@ -123,11 +123,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <summary>
         /// Produces syntax for creating a variable and assigning from executing a method on a field.
         /// </summary>
-        /// <param name="variableName"></param>
-        /// <param name="fieldName"></param>
+        /// <param name="variableName">The name of the variable to create.</param>
+        /// <param name="fieldName">The name of the field to access.</param>
         /// <param name="methodName">The name of the method to invoke.</param>
         /// <param name="args">Collection of args to pass to the method.</param>
-        /// <returns></returns>
+        /// <returns>Roslyn Syntax for carrying out the variable declaration.</returns>
         public static LocalDeclarationStatementSyntax GetVariableAssignmentFromMethodOnFieldSyntax(string variableName, string fieldName, string methodName, string[] args)
         {
             var fieldMemberAccess = SyntaxFactory.MemberAccessExpression(

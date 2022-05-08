@@ -12,8 +12,12 @@ using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 {
+    /// <summary>
+    /// Abstraction for generating a Control Binding Model class.
+    /// </summary>
     public abstract class AbstractControlBindingModelClassGenerator : IClassGenerator
     {
+        /// <inheritdoc />
         public ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,

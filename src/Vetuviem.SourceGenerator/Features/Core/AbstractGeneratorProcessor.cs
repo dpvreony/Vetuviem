@@ -11,9 +11,24 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Vetuviem.SourceGenerator.Features.Core
 {
+    /// <summary>
+    /// Abstraction for a Code Generation Processor.
+    /// </summary>
     public abstract class AbstractGeneratorProcessor
     {
-        public NamespaceDeclarationSyntax GenerateObjects(
+        /// <summary>
+        /// Generates a Namespace Declaration.
+        /// </summary>
+        /// <param name="namespaceDeclaration">Roslyn Namespace Declaration to extend.</param>
+        /// <param name="assembliesOfInterest">Collection of assemblies to generate code around.</param>
+        /// <param name="compilation">Compilation Unit.</param>
+        /// <param name="reportDiagnosticAction">Action for reporting a diagnostic to the build pipeline.</param>
+        /// <param name="desiredBaseType">Fully qualified name of the UI platform base type for a control.</param>
+        /// <param name="desiredBaseTypeIsInterface">Flag indicating whether the desiredBaseType is an interface.</param>
+        /// <param name="desiredCommandInterface">Fully qualified name for the desired command interface, if any.</param>
+        /// <param name="platformName">Name of the UI Platform.</param>
+        /// <returns>Namespace declaration containing generated code.</returns>
+        public NamespaceDeclarationSyntax GenerateNamespaceDeclaration(
             NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference[] assembliesOfInterest,
             Compilation compilation,
@@ -130,7 +145,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             }
 
             previouslyGeneratedClasses.Add(fullName);
-            reportDiagnosticAction(ReportDiagnostics.HasDesiredBaseType(baseUiElement, namedTypeSymbol));
+            reportDiagnosticAction(ReportDiagnosticFactory.HasDesiredBaseType(baseUiElement, namedTypeSymbol));
 
             foreach (var classGeneratorFactory in classGenerators)
             {
@@ -194,20 +209,20 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string? desiredCommandInterface,
             string platformName)
         {
-            reportDiagnosticAction(ReportDiagnostics.StartingScanOfAssembly(metadataReference));
+            reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfAssembly(metadataReference));
 
             var assemblyOrModuleSymbol = compilation.GetAssemblyOrModuleSymbol(metadataReference);
 
             if (assemblyOrModuleSymbol == null)
             {
-                reportDiagnosticAction(ReportDiagnostics.NoAssemblyOrModuleSybmol(metadataReference));
+                reportDiagnosticAction(ReportDiagnosticFactory.NoAssemblyOrModuleSybmol(metadataReference));
                 return namespaceDeclaration;
             }
 
             var globalNamespace = GetGlobalNamespace(assemblyOrModuleSymbol);
             if (globalNamespace == null)
             {
-                reportDiagnosticAction(ReportDiagnostics.NoGlobalNamespaceInAssemblyOrModule(metadataReference));
+                reportDiagnosticAction(ReportDiagnosticFactory.NoGlobalNamespaceInAssemblyOrModule(metadataReference));
                 return namespaceDeclaration;
             }
 
@@ -257,7 +272,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string platformName,
             Func<IClassGenerator>[] classGenerators)
         {
-            reportDiagnosticAction(ReportDiagnostics.StartingScanOfNamespace(namespaceSymbol));
+            reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfNamespace(namespaceSymbol));
 
             var namedTypeSymbols = namespaceSymbol.GetTypeMembers();
 

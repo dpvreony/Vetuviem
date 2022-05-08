@@ -6,7 +6,10 @@ using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 
 namespace Vetuviem.SourceGenerator
 {
-    public abstract class AbstractControlBindingModelGenerator : AbstractBaseGenerator<ControlBindingModelGeneratorProcessor>
+    /// <summary>
+    /// Abstraction for a Code Generator for a Control Binding Model.
+    /// </summary>
+    public abstract class AbstractControlBindingModelSourceGenerator : AbstractBaseSourceGenerator<ControlBindingModelGeneratorProcessor>
     {
         /// <inheritdoc />
         protected override string GetNamespace() => $"ReactiveUI.{GetPlatformName()}.ViewToViewModelBindings";

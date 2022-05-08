@@ -18,7 +18,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WinUi3
     public static class WinUi3ViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WinUi3ControlBindingModelGenerator, ControlBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WinUi3ControlBindingModelSourceGenerator, ControlBindingModelGeneratorProcessor>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
@@ -41,9 +41,9 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WinUi3
             }
 
             /// <inheritdoc />
-            protected override Func<WinUi3ControlBindingModelGenerator> GetFactory()
+            protected override Func<WinUi3ControlBindingModelSourceGenerator> GetFactory()
             {
-                return () => new WinUi3ControlBindingModelGenerator();
+                return () => new WinUi3ControlBindingModelSourceGenerator();
             }
         }
     }

@@ -6,10 +6,10 @@ using Microsoft.CodeAnalysis;
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.Blazor.VetuviemGenerator
+namespace ReactiveUI.WPF.VetuviemGenerator
 {
     [Generator]
-    public sealed class BlazorControlBindingModelGenerator : AbstractControlBindingModelGenerator
+    public sealed class WpfControlBindingModelSourceGenerator : AbstractControlBindingModelSourceGenerator
     {
         /// <inheritdoc />
         protected override MetadataReference? CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest)
@@ -18,15 +18,15 @@ namespace ReactiveUI.Blazor.VetuviemGenerator
         }
 
         /// <inheritdoc />
-        protected override IPlatformResolver GetPlatformResolver()
+        protected override string GetPlatformName()
         {
-            return new BlazorPlatformResolver();
+            return "Wpf";
         }
 
         /// <inheritdoc />
-        protected override string GetPlatformName()
+        protected override IPlatformResolver GetPlatformResolver()
         {
-            return "Blazor";
+            return new WpfPlatformResolver();
         }
     }
 }

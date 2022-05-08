@@ -30,7 +30,7 @@ namespace Vetuviem.Testing
         /// <typeparam name="TGenerator">The type for the source generator.</typeparam>
         /// <typeparam name="TGeneratorProcessor">The type for the source generator processor.</typeparam>
         public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor> : Foundatio.Xunit.TestWithLoggingBase
-            where TGenerator : AbstractBaseGenerator<TGeneratorProcessor>
+            where TGenerator : AbstractBaseSourceGenerator<TGeneratorProcessor>
             where TGeneratorProcessor : AbstractGeneratorProcessor, new()
         {
             /// <summary>
@@ -84,7 +84,7 @@ namespace Vetuviem.Testing
             /// with no specific references loaded. Source generators typically take these via MSBuild loading
             /// from the csproj file, but you need to do it yourself in a test.
             /// </summary>
-            /// <param name="metadataReferences"></param>
+            /// <param name="metadataReferences">List of metadata references.</param>
             protected abstract void AddReferenceAssemblies(IList<MetadataReference> metadataReferences);
 
             /// <summary>

@@ -18,7 +18,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.UWP
     public static class UwpViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<UwpControlBindingModelGenerator, ControlBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<UwpControlBindingModelSourceGenerator, ControlBindingModelGeneratorProcessor>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
@@ -41,9 +41,9 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.UWP
             }
 
             /// <inheritdoc />
-            protected override Func<UwpControlBindingModelGenerator> GetFactory()
+            protected override Func<UwpControlBindingModelSourceGenerator> GetFactory()
             {
-                return () => new UwpControlBindingModelGenerator();
+                return () => new UwpControlBindingModelSourceGenerator();
             }
         }
     }

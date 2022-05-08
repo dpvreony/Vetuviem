@@ -19,7 +19,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="baseUiElement">The fully qualified name for the Base UI element for the platform.</param>
         /// <param name="desiredCommandInterface">The fully qualified name for the command interface, if the platform supports commands.</param>
         /// <param name="platformName">The name of the Platform code is being generated for.</param>
-        /// <returns></returns>
+        /// <returns>Class Declaration Syntax Node.</returns>
         ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,

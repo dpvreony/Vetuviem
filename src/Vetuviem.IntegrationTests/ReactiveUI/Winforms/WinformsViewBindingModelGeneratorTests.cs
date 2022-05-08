@@ -19,7 +19,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Winforms
     public static class WinformsViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WinformsControlBindingModelGenerator, ControlBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WinformsControlBindingModelSourceGenerator, ControlBindingModelGeneratorProcessor>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
@@ -52,9 +52,9 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Winforms
             }
 
             /// <inheritdoc />
-            protected override Func<WinformsControlBindingModelGenerator> GetFactory()
+            protected override Func<WinformsControlBindingModelSourceGenerator> GetFactory()
             {
-                return () => new WinformsControlBindingModelGenerator();
+                return () => new WinformsControlBindingModelSourceGenerator();
             }
 
             private static string[]? GetPlatformAssemblyPaths()

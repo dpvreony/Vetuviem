@@ -12,8 +12,9 @@ namespace ReactiveUI.UWP.VetuviemGenerator
     /// Source Generator for UWP View Binding Models.
     /// </summary>
     [Generator]
-    public sealed class UwpControlBindingModelGenerator : AbstractControlBindingModelGenerator
+    public sealed class UwpControlBindingModelSourceGenerator : AbstractControlBindingModelSourceGenerator
     {
+        /// <inheritdoc />
         protected override MetadataReference CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest)
         {
             return MetadataReference.CreateFromFile(assemblyOfInterest);
@@ -25,6 +26,7 @@ namespace ReactiveUI.UWP.VetuviemGenerator
             return new UwpPlatformResolver();
         }
 
+        /// <inheritdoc/>
         protected override string GetPlatformName()
         {
             return "UWP";
