@@ -16,6 +16,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
     /// </summary>
     public static class RoslynGenerationHelpers
     {
+        /// <summary>
+        /// Creates a parameter list syntax for use in a method invocation.
+        /// </summary>
+        /// <param name="argCollection">Collection of argument names.</param>
+        /// <returns>Parameter List Syntax.</returns>
         public static ParameterListSyntax GetParams(string[] argCollection)
         {
             if (argCollection == null)
@@ -34,6 +39,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return SyntaxFactory.ParameterList(parameters);
         }
 
+        /// <summary>
+        /// Generates an attribute list syntax for use in invocation of a generic method, or reference of a generic class.
+        /// </summary>
+        /// <param name="attributeArguments">List of argument names.</param>
+        /// <returns>Attribute List Syntax.</returns>
         public static AttributeArgumentListSyntax? GetAttributeArgumentListSyntax(IList<string> attributeArguments)
         {
             if (attributeArguments == null || attributeArguments.Count < 1)
@@ -163,12 +173,12 @@ namespace Vetuviem.SourceGenerator.Features.Core
         }
 
         /// <summary>
-        /// Produces syntax for creating a variable and assigning from executing a method on a field.
+        /// Produces syntax for creating a variable and assigning from accessing a property on a field.
         /// </summary>
-        /// <param name="variableName"></param>
-        /// <param name="fieldName"></param>
-        /// <param name="propertyName"></param>
-        /// <returns></returns>
+        /// <param name="variableName">The name of the variable to create.</param>
+        /// <param name="fieldName">The name of the field to access.</param>
+        /// <param name="propertyName">The name of the property to access.</param>
+        /// <returns>Roslyn Syntax for carrying out the variable declaration.</returns>
         public static LocalDeclarationStatementSyntax GetVariableAssignmentFromVariablePropertyAccessSyntax(
             string variableName,
             string fieldName,
@@ -329,7 +339,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="methodName">The name of the method to invoke.</param>
         /// <param name="args">Collection of args to pass to the method.</param>
         /// <param name="isAsync">Whether the variable is an async method invocation.</param>
-        /// <returns></returns>
+        /// <returns>Invocation Syntax.</returns>
         public static ExpressionSyntax GetMethodOnClassInvocationSyntax(
             string methodName,
             string[] args,
@@ -372,6 +382,14 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return awaitCommand;
         }
 
+        /// <summary>
+        /// Generates an statement for invoking a method on a static class.
+        /// </summary>
+        /// <param name="className">Fully qualified name of the class.</param>
+        /// <param name="methodName">The name of the method to invoke.</param>
+        /// <param name="nestedSyntax">nested syntax for arguments to be passed into the method.</param>
+        /// <param name="isAsync">Whether the method is async.</param>
+        /// <returns>Invocation syntax.</returns>
         public static ExpressionSyntax GetStaticMethodInvocationSyntax(
             string className,
             string methodName,
@@ -414,11 +432,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <summary>
         /// Gets the syntax for invoking a method on a field and passing in a value.
         /// </summary>
-        /// <param name="className"></param>
+        /// <param name="className">Name of the class to access.</param>
         /// <param name="methodName">The name of the method to invoke.</param>
         /// <param name="args">Collection of args to pass to the method.</param>
         /// <param name="isAsync">Whether the variable is an async method invocation.</param>
-        /// <returns></returns>
+        /// <returns>Invocation statement.</returns>
         public static ExpressionSyntax GetStaticMethodInvocationSyntax(string className, string methodName, string[] args, bool isAsync)
         {
             var getAddCommandInvocation = SyntaxFactory.MemberAccessExpression(
@@ -462,12 +480,12 @@ namespace Vetuviem.SourceGenerator.Features.Core
         }
 
         /// <summary>
-        /// Gets the syntax for invoking a method on a class and passing in a value.
+        /// Gets the syntax for invoking a static method on the local class and passing in a value.
         /// </summary>
         /// <param name="methodName">The name of the method.</param>
         /// <param name="args">Collection of args to pass to the method.</param>
         /// <param name="isAsync">Whether the variable is an async method invocation.</param>
-        /// <returns></returns>
+        /// <returns>Invocation Statement.</returns>
         public static ExpressionSyntax GetStaticMethodInvocationSyntax(string methodName, string[] args, bool isAsync)
         {
             var argsList = default(SeparatedSyntaxList<ArgumentSyntax>);
@@ -510,7 +528,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="methodName">The name of the method on the field.</param>
         /// <param name="args">Collection of args to pass to the method.</param>
         /// <param name="isAsync">Whether the variable is an async method invocation.</param>
-        /// <returns></returns>
+        /// <returns>Invocation statement.</returns>
         public static StatementSyntax GetMethodOnFieldInvocationSyntax(
             string fieldName,
             string methodName,
@@ -564,11 +582,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <summary>
         /// Gets the syntax for invoking a method on a field and passing in a value.
         /// </summary>
-        /// <param name="variableName"></param>
+        /// <param name="variableName">Name of the variable to access.</param>
         /// <param name="methodName">The name of the method to invoke.</param>
         /// <param name="args">Collection of args to pass to the method.</param>
         /// <param name="isAsync">Whether the variable is an async method invocation.</param>
-        /// <returns></returns>
+        /// <returns>Invocation statement.</returns>
         public static StatementSyntax GetMethodOnVariableInvocationSyntax(
             string variableName,
             string methodName,
@@ -614,13 +632,13 @@ namespace Vetuviem.SourceGenerator.Features.Core
         }
 
         /// <summary>
-        /// Gets the syntax for invoking a method on a property and passing in a value.
+        /// Gets the syntax for invoking a method on a property that is on a variable and passing in a value.
         /// </summary>
-        /// <param name="variableName"></param>
-        /// <param name="propertyName"></param>
-        /// <param name="methodName">The name of the method to invoke.</param>
+        /// <param name="variableName">Name of the variable to access.</param>
+        /// <param name="propertyName">Name of the property on the variable to access.</param>
+        /// <param name="methodName">The name of the method on the property to invoke.</param>
         /// <param name="args">Collection of args to pass to the method.</param>
-        /// <returns></returns>
+        /// <returns>Invocation Statement.</returns>
         public static StatementSyntax GetMethodOnPropertyOfVariableInvocationSyntax(
             string variableName,
             string propertyName,
@@ -648,6 +666,14 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return SyntaxFactory.ExpressionStatement(getCommandInvocation);
         }
 
+        /// <summary>
+        /// Generates an invocation for invoking a method on a variable.
+        /// </summary>
+        /// <param name="variableName">Name of the variable to access.</param>
+        /// <param name="methodName">Name of the method on the variable to invoke.</param>
+        /// <param name="args">Collection of arguments to pass to the method.</param>
+        /// <param name="isAsync">Whether the method is asynchronous.</param>
+        /// <returns>Invocation statement.</returns>
         public static ExpressionSyntax GetMethodOnVariableInvocationExpression(
             string variableName,
             string methodName,
@@ -695,6 +721,13 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return awaitCommand;
         }
 
+        /// <summary>
+        /// Generates a Fluent API invocation statement.
+        /// </summary>
+        /// <param name="fluentApiInvocation">Existing fluent API expression to extend.</param>
+        /// <param name="name">Name of the method to invoke.</param>
+        /// <param name="args">Collection of arguments to pass to the method.</param>
+        /// <returns>Invocation expression.</returns>
         public static InvocationExpressionSyntax GetFluentApiChainedInvocationExpression(
             ExpressionSyntax fluentApiInvocation,
             string name,

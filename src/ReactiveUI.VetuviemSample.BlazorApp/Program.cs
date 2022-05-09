@@ -10,8 +10,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ReactiveUI.VetuviemSample.BlazorApp
 {
+    /// <summary>
+    /// Program Entry point.
+    /// </summary>
     public static class Program
     {
+        /// <summary>
+        /// Main Application Entry.
+        /// </summary>
+        /// <param name="args">Command Line Arguments.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);

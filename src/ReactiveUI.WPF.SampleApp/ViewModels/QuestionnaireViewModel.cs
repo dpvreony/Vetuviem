@@ -83,9 +83,15 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _forename, value);
         }
 
+        /// <summary>
+        /// Gets the available length remaining on the forename.
+        /// </summary>
         public int ForenameLengthRemaining => _forenameLengthRemaining.Value;
 
-        public ReactiveCommand<Unit, Unit> LaunchInteraction { get; set; }
+        /// <summary>
+        /// Gets the command to launch an interaction.
+        /// </summary>
+        public ReactiveCommand<Unit, Unit> LaunchInteraction { get; }
 
         /// <summary>
         /// Gets or sets the surname.
@@ -96,6 +102,9 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _surname, value);
         }
 
+        /// <summary>
+        /// Gets the available length remaining on the surname.
+        /// </summary>
         public int SurnameLengthRemaining => _surnameLengthRemaining.Value;
 
         /// <summary>
@@ -107,6 +116,9 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _answerOne, value);
         }
 
+        /// <summary>
+        /// Gets the available length remaining on answer one.
+        /// </summary>
         public int AnswerOneLengthRemaining => _answerOneLengthRemaining.Value;
 
         /// <summary>
@@ -118,6 +130,9 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _answerTwo, value);
         }
 
+        /// <summary>
+        /// Gets the available length remaining on answer two.
+        /// </summary>
         public int AnswerTwoLengthRemaining => _answerTwoLengthRemaining.Value;
 
         /// <summary>
@@ -129,6 +144,9 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _answerThree, value);
         }
 
+        /// <summary>
+        /// Gets the available length remaining on answer three.
+        /// </summary>
         public int AnswerThreeLengthRemaining => _answerThreeLengthRemaining.Value;
 
         /// <summary>
@@ -140,6 +158,9 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _answerFour, value);
         }
 
+        /// <summary>
+        /// Gets the available length remaining on answer four.
+        /// </summary>
         public int AnswerFourLengthRemaining => _answerFourLengthRemaining.Value;
 
         /// <summary>
@@ -151,6 +172,9 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             set => this.RaiseAndSetIfChanged(ref _answerFive, value);
         }
 
+        /// <summary>
+        /// Gets the available length remaining on answer five.
+        /// </summary>
         public int AnswerFiveLengthRemaining => _answerFiveLengthRemaining.Value;
 
         /// <summary>

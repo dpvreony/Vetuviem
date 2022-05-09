@@ -87,6 +87,10 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return namespaceDeclaration;
         }
 
+        /// <summary>
+        /// Function for getting a collection of class generators.
+        /// </summary>
+        /// <returns>Function to invoke.</returns>
         protected abstract Func<IClassGenerator>[] GetClassGenerators();
 
         private static INamespaceSymbol? GetGlobalNamespace(ISymbol assemblyOrModuleSymbol)

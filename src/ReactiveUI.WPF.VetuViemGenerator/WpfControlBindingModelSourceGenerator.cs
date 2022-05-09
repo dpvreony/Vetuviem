@@ -8,6 +8,9 @@ using Vetuviem.SourceGenerator.Features.Core;
 
 namespace ReactiveUI.WPF.VetuviemGenerator
 {
+    /// <summary>
+    /// Control Binding Model Source Generator for WPF.
+    /// </summary>
     [Generator]
     public sealed class WpfControlBindingModelSourceGenerator : AbstractControlBindingModelSourceGenerator
     {

@@ -8,6 +8,9 @@ using Vetuviem.SourceGenerator.Features.Core;
 
 namespace ReactiveUI.Blazor.VetuviemGenerator
 {
+    /// <summary>
+    /// Control Binding Model Source Generator for Blazor.
+    /// </summary>
     [Generator]
     public sealed class BlazorControlBindingModelSourceGenerator : AbstractControlBindingModelSourceGenerator
     {

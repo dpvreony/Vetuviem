@@ -152,8 +152,23 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             }
         }
 
+        /// <summary>
+        /// Fluent API to get a Syntax Token List of modifiers to apply to the generated class.
+        /// </summary>
+        /// <param name="modifiers">List of modifiers to extend.</param>
+        /// <returns>Modified syntax token list.</returns>
         protected abstract SyntaxTokenList GetClassModifiers(SyntaxTokenList modifiers);
 
+        /// <summary>
+        /// Fluent API to extend a class with generated members.
+        /// </summary>
+        /// <param name="members">Members collection to modify.</param>
+        /// <param name="namedTypeSymbol">The named type symbol to use as a reference point for generated members.</param>
+        /// <param name="desiredCommandInterface">The desired command interface to check for.</param>
+        /// <param name="isDerivedType">Whether the named type symbol is derived from another type, other than base UI type for the platform.</param>
+        /// <param name="controlClassFullName">Full Name of the Control Class.</param>
+        /// <param name="platformName">Friendly Name for the platform.</param>
+        /// <returns>Modified Syntax List of Member declarations.</returns>
         protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(
             SyntaxList<MemberDeclarationSyntax> members,
             INamedTypeSymbol namedTypeSymbol,
@@ -162,14 +177,43 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string controlClassFullName,
             string platformName);
 
+        /// <summary>
+        /// Gets the class name identifier from a named type symbol.
+        /// </summary>
+        /// <param name="namedTypeSymbol">The named type symbol to calculate from.</param>
+        /// <returns>Name of the class.</returns>
         protected abstract string GetClassNameIdentifier(INamedTypeSymbol namedTypeSymbol);
 
+        /// <summary>
+        /// Gets the constructor XML DOC summary for a constructor.
+        /// </summary>
+        /// <param name="className">Name of the class.</param>
+        /// <returns>XML DOC summary string.</returns>
         protected abstract string GetConstructorSummaryText(string className);
 
+        /// <summary>
+        /// Gets the statement syntax body for a constructor.
+        /// </summary>
+        /// <param name="isDerivedType">Whether the type being generated is derived.</param>
+        /// <returns>Constructor body.</returns>
         protected abstract IReadOnlyCollection<StatementSyntax> GetConstructorBody(bool isDerivedType);
 
+        /// <summary>
+        /// Gets the constructor's control type name.
+        /// </summary>
+        /// <param name="namedTypeSymbol">Named type symbol.</param>
+        /// <returns>Control Type Name.</returns>
         protected abstract string GetConstructorControlTypeName(INamedTypeSymbol namedTypeSymbol);
 
+        /// <summary>
+        /// Applies a base class declaration to a class declaration.
+        /// </summary>
+        /// <param name="namedTypeSymbol">The named type symbol to check for a base type.</param>
+        /// <param name="baseUiElement">The core UI element for the platform.</param>
+        /// <param name="controlClassFullName">Full name of the control class.</param>
+        /// <param name="classDeclaration">Existing class declaration to extend.</param>
+        /// <param name="platformName">Friendly Name for the UI platform.</param>
+        /// <returns>Modified Class Declaration Syntax.</returns>
         protected abstract ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
@@ -177,10 +221,20 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             ClassDeclarationSyntax classDeclaration,
             string platformName);
 
+        /// <summary>
+        /// Gets a collection of type constraint clauses.
+        /// </summary>
+        /// <param name="controlClassFullName">Full name of the control class.</param>
+        /// <param name="namedTypeSymbol">The named type symbol to check.</param>
+        /// <returns>Collection of Type Parameter constraints.</returns>
         protected abstract SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(
             string controlClassFullName,
             INamedTypeSymbol namedTypeSymbol);
 
+        /// <summary>
+        /// Gets Type Parameter Syntax.
+        /// </summary>
+        /// <returns>Type Parameter Syntax.</returns>
         protected abstract SeparatedSyntaxList<TypeParameterSyntax> GetTypeParameterSyntaxes();
 
         private static IEnumerable<TypeParameterSyntax> GetTypeParameterSeparatedSyntaxList(INamedTypeSymbol namedTypeSymbol)
