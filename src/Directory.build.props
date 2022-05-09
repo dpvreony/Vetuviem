@@ -27,17 +27,15 @@
     <!-- disable sourcelink on mono, to workaround https://github.com/dotnet/sourcelink/issues/155 -->
     <EnableSourceLink Condition=" '$(OS)' != 'Windows_NT' AND '$(MSBuildRuntimeType)' != 'Core' ">false</EnableSourceLink>
     <EnableSourceControlManagerQueries>$(EnableSourceLink)</EnableSourceControlManagerQueries>
-    <!--
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <WarningsAsErrors>nullable</WarningsAsErrors>
-    -->
     <Nullable>enable</Nullable>
     <Packable>false</Packable>
     <Packable Condition="$(IsTestProject) != 'true' and $(MSBuildProjectName.StartsWith('Vetuviem.'))">false</Packable>
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsTestProject)">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
     <PackageReference Include="Xunit.StaFact" Version="1.1.11" />
@@ -62,7 +60,7 @@
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.255" PrivateAssets="all" />	
   </ItemGroup>
 
-  <ItemGroup Condition="$(IsWasmProject) == ''">
+  <ItemGroup Condition="$(IsWasmProject) != 'true'">
     <PackageReference Include="Dhgms.QualityAssurancePack" Version="2.3.17" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
@@ -71,8 +69,9 @@
 
   <ItemGroup>
     <None Include="..\..\readme.md" Pack="true" PackagePath="\"/>
+    <Compile Include="..\Common.Assembly.cs" />
   </ItemGroup>
-  
+
   <!-- Net Analyzers config taken from : https://docs.microsoft.com/en-gb/visualstudio/code-quality/migrate-from-fxcop-analyzers-to-net-analyzers?view=vs-2019 -->
   <PropertyGroup>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>

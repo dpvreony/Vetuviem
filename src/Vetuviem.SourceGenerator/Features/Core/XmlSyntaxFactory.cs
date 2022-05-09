@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Copyright (c) 2022 DPVreony and Contributors. All rights reserved.
+// DPVreony and Contributors licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -53,7 +57,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="seeAlsoText">The uri for the inner see also section.</param>
         /// <param name="parameters">Key/Value pairs for the parameters for the comment.</param>
         /// <returns>The syntax trivia of the comment.</returns>
-        public static SyntaxTriviaList GenerateSummarySeeAlsoComment(string summaryText, string seeAlsoText, params (string paramName, string paramText)[] parameters)
+        public static SyntaxTriviaList GenerateSummarySeeAlsoComment(string summaryText, string seeAlsoText, params (string ParamName, string ParamText)[] parameters)
         {
             var text = string.Format(CultureInfo.InvariantCulture, summaryText, "<see cref=\"" + seeAlsoText.Replace("<", "{").Replace(">", "}") + "\" />");
             var sb = new StringBuilder("/// <summary>")
@@ -63,7 +67,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
             foreach (var parameter in parameters)
             {
-                sb.Append("/// <param name=\"").Append(parameter.paramName).Append("\">").Append(parameter.paramText).AppendLine("</param>");
+                sb.Append("/// <param name=\"").Append(parameter.ParamName).Append("\">").Append(parameter.ParamText).AppendLine("</param>");
             }
 
             return SyntaxFactory.ParseLeadingTrivia(sb.ToString());

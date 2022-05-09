@@ -1,10 +1,23 @@
-﻿using System;
+﻿// Copyright (c) 2022 DPVreony and Contributors. All rights reserved.
+// DPVreony and Contributors licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using System;
 using Microsoft.CodeAnalysis;
 
 namespace Vetuviem.SourceGenerator.Features.Core
 {
-    public static class ReportDiagnostics
+    /// <summary>
+    /// Helper class for producing reporting diagnostic events.
+    /// </summary>
+    public static class ReportDiagnosticFactory
     {
+        /// <summary>
+        /// Report for when a named type has the desired base type for a UI platform.
+        /// </summary>
+        /// <param name="desiredBaseType">The desired base type for the UI platform.</param>
+        /// <param name="namedTypeSymbol">Named Type Symbol.</param>
+        /// <returns>Diagnostic Instance.</returns>
         public static Diagnostic HasDesiredBaseType(string desiredBaseType, INamedTypeSymbol namedTypeSymbol)
         {
             return InfoDiagnostic(
@@ -12,6 +25,10 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 $"{namedTypeSymbol.GetFullName()} has desired base type {desiredBaseType}");
         }
 
+        /// <summary>
+        /// Report for when a source generator is starting.
+        /// </summary>
+        /// <returns>Diagnostic Instance.</returns>
         public static Diagnostic StartingSourceGenerator()
         {
             return InfoDiagnostic(
@@ -19,6 +36,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 $"Starting Source Generator");
         }
 
+        /// <summary>
+        /// Report for when the scan of an assembly is starting.
+        /// </summary>
+        /// <param name="metadataReference">Metadata reference for an assembly.</param>
+        /// <returns>Diagnostic Instance.</returns>
         public static Diagnostic StartingScanOfAssembly(MetadataReference metadataReference)
         {
             return InfoDiagnostic(
@@ -26,6 +48,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 $"Starting Scan Of Namespace: {metadataReference.Display}");
         }
 
+        /// <summary>
+        /// Report for when the scan of a namespace is starting.
+        /// </summary>
+        /// <param name="namespaceSymbol">Symbol reference for a namespace.</param>
+        /// <returns>Diagnostic Instance.</returns>
         public static Diagnostic StartingScanOfNamespace(INamespaceSymbol namespaceSymbol)
         {
             return InfoDiagnostic(
@@ -33,6 +60,12 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 $"Starting Scan Of Namespace: {namespaceSymbol}");
         }
 
+        /// <summary>
+        /// Report for when after assembly reference scanning, there is a mismatch in the number of assemblies found versus what was expected.
+        /// </summary>
+        /// <param name="expected">Expected number of assemblies.</param>
+        /// <param name="actual">The actual number of assemblies.</param>
+        /// <returns>Diagnostic Instance.</returns>
         public static Diagnostic ReferencesOfInterestCountMismatch(int expected, int actual)
         {
             return ErrorDiagnostic(
@@ -40,13 +73,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 $"The number of assemblies we want for this generator does not match the amount matched. Expected: {expected}, Actual: {actual}");
         }
 
-        public static Diagnostic MatchedBaseUiElement(string desiredBaseType)
-        {
-            return InfoDiagnostic(
-                ReportDiagnosticIds.MatchedBaseUiElement,
-                $"Matched Base Ui Element: {desiredBaseType}");
-        }
-
+        /// <summary>
+        /// Report for when an unhandled exception has occurred.
+        /// </summary>
+        /// <param name="exception">The exception that occurred.</param>
+        /// <returns>Diagnostic Instance.</returns>
         public static Diagnostic UnhandledException(Exception exception)
         {
             return ErrorDiagnostic(
@@ -54,20 +85,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 exception.ToString());
         }
 
-        public static Diagnostic MetadataReferenceNotAssemblySymbol(MetadataReference metadataReference)
-        {
-            return ErrorDiagnostic(
-                ReportDiagnosticIds.MetadataReferenceNotAssemblySymbol,
-                $"Metadata Reference Not Assembly Symbol {metadataReference.Display}");
-        }
-
-        public static Diagnostic StartingCheckOfType(string fullName)
-        {
-            return InfoDiagnostic(
-                ReportDiagnosticIds.StartingCheckOfType,
-                $"Starting Check Of Type: {fullName}");
-        }
-
+        /// <summary>
+        /// Report for when the desired base type of a UI platform has not been found during a scan of the reference assemblies.
+        /// </summary>
+        /// <param name="desiredTypeName">Fully qualified name of the desired type.</param>
+        /// <returns>Diagnostic Instance.</returns>
         public static Diagnostic FailedToFindDesiredBaseTypeSymbol(string desiredTypeName)
         {
             return ErrorDiagnostic(
@@ -75,20 +97,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 $"Failed To Find Desired Base Type Symbol: {desiredTypeName}");
         }
 
-        public static Diagnostic DesiredBaseTypeSymbolSearchResultNotUnique(string desiredTypeName)
-        {
-            return ErrorDiagnostic(
-                ReportDiagnosticIds.DesiredBaseTypeSymbolSearchResultNotUnique,
-                $"Desired Base Type Symbol Search Result Not Unique: {desiredTypeName}");
-        }
-
-        public static Diagnostic DesiredBaseTypeSymbolSearchNotNamedTypeSymbol(string desiredTypeName)
-        {
-            return ErrorDiagnostic(
-                ReportDiagnosticIds.DesiredBaseTypeSymbolSearchNotNamedTypeSymbol,
-                $"Desired Base Type Symbol Search Not Named Type Symbol: {desiredTypeName}");
-        }
-
+        /// <summary>
+        /// Report for when the desired base type has been found, but is not a class or interface.
+        /// </summary>
+        /// <param name="desiredTypeName">Fully qualified name of the desired type.</param>
+        /// <returns>Diagnostic Instance.</returns>
         public static Diagnostic DesiredBaseTypeSymbolNotInterfaceOrClass(string desiredTypeName)
         {
             return ErrorDiagnostic(
@@ -96,6 +109,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 $"Desired Base Type Symbol Search Not Named Type Symbol: {desiredTypeName}");
         }
 
+        /// <summary>
+        /// Report for when a metadata reference isn't for an assembly or module.
+        /// </summary>
+        /// <param name="metadataReference">Metadata reference for what should have been an assembly or module.</param>
+        /// <returns>Diagnostic Instance.</returns>
         public static Diagnostic NoAssemblyOrModuleSybmol(MetadataReference metadataReference)
         {
             return ErrorDiagnostic(
@@ -103,6 +121,11 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 $"No Assembly or Module Symbol: {metadataReference.Display}");
         }
 
+        /// <summary>
+        /// Report for when an assembly\ module doesn't contain a global namespace.
+        /// </summary>
+        /// <param name="metadataReference">Metadata reference for an assembly or module.</param>
+        /// <returns>Diagnostic Instance.</returns>
         public static Diagnostic NoGlobalNamespaceInAssemblyOrModule(MetadataReference metadataReference)
         {
             return ErrorDiagnostic(

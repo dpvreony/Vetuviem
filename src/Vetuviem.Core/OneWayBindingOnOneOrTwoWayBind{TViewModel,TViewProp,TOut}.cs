@@ -1,5 +1,5 @@
-﻿// Copyright (c) 2020 DHGMS Solutions and Contributors. All rights reserved.
-// DHGMS Solutions and Contributors licenses this file to you under the MIT license.
+﻿// Copyright (c) 2022 DPVreony and Contributors. All rights reserved.
+// DPVreony and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
 using System;
@@ -22,7 +22,7 @@ namespace Vetuviem.Core
         private readonly Expression<Func<TViewProp, TOut>> _converterBinding;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBindOnOneOrTwoWayBind{TViewModel,TViewProp,TOut}"/> class.
+        /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBind{TViewModel, TViewProp, TOut}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">View to ViewModel binding expression.</param>
         /// <param name="converterBinding">View Property Conversion binding expression.</param>

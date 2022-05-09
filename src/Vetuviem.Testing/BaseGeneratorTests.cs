@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Copyright (c) 2022 DPVreony and Contributors. All rights reserved.
+// DPVreony and Contributors licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -23,15 +27,18 @@ namespace Vetuviem.Testing
         /// <summary>
         /// Unit Tests for the Execute Method.
         /// </summary>
+        /// <typeparam name="TGenerator">The type for the source generator.</typeparam>
+        /// <typeparam name="TGeneratorProcessor">The type for the source generator processor.</typeparam>
         public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor> : Foundatio.Xunit.TestWithLoggingBase
-            where TGenerator : AbstractBaseGenerator<TGeneratorProcessor>
+            where TGenerator : AbstractBaseSourceGenerator<TGeneratorProcessor>
             where TGeneratorProcessor : AbstractGeneratorProcessor, new()
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="BaseExecuteMethod{TGenerator, TGeneratorProcessor}"/> class.
             /// </summary>
             /// <param name="output">Test Output Helper.</param>
-            protected BaseExecuteMethod(ITestOutputHelper output) : base(output)
+            protected BaseExecuteMethod(ITestOutputHelper output)
+                : base(output)
             {
             }
 
@@ -77,7 +84,7 @@ namespace Vetuviem.Testing
             /// with no specific references loaded. Source generators typically take these via MSBuild loading
             /// from the csproj file, but you need to do it yourself in a test.
             /// </summary>
-            /// <param name="metadataReferences"></param>
+            /// <param name="metadataReferences">List of metadata references.</param>
             protected abstract void AddReferenceAssemblies(IList<MetadataReference> metadataReferences);
 
             /// <summary>
@@ -90,15 +97,13 @@ namespace Vetuviem.Testing
                 assemblyName: "compilation",
                 syntaxTrees: new[] { CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(LanguageVersion.Preview)) },
                 references: reference,
-                options: new CSharpCompilationOptions(OutputKind.ConsoleApplication)
-            );
+                options: new CSharpCompilationOptions(OutputKind.ConsoleApplication));
 
             private static GeneratorDriver CreateDriver(Compilation compilation, params ISourceGenerator[] generators) => CSharpGeneratorDriver.Create(
                 generators: ImmutableArray.Create(generators),
                 additionalTexts: ImmutableArray<AdditionalText>.Empty,
                 parseOptions: (CSharpParseOptions)compilation.SyntaxTrees.First().Options,
-                optionsProvider: null
-            );
+                optionsProvider: null);
 
             private static Compilation RunGenerators(Compilation compilation, out ImmutableArray<Diagnostic> diagnostics, params ISourceGenerator[] generators)
             {

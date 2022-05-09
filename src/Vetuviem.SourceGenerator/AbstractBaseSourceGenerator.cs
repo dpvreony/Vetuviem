@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Copyright (c) 2022 DPVreony and Contributors. All rights reserved.
+// DPVreony and Contributors licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -15,8 +19,8 @@ namespace Vetuviem.SourceGenerator
     /// <summary>
     /// Base logic for a source generator.
     /// </summary>
-    /// <typeparam name="TGeneratorProcessor"></typeparam>
-    public abstract class AbstractBaseGenerator<TGeneratorProcessor> : ISourceGenerator
+    /// <typeparam name="TGeneratorProcessor">The type for the generator processor.</typeparam>
+    public abstract class AbstractBaseSourceGenerator<TGeneratorProcessor> : ISourceGenerator
         where TGeneratorProcessor : AbstractGeneratorProcessor, new()
     {
         /// <inheritdoc />
@@ -29,14 +33,13 @@ namespace Vetuviem.SourceGenerator
         {
             try
             {
-                context.ReportDiagnostic(ReportDiagnostics.StartingSourceGenerator());
+                context.ReportDiagnostic(ReportDiagnosticFactory.StartingSourceGenerator());
 
                 var memberDeclarationSyntax = GenerateAsync(context, context.CancellationToken);
 
                 var nullableDirectiveTrivia = SyntaxFactory.NullableDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.EnableKeyword), true);
                 var trivia = SyntaxFactory.Trivia(nullableDirectiveTrivia);
                 var leadingSyntaxTriviaList = SyntaxFactory.TriviaList(trivia);
-
 
                 if (memberDeclarationSyntax == null)
                 {
@@ -69,7 +72,7 @@ namespace Vetuviem.SourceGenerator
             catch (Exception e)
 #pragma warning restore CA1031 // Do not catch general exception types
             {
-                context.ReportDiagnostic(ReportDiagnostics.UnhandledException(e));
+                context.ReportDiagnostic(ReportDiagnosticFactory.UnhandledException(e));
             }
         }
 
@@ -78,6 +81,25 @@ namespace Vetuviem.SourceGenerator
         /// </summary>
         /// <returns>Name identifier for the platform.</returns>
         protected abstract string GetPlatformName();
+
+        /// <summary>
+        /// Gets the platform resolver used for searching for UI types for the platform.
+        /// </summary>
+        /// <returns>Platform specific resolver.</returns>
+        protected abstract IPlatformResolver GetPlatformResolver();
+
+        /// <summary>
+        /// Works out if a assembly reference should be included if it's found to be missing.
+        /// </summary>
+        /// <param name="assemblyOfInterest">Name of the assembly.</param>
+        /// <returns>A metadata reference for an assembly, if required.</returns>
+        protected abstract MetadataReference? CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest);
+
+        /// <summary>
+        /// Gets the root namespace to place the generated code inside.
+        /// </summary>
+        /// <returns>Fully qualified root namespace.</returns>
+        protected abstract string GetNamespace();
 
         /// <summary>
         /// Create the syntax tree representing the expansion of some member to which this attribute is applied.
@@ -102,6 +124,7 @@ namespace Vetuviem.SourceGenerator
 
             var platformResolver = GetPlatformResolver();
 
+#if PLATFORMASSEMBLIES
             //// we work on assumption we have the references already in the build chain
             //var trustedAssembliesPaths = GetPlatformAssemblyPaths(context);
             //if (trustedAssembliesPaths == null || trustedAssembliesPaths.Length == 0)
@@ -112,6 +135,7 @@ namespace Vetuviem.SourceGenerator
             //    // for now we drop out
             //    return namespaceDeclaration;
             //}
+#endif
 
             var assembliesOfInterest = platformResolver.GetAssemblyNames();
 
@@ -126,7 +150,7 @@ namespace Vetuviem.SourceGenerator
             if (referencesOfInterest.Length != assembliesOfInterest.Length)
             {
                 // not got the expected count back, drop out.
-                context.ReportDiagnostic(ReportDiagnostics.ReferencesOfInterestCountMismatch(assembliesOfInterest.Length, referencesOfInterest.Length));
+                context.ReportDiagnostic(ReportDiagnosticFactory.ReferencesOfInterestCountMismatch(assembliesOfInterest.Length, referencesOfInterest.Length));
                 return namespaceDeclaration;
             }
 
@@ -136,7 +160,7 @@ namespace Vetuviem.SourceGenerator
 
             if (desiredBaseTypeSymbolMatch == null)
             {
-                context.ReportDiagnostic(ReportDiagnostics.FailedToFindDesiredBaseTypeSymbol(desiredBaseType));
+                context.ReportDiagnostic(ReportDiagnosticFactory.FailedToFindDesiredBaseTypeSymbol(desiredBaseType));
                 return namespaceDeclaration;
             }
 
@@ -150,7 +174,7 @@ namespace Vetuviem.SourceGenerator
                 case TypeKind.Class:
                     break;
                 default:
-                    context.ReportDiagnostic(ReportDiagnostics.DesiredBaseTypeSymbolNotInterfaceOrClass(desiredBaseType));
+                    context.ReportDiagnostic(ReportDiagnosticFactory.DesiredBaseTypeSymbolNotInterfaceOrClass(desiredBaseType));
                     return namespaceDeclaration;
             }
 
@@ -160,7 +184,7 @@ namespace Vetuviem.SourceGenerator
 
             var platformName = GetPlatformName();
 
-            var result = generatorProcessor.GenerateObjects(
+            var result = generatorProcessor.GenerateNamespaceDeclaration(
                 namespaceDeclaration,
                 referencesOfInterest,
                 compilation,
@@ -172,12 +196,6 @@ namespace Vetuviem.SourceGenerator
 
             return result;
         }
-
-        /// <summary>
-        /// Gets the platform resolver used for searching for UI types for the platform.
-        /// </summary>
-        /// <returns>Platform specific resolver.</returns>
-        protected abstract IPlatformResolver GetPlatformResolver();
 
         private IEnumerable<MetadataReference> GetReferencesOfInterest(
             IEnumerable<MetadataReference> compilationReferences,
@@ -206,13 +224,5 @@ namespace Vetuviem.SourceGenerator
                 }
             }
         }
-
-        protected abstract MetadataReference? CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest);
-
-        /// <summary>
-        /// Gets the root namespace to place the generated code inside.
-        /// </summary>
-        /// <returns>Fully qualified root namespace.</returns>
-        protected abstract string GetNamespace();
     }
 }

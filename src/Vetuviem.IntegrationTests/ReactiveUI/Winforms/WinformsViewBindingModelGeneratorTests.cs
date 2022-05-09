@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Copyright (c) 2022 DPVreony and Contributors. All rights reserved.
+// DPVreony and Contributors licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.CodeAnalysis;
@@ -12,10 +16,10 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Winforms
     /// <summary>
     /// Unit Tests for the ViewBinding Model Source Generator.
     /// </summary>
-    public static class ViewBindingModelGeneratorTests
+    public static class WinformsViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WinformsControlBindingModelGenerator, ControlBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WinformsControlBindingModelSourceGenerator, ControlBindingModelGeneratorProcessor>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
@@ -48,9 +52,9 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Winforms
             }
 
             /// <inheritdoc />
-            protected override Func<WinformsControlBindingModelGenerator> GetFactory()
+            protected override Func<WinformsControlBindingModelSourceGenerator> GetFactory()
             {
-                return () => new WinformsControlBindingModelGenerator();
+                return () => new WinformsControlBindingModelSourceGenerator();
             }
 
             private static string[]? GetPlatformAssemblyPaths()

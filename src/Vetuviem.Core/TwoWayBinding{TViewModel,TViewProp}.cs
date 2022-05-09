@@ -9,27 +9,22 @@ using ReactiveUI;
 namespace Vetuviem.Core
 {
     /// <summary>
-    /// Represents a One Way Bind to a property that takes One or Two way binding.
+    /// Represents a Two way binding on a View Property that supports One or Two way binding.
     /// </summary>
     /// <typeparam name="TViewModel">The type for the ViewModel.</typeparam>
-    /// <typeparam name="TViewProp">The type for the View Property.</typeparam>
-    public class OneWayBindingOnOneOrTwoWayBind<TViewModel, TViewProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
+    /// <typeparam name="TViewProp">The type for the View.</typeparam>
+    public class TwoWayBinding<TViewModel, TViewProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
         where TViewModel : class
     {
         private readonly Expression<Func<TViewModel, TViewProp?>> _viewModelBinding;
-        private readonly Func<TViewProp?, TViewProp> _vmToViewConverter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBind{TViewModel,TViewProp}"/> class.
+        /// Initializes a new instance of the <see cref="TwoWayBinding{TViewModel, TViewProp}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
-        /// <param name="vmToViewConverter">Function for converting the ViewModel property to the type of the View Property.</param>
-        public OneWayBindingOnOneOrTwoWayBind(
-            Expression<Func<TViewModel, TViewProp?>> viewModelBinding,
-            Func<TViewProp?, TViewProp> vmToViewConverter)
+        public TwoWayBinding(Expression<Func<TViewModel, TViewProp?>> viewModelBinding)
         {
             _viewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
-            _vmToViewConverter = vmToViewConverter;
         }
 
         /// <inheritdoc/>
@@ -45,11 +40,10 @@ namespace Vetuviem.Core
                 throw new ArgumentNullException(nameof(d));
             }
 
-            d(view.OneWayBind(
+            d(view.Bind(
                 viewModel,
                 _viewModelBinding,
-                viewBinding,
-                _vmToViewConverter));
+                viewBinding));
         }
     }
 }

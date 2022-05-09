@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Copyright (c) 2022 DPVreony and Contributors. All rights reserved.
+// DPVreony and Contributors licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using ReactiveUI.UWP.VetuviemGenerator;
@@ -14,7 +18,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.UWP
     public static class UwpViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<UwpControlBindingModelGenerator, ControlBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<UwpControlBindingModelSourceGenerator, ControlBindingModelGeneratorProcessor>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
@@ -37,9 +41,9 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.UWP
             }
 
             /// <inheritdoc />
-            protected override Func<UwpControlBindingModelGenerator> GetFactory()
+            protected override Func<UwpControlBindingModelSourceGenerator> GetFactory()
             {
-                return () => new UwpControlBindingModelGenerator();
+                return () => new UwpControlBindingModelSourceGenerator();
             }
         }
     }

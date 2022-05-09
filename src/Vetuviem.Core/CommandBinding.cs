@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Copyright (c) 2022 DPVreony and Contributors. All rights reserved.
+// DPVreony and Contributors licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using System;
 using System.Linq.Expressions;
 using System.Reactive;
 using System.Windows.Input;
@@ -6,6 +10,10 @@ using ReactiveUI;
 
 namespace Vetuviem.Core
 {
+    /// <summary>
+    /// Represents a command binding between a control and a viewmodel.
+    /// </summary>
+    /// <typeparam name="TViewModel">The type for the viewmodel.</typeparam>
     public sealed class CommandBinding<TViewModel> : ICommandBinding<TViewModel, ICommand>
         where TViewModel : class
     {

@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Copyright (c) 2022 DPVreony and Contributors. All rights reserved.
+// DPVreony and Contributors licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Windows.Controls;
@@ -35,7 +39,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 
             // Surname
             yield return GetStandardTextBoxViewModel(
-                vw =>vw.Surname,
+                vw => vw.Surname,
                 vm => vm.Surname);
             yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.SurnameLengthRemaining,
@@ -44,7 +48,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 
             // answer one
             yield return GetStandardTextBoxViewModel(
-                vw =>vw.AnswerOne,
+                vw => vw.AnswerOne,
                 vm => vm.AnswerOne);
             yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerOneLengthRemaining,
@@ -53,7 +57,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 
             // answer two
             yield return GetStandardTextBoxViewModel(
-                vw =>vw.AnswerTwo,
+                vw => vw.AnswerTwo,
                 vm => vm.AnswerTwo);
             yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerTwoLengthRemaining,
@@ -62,7 +66,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 
             // answer three
             yield return GetStandardTextBoxViewModel(
-                vw =>vw.AnswerThree,
+                vw => vw.AnswerThree,
                 vm => vm.AnswerThree);
             yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerThreeLengthRemaining,
@@ -71,7 +75,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 
             // answer four
             yield return GetStandardTextBoxViewModel(
-                vw =>vw.AnswerFour,
+                vw => vw.AnswerFour,
                 vm => vm.AnswerFour);
             yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerFourLengthRemaining,
@@ -80,7 +84,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 
             // answer five
             yield return GetStandardTextBoxViewModel(
-                vw =>vw.AnswerFive,
+                vw => vw.AnswerFive,
                 vm => vm.AnswerFive);
             yield return GetStandardLengthRemainingLabelViewBindingModel(
                 vw => vw.AnswerFiveLengthRemaining,
@@ -98,7 +102,6 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
                 // TODO: explore the ability to pass in an object and not apply a vm convertor. this is doing boxing we can probably avoid
                 Content = new OneWayBindingOnOneOrTwoWayBind<QuestionnaireViewModel, object>(viewModelObjectExpression, o => o?.ToString() ?? string.Empty),
                 Foreground = new OneWayBindingWithConversionOnOneOrTwoWayBind<QuestionnaireViewModel, Brush, int>(viewModelNumberExpression, lengthRemaining => GetBrushForLengthRemaining(lengthRemaining))
-                //Foreground = new OneWayBindingOnOneOrTwoWayBind<QuestionnaireViewModel, Brush>()
             };
         }
 

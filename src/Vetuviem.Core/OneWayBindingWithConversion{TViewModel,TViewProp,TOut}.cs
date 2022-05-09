@@ -9,27 +9,36 @@ using ReactiveUI;
 namespace Vetuviem.Core
 {
     /// <summary>
-    /// Represents a One Way Bind to a property that takes One or Two way binding.
+    /// Represents a one way View and ViewModel binding.
     /// </summary>
     /// <typeparam name="TViewModel">The type for the ViewModel.</typeparam>
-    /// <typeparam name="TViewProp">The type for the View Property.</typeparam>
-    public class OneWayBindingOnOneOrTwoWayBind<TViewModel, TViewProp> : IOneOrTwoWayBind<TViewModel, TViewProp>
+    /// <typeparam name="TViewProp">The type for the View.</typeparam>
+    /// <typeparam name="TOut">The type for the control binding.</typeparam>
+    public class OneWayBindingWithConversion<TViewModel, TViewProp, TOut> : IOneWayBind<TViewModel, TViewProp>
         where TViewModel : class
     {
-        private readonly Expression<Func<TViewModel, TViewProp?>> _viewModelBinding;
-        private readonly Func<TViewProp?, TViewProp> _vmToViewConverter;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBind{TViewModel,TViewProp}"/> class.
+        /// Initializes a new instance of the <see cref="OneWayBindingWithConversion{TViewModel,TViewProp, TOut}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
-        /// <param name="vmToViewConverter">Function for converting the ViewModel property to the type of the View Property.</param>
-        public OneWayBindingOnOneOrTwoWayBind(
+        /// <param name="selector">Conversion selector function.</param>
+        public OneWayBindingWithConversion(
             Expression<Func<TViewModel, TViewProp?>> viewModelBinding,
-            Func<TViewProp?, TViewProp> vmToViewConverter)
+            Func<TViewProp, TOut> selector)
         {
-            _viewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
-            _vmToViewConverter = vmToViewConverter;
+            ViewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
+            Selector = selector ?? throw new ArgumentNullException(nameof(selector));
+        }
+
+        /// <summary>
+        /// Gets the conversion selector function.
+        /// </summary>
+        public Func<TViewProp, TOut> Selector { get; }
+
+        /// <inheritdoc/>
+        public Expression<Func<TViewModel, TViewProp?>> ViewModelBinding
+        {
+            get;
         }
 
         /// <inheritdoc/>
@@ -47,9 +56,9 @@ namespace Vetuviem.Core
 
             d(view.OneWayBind(
                 viewModel,
-                _viewModelBinding,
+                ViewModelBinding,
                 viewBinding,
-                _vmToViewConverter));
+                Selector));
         }
     }
 }

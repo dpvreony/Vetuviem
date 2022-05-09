@@ -2,18 +2,14 @@
 // DPVreony and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ReactiveUI.WPF.SampleApp.ViewModels;
 
-namespace Vetuviem.UnitTests.SourceGenerator
+namespace ReactiveUI.WPF.SampleApp.Views
 {
     /// <summary>
-    /// Unit Tests for the ViewBinding Model Source Generator.
+    /// Reactive Window Wrapper for a Questionnaire View Model.
     /// </summary>
-    public static class ViewBindingModelGeneratorTests
+    public class ReactiveQuestionnaireWindow : ReactiveWindow<QuestionnaireViewModel>
     {
     }
 }
