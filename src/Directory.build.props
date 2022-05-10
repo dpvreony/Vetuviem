@@ -76,4 +76,9 @@
   <PropertyGroup>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
   </PropertyGroup>
+
+  <!--workaround for NBGV 3.5.103 failing -->
+  <PropertyGroup>
+    <NBGV_PrivateP2PAuxTargets>$(MSBuildThisFileDirectory)nbgv-workaround.targets</NBGV_PrivateP2PAuxTargets>
+  </PropertyGroup>
 </Project>
