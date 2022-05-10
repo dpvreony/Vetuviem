@@ -29,7 +29,4 @@
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
   
-  <!-- workaround for NBGV 3.5.103 -->
-  <Target Name="GetTargetPathWithTargetPlatformMoniker" />
-
 </Project>
