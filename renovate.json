@@ -17,8 +17,8 @@
         },
         {
             "matchPackagePatterns": ["Xamarin.*"],
-            "groupName": "all reactiveui dependencies",
-            "groupSlug": "all-reactiveui",
+            "groupName": "all xamarin dependencies",
+            "groupSlug": "all-xamarin",
             "labels": ["dependencies"]
         }]
 }
