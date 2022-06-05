@@ -35,7 +35,7 @@ namespace Vetuviem.SourceGenerator
             {
                 context.ReportDiagnostic(ReportDiagnosticFactory.StartingSourceGenerator());
 
-                var memberDeclarationSyntax = GenerateAsync(context, context.CancellationToken);
+                var memberDeclarationSyntax = Generate(context, context.CancellationToken);
 
                 var nullableDirectiveTrivia = SyntaxFactory.NullableDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.EnableKeyword), true);
                 var trivia = SyntaxFactory.Trivia(nullableDirectiveTrivia);
@@ -107,7 +107,7 @@ namespace Vetuviem.SourceGenerator
         /// <param name="context">The transformation context being generated for.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The generated member syntax to be added to the project.</returns>
-        private MemberDeclarationSyntax? GenerateAsync(
+        private MemberDeclarationSyntax? Generate(
             GeneratorExecutionContext context,
             CancellationToken cancellationToken)
         {

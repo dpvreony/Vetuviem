@@ -11,4 +11,9 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" PrivateAssets="none" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Maui\" />
+    <Folder Include="Features\XamForms\" />
+  </ItemGroup>
+
 </Project>

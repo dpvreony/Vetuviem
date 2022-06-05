@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- this will change to be the core sourcegenerator -->
     <ProjectReference Include="..\ReactiveUI.Blazor.VetuViemGenerator\ReactiveUI.Blazor.VetuViemGenerator.csproj" OutputItemType="Analyzer" />
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
