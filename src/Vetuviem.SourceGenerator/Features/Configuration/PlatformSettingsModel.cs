@@ -9,6 +9,5 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
     /// </summary>
     public sealed class PlatformSettingsModel
     {
-
     }
 }
