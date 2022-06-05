@@ -5,6 +5,7 @@
 using Microsoft.CodeAnalysis;
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
+using Vetuviem.SourceGenerator.Features.WinUi3;
 
 namespace ReactiveUI.WinUI3.VetuviemGenerator
 {

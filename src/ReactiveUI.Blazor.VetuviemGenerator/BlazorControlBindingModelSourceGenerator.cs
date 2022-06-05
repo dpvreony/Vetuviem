@@ -4,6 +4,7 @@
 
 using Microsoft.CodeAnalysis;
 using Vetuviem.SourceGenerator;
+using Vetuviem.SourceGenerator.Features.Blazor;
 using Vetuviem.SourceGenerator.Features.Core;
 
 namespace ReactiveUI.Blazor.VetuviemGenerator

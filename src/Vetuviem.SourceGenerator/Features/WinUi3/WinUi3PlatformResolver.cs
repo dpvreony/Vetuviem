@@ -4,7 +4,7 @@
 
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.WinUI3.VetuviemGenerator
+namespace Vetuviem.SourceGenerator.Features.WinUi3
 {
     /// <summary>
     /// UI Platform resolver for WinUI3.

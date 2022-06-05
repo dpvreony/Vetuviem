@@ -279,7 +279,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 baseInitializerArgumentList);
 
             var summaryText = GetConstructorSummaryText(className);
-            var summaryParameters = new (string paramName, string paramText)[]
+            var summaryParameters = new (string ParamName, string ParamText)[]
             {
                 ("viewExpression", "expression representing the control on the view to bind to.")
             };
