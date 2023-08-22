@@ -6,6 +6,7 @@
     <DebugSymbols>True</DebugSymbols>
     <DevelopmentDependency>true</DevelopmentDependency>
     <IsPackable>False</IsPackable>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
   </PropertyGroup>
 
   <ItemGroup>
