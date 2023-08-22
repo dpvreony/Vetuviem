@@ -40,6 +40,12 @@ jobs:
       with:
         dotnet-version: 7.0.x
 
+    - name: Install DotNet workloads
+      shell: bash
+      run: |
+        dotnet workload install android ios tvos macos maui wasm-tools
+        dotnet workload list
+        
     - name: Install Windows SDK 10.0.16299
       shell: pwsh
       run: |
