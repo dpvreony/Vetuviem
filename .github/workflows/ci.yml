@@ -20,6 +20,15 @@ jobs:
       solutionpath: src\Vetuviem.sln
       unittestprojectpath: src\Vetuviem.UnitTests\Vetuviem.UnitTests.csproj
     steps:
+    - name: Get Latest Visual Studio Version
+      shell: bash
+      run: |
+        dotnet tool update -g dotnet-vs
+        vs where release
+        vs update release Enterprise
+        vs modify release Enterprise +mobile +desktop +uwp +web
+        vs where release
+        
     - name: Checkout code
       uses: actions/checkout@v3
       with:
