@@ -30,7 +30,7 @@ jobs:
         vs where release
         
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
       with:
         fetch-depth: 0
 
@@ -183,7 +183,7 @@ jobs:
       DOTNET_GENERATE_ASPNET_CERTIFICATE: false
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
       with:
         fetch-depth: 0
 
