@@ -92,7 +92,7 @@ jobs:
         mkdir artifacts\docfx
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1.3.1
+      uses: microsoft/setup-msbuild@v1.3.2
 
     - name: Restore Packages
       run: |
