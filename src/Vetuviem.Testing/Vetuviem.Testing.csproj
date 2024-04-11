@@ -10,7 +10,7 @@
     <PackageReference Include="Foundatio.Xunit" Version="10.7.1" />
     <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="NetTestRegimentation" Version="1.7.48" />
-    <PackageReference Include="xunit.assert" Version="2.7.0" />
+    <PackageReference Include="xunit.assert" Version="2.7.1" />
   </ItemGroup>
 
   <ItemGroup>
