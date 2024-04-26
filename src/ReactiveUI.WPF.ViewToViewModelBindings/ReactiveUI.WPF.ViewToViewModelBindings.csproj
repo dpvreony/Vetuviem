@@ -14,7 +14,7 @@
     <TreatWarningsAsErrors />
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ReactiveUI.WPF" Version="19.6.1" />
+    <PackageReference Include="ReactiveUI.WPF" Version="19.6.12" />
   </ItemGroup>
 
   <ItemGroup>
