@@ -277,9 +277,10 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 "global::System.Action<global::System.IDisposable> registerForDisposalAction",
             });
 
+            // TODO: allow overrding public \ internal
             var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
                 .AddModifiers(
-                    SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+                    SyntaxFactory.Token(SyntaxKind.InternalKeyword),
                     SyntaxFactory.Token(SyntaxKind.OverrideKeyword))
                 .WithParameterList(parameters)
                 .AddBodyStatements(methodBody)

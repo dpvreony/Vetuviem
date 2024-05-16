@@ -142,6 +142,7 @@ namespace Vetuviem.SourceGenerator
 #endif
 
             // TODO: allow the assemblies to be overriden by config.
+            // TODO: allow the classes to be internal rather than public
             var assembliesOfInterest = platformResolver.GetAssemblyNames();
 
             if (cancellationToken.IsCancellationRequested)
