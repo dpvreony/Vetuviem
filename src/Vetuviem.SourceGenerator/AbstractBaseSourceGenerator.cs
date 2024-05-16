@@ -98,8 +98,9 @@ namespace Vetuviem.SourceGenerator
         /// <summary>
         /// Gets the root namespace to place the generated code inside.
         /// </summary>
+        /// <param name="rootNamespace"></param>
         /// <returns>Fully qualified root namespace.</returns>
-        protected abstract string GetNamespace();
+        protected abstract string GetNamespace(string? rootNamespace);
 
         /// <summary>
         /// Create the syntax tree representing the expansion of some member to which this attribute is applied.
@@ -116,7 +117,10 @@ namespace Vetuviem.SourceGenerator
                 return null;
             }
 
-            var namespaceName = GetNamespace();
+            var configOptions = context.AnalyzerConfigOptions;
+            var globalOptions = configOptions.GlobalOptions;
+            globalOptions.TryGetValue("root_namespace", out var rootNamespace);
+            var namespaceName = GetNamespace(rootNamespace);
 
             var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(namespaceName));
 
@@ -137,6 +141,7 @@ namespace Vetuviem.SourceGenerator
             //}
 #endif
 
+            // TODO: allow the assemblies to be overriden by config.
             var assembliesOfInterest = platformResolver.GetAssemblyNames();
 
             if (cancellationToken.IsCancellationRequested)
@@ -195,6 +200,21 @@ namespace Vetuviem.SourceGenerator
                 platformName);
 
             return result;
+        }
+
+        private void ValidateRootNamespace(string? rootNamespace)
+        {
+            if (string.IsNullOrWhiteSpace(rootNamespace))
+            {
+                return;
+            }
+
+            // this is crude right now, look to see if roslyn can validate it, or produce a more expansive check.
+            // todo: pass the csproj key and value back in the error.
+            if (rootNamespace.Any(c => char.IsLetter(c) && c != '.')) ;
+            {
+                throw new InvalidOperationException("Root namespace in project config must be a valid namespace.");
+            }
         }
 
         private IEnumerable<MetadataReference> GetReferencesOfInterest(
