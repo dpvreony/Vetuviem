@@ -17,7 +17,7 @@ namespace Vetuviem.SourceGenerator
         {
             if (string.IsNullOrWhiteSpace(rootNamespace))
             {
-                rootNamespace = "ReactiveUI";
+                rootNamespace = "VetuviemGenerated";
             }
 
             return $"{rootNamespace}.{GetPlatformName()}.ViewToViewModelBindings";
