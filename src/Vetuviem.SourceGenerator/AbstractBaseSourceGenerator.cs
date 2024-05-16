@@ -122,6 +122,15 @@ namespace Vetuviem.SourceGenerator
             globalOptions.TryGetValue("root_namespace", out var rootNamespace);
             var namespaceName = GetNamespace(rootNamespace);
 
+            globalOptions.TryGetValue("make_classes_public", out var makeClassesPublicAsString);
+            bool.TryParse(makeClassesPublicAsString, out var makeClassesPublic);
+            globalOptions.TryGetValue("vetuviem_assemblies", out var assemblies);
+            var assembliesArray = assemblies?.Split(';');
+
+            // base type name only used if passing a custom set of assemblies to search for.
+            // allows for 3rd parties to use the generator and produce a custom namespace that inherits off the root, or custom namespace.
+            globalOptions.TryGetValue("vetuviem_base_type", out var baseType);
+
             var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(namespaceName));
 
             var compilation = context.Compilation;
