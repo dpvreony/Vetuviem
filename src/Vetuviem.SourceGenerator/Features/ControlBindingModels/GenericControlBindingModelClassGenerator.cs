@@ -151,7 +151,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     .Replace("global::", string.Empty);
 
             var baseViewBindingModelClassName =
-                $"global::{rootNamespace}.{platformName}.ViewToViewModelBindings.{subNameSpace}.Unbound{baseClass.Name}ControlBindingModel";
+                $"global::{rootNamespace}.{subNameSpace}.Unbound{baseClass.Name}ControlBindingModel";
 
             var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
 
