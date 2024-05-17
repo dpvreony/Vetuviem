@@ -28,7 +28,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var controlClassFullName = namedTypeSymbol.GetFullName();
 
-            var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+            var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.InternalKeyword));
             modifiers = GetClassModifiers(modifiers);
 
             var constraintClauses = GetTypeParameterConstraintClauseSyntaxes(controlClassFullName, namedTypeSymbol);
@@ -287,7 +287,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var declaration = SyntaxFactory.ConstructorDeclaration(className)
                 .WithInitializer(initializer)
                 .WithParameterList(parameters)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword))
                 .AddBodyStatements(body.ToArray())
                 .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummaryComment(summaryText, summaryParameters));
 

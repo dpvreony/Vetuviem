@@ -125,7 +125,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var result = SyntaxFactory.PropertyDeclaration(
                     type,
                     prop.Name)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword))
                 .WithAccessorList(
                     SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)))
                 .WithLeadingTrivia(summary);
