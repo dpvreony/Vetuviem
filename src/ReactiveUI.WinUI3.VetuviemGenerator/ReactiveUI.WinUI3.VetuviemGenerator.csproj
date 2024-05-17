@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -28,11 +28,6 @@
       <TargetPathWithTargetPlatformMoniker Include="$(PKGVetuviem_SourceGenerator)\lib\netstandard2.0\Vetuviem.SourceGenerators.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>
-  -->
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.12" PrivateAssets="all" ReferenceOutputAssembly="true" />
-  </ItemGroup>
 
   <PropertyGroup>
     <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
@@ -43,5 +38,6 @@
       <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_ProjectReunion_WinUI)\lib\net5.0-windows10.0.18362.0\Microsoft.WinUI.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
   </Target>
+  -->
 
 </Project>
