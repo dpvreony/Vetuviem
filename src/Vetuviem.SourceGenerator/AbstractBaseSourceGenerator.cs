@@ -208,7 +208,8 @@ namespace Vetuviem.SourceGenerator
                 desiredBaseTypeIsInterface,
                 desiredCommandInterface,
                 platformName,
-                namespaceName);
+                namespaceName,
+                makeClassesPublic);
 
             return result;
         }

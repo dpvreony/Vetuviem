@@ -26,7 +26,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <returns>List of property declarations.</returns>
         public static SyntaxList<MemberDeclarationSyntax> GetProperties(
             INamedTypeSymbol namedTypeSymbol,
-            string? desiredCommandInterface)
+            string? desiredCommandInterface,
+            bool makeClassesPublic)
         {
             if (namedTypeSymbol == null)
             {
@@ -79,7 +80,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     propertySymbol,
                     accessorList,
                     summary,
-                    desiredCommandInterface);
+                    desiredCommandInterface,
+                    makeClassesPublic);
 
                 nodes.Add(propSyntax);
             }
@@ -118,14 +120,15 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             IPropertySymbol prop,
             AccessorDeclarationSyntax[] accessorList,
             IEnumerable<SyntaxTrivia> summary,
-            string? desiredCommandInterface)
+            string? desiredCommandInterface,
+            bool makeClassesPublic)
         {
             TypeSyntax type = GetBindingTypeSyntax(prop, desiredCommandInterface);
 
             var result = SyntaxFactory.PropertyDeclaration(
                     type,
                     prop.Name)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword))
+                .AddModifiers(SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword))
                 .WithAccessorList(
                     SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)))
                 .WithLeadingTrivia(summary);

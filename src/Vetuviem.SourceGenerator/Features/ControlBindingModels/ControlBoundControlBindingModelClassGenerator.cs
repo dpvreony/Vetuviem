@@ -30,7 +30,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string? desiredCommandInterface,
             bool isDerivedType,
             string controlClassFullName,
-            string platformName)
+            string platformName,
+            bool makeClassesPublic)
         {
             return members;
         }

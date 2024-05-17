@@ -37,7 +37,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             bool desiredBaseTypeIsInterface,
             string? desiredCommandInterface,
             string platformName,
-            string rootNamespace)
+            string rootNamespace,
+            bool makeClassesPublic)
         {
             if (namespaceDeclaration == null)
             {
@@ -83,7 +84,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     previouslyGeneratedClasses,
                     desiredCommandInterface,
                     platformName,
-                    rootNamespace);
+                    rootNamespace,
+                    makeClassesPublic);
             }
 
             return namespaceDeclaration;
@@ -118,7 +120,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string platformName,
             Func<IClassGenerator>[] classGenerators,
             List<MemberDeclarationSyntax> memberDeclarationSyntaxes,
-            string rootNamespace)
+            string rootNamespace,
+            bool makeClassesPublic)
         {
             var fullName = namedTypeSymbol.GetFullName();
 
@@ -162,7 +165,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     baseUiElement,
                     desiredCommandInterface,
                     platformName,
-                    rootNamespace);
+                    rootNamespace,
+                    makeClassesPublic);
 
                 memberDeclarationSyntaxes.Add(generatedClass);
             }
@@ -216,7 +220,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             IList<string> previouslyGeneratedClasses,
             string? desiredCommandInterface,
             string platformName,
-            string rootNamespace)
+            string rootNamespace,
+            bool makeClassesPublic)
         {
             reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfAssembly(metadataReference));
 
@@ -249,7 +254,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     desiredCommandInterface,
                     platformName,
                     classGenerators,
-                    rootNamespace);
+                    rootNamespace,
+                    makeClassesPublic);
 
                 if (nestedDeclarationSyntax != null)
                 {
@@ -281,7 +287,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string? desiredCommandInterface,
             string platformName,
             Func<IClassGenerator>[] classGenerators,
-            string rootNamespace)
+            string rootNamespace,
+            bool makeClassesPublic)
         {
             reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfNamespace(namespaceSymbol));
 
@@ -301,7 +308,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     platformName,
                     classGenerators,
                     nestedMembers,
-                    rootNamespace);
+                    rootNamespace,
+                    makeClassesPublic);
             }
 
             var nestedSymbols = namespaceSymbol.GetNamespaceMembers();
@@ -317,7 +325,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     desiredCommandInterface,
                     platformName,
                     classGenerators,
-                    rootNamespace);
+                    rootNamespace,
+                    makeClassesPublic);
 
                 if (nestedNamespace != null)
                 {

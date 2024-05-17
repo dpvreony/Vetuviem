@@ -23,13 +23,14 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string baseUiElement,
             string? desiredCommandInterface,
             string platformName,
-            string rootNamespace)
+            string rootNamespace,
+            bool makeClassesPublic)
         {
             var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
 
             var controlClassFullName = namedTypeSymbol.GetFullName();
 
-            var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.InternalKeyword));
+            var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword));
             modifiers = GetClassModifiers(modifiers);
 
             var constraintClauses = GetTypeParameterConstraintClauseSyntaxes(controlClassFullName, namedTypeSymbol);
@@ -48,9 +49,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var isDerivedType = !controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase) && namedTypeSymbol.BaseType?.BaseType != null;
 
-            var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, isDerivedType));
+            var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, isDerivedType, makeClassesPublic));
 
-            members = ApplyMembers(members, namedTypeSymbol, desiredCommandInterface, isDerivedType, controlClassFullName, platformName);
+            members = ApplyMembers(members, namedTypeSymbol, desiredCommandInterface, isDerivedType, controlClassFullName, platformName, makeClassesPublic);
 
             return classDeclaration
                 .WithModifiers(modifiers)
@@ -177,7 +178,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string? desiredCommandInterface,
             bool isDerivedType,
             string controlClassFullName,
-            string platformName);
+            string platformName,
+            bool makeClassesPublic);
 
         /// <summary>
         /// Gets the class name identifier from a named type symbol.
@@ -258,7 +260,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
         private MemberDeclarationSyntax GetConstructorMethod(
             INamedTypeSymbol namedTypeSymbol,
-            bool isDerivedType)
+            bool isDerivedType,
+            bool makeClassesPublic)
         {
             var className = GetClassNameIdentifier(namedTypeSymbol);
             var body = GetConstructorBody(isDerivedType);
@@ -291,7 +294,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var declaration = SyntaxFactory.ConstructorDeclaration(className)
                 .WithInitializer(initializer)
                 .WithParameterList(parameters)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.InternalKeyword))
+                .AddModifiers(SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword))
                 .AddBodyStatements(body.ToArray())
                 .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummaryComment(summaryText, summaryParameters));
 

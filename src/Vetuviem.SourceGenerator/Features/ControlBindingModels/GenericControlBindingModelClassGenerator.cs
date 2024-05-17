@@ -32,11 +32,13 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string? desiredCommandInterface,
             bool isDerivedType,
             string controlClassFullName,
-            string platformName)
+            string platformName,
+            bool makeClassesPublic)
         {
             members = members.AddRange(ControlBindingModelPropertyGenerator.GetProperties(
                 namedTypeSymbol,
-                desiredCommandInterface));
+                desiredCommandInterface,
+                makeClassesPublic));
 
             members = members.Add(GetApplyBindingsMethod(
                 namedTypeSymbol,

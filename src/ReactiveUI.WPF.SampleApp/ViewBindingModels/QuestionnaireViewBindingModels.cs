@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using ReactiveUI.WPF.SampleApp.ViewModels;
 using ReactiveUI.WPF.SampleApp.Views;
-using ReactiveUI.Wpf.ViewToViewModelBindings.System.Windows.Controls;
+using VetuviemGenerated.Wpf.ViewToViewModelBindings.System.Windows.Controls;
 using Vetuviem.Core;
 
 namespace ReactiveUI.WPF.SampleApp.ViewBindingModels

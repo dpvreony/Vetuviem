@@ -25,6 +25,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string baseUiElement,
             string? desiredCommandInterface,
             string platformName,
-            string rootNamespace);
+            string rootNamespace,
+            bool makeClassesPublic);
     }
 }
