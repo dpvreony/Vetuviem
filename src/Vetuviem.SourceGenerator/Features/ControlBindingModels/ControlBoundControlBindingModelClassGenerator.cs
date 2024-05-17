@@ -83,7 +83,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string baseUiElement,
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
-            string platformName)
+            string platformName,
+            string rootNamespace)
         {
             if (namedTypeSymbol == null)
             {
@@ -103,7 +104,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     .Replace("global::", string.Empty);
 
             var baseViewBindingModelClassName =
-                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.Unbound{namedTypeSymbol.Name}ControlBindingModel";
+                $"global::{rootNamespace}.{platformName}.ViewToViewModelBindings.{subNameSpace}.Unbound{namedTypeSymbol.Name}ControlBindingModel";
 
             var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
 

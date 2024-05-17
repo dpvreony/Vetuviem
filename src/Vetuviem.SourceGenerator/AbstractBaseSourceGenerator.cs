@@ -207,7 +207,8 @@ namespace Vetuviem.SourceGenerator
                 desiredBaseType,
                 desiredBaseTypeIsInterface,
                 desiredCommandInterface,
-                platformName);
+                platformName,
+                namespaceName);
 
             return result;
         }

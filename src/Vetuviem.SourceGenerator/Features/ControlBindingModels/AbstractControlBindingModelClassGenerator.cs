@@ -22,7 +22,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string? desiredCommandInterface,
-            string platformName)
+            string platformName,
+            string rootNamespace)
         {
             var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
 
@@ -42,7 +43,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 baseUiElement,
                 controlClassFullName,
                 classDeclaration,
-                platformName);
+                platformName,
+                rootNamespace);
 
             var isDerivedType = !controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase) && namedTypeSymbol.BaseType?.BaseType != null;
 
@@ -213,13 +215,15 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="controlClassFullName">Full name of the control class.</param>
         /// <param name="classDeclaration">Existing class declaration to extend.</param>
         /// <param name="platformName">Friendly Name for the UI platform.</param>
+        /// <param name="rootNamespace">The root namespace to place the code in.</param>
         /// <returns>Modified Class Declaration Syntax.</returns>
         protected abstract ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
-            string platformName);
+            string platformName,
+            string rootNamespace);
 
         /// <summary>
         /// Gets a collection of type constraint clauses.

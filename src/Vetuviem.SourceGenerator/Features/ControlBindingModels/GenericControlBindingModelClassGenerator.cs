@@ -96,7 +96,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string baseUiElement,
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
-            string platformName)
+            string platformName,
+            string rootNamespace)
         {
             if (namedTypeSymbol == null)
             {
@@ -150,7 +151,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     .Replace("global::", string.Empty);
 
             var baseViewBindingModelClassName =
-                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.Unbound{baseClass.Name}ControlBindingModel";
+                $"global::{rootNamespace}.{platformName}.ViewToViewModelBindings.{subNameSpace}.Unbound{baseClass.Name}ControlBindingModel";
 
             var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
 
@@ -280,7 +281,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             // TODO: allow overrding public \ internal
             var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
                 .AddModifiers(
-                    SyntaxFactory.Token(SyntaxKind.InternalKeyword),
+                    SyntaxFactory.Token(SyntaxKind.PublicKeyword),
                     SyntaxFactory.Token(SyntaxKind.OverrideKeyword))
                 .WithParameterList(parameters)
                 .AddBodyStatements(methodBody)

@@ -24,6 +24,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string? desiredCommandInterface,
-            string platformName);
+            string platformName,
+            string rootNamespace);
     }
 }
