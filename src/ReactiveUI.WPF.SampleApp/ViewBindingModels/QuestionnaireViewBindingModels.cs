@@ -105,7 +105,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
             };
         }
 
-        private static Brush GetBrushForLengthRemaining(int lengthRemaining)
+        private static SolidColorBrush GetBrushForLengthRemaining(int lengthRemaining)
         {
             return lengthRemaining switch
             {

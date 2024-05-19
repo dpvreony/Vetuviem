@@ -48,7 +48,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         }
 
         /// <inheritdoc />
-        protected override string GetConstructorSummaryText(string className)
+        protected override string GetConstructorSummaryText(string className, TypeParameterListSyntax typeParameterList)
         {
             return $"Initializes a new instance of the <see cref=\"{className}{{TView, TViewModel}}\"/> class.";
         }

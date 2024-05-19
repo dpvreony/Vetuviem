@@ -49,7 +49,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var isDerivedType = !controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase) && namedTypeSymbol.BaseType?.BaseType != null;
 
-            var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, isDerivedType, makeClassesPublic));
+            var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, isDerivedType, makeClassesPublic, typeParameterList));
 
             members = ApplyMembers(members, namedTypeSymbol, desiredCommandInterface, isDerivedType, controlClassFullName, platformName, makeClassesPublic);
 
@@ -192,8 +192,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// Gets the constructor XML DOC summary for a constructor.
         /// </summary>
         /// <param name="className">Name of the class.</param>
+        /// <param name="typeParameterList"></param>
         /// <returns>XML DOC summary string.</returns>
-        protected abstract string GetConstructorSummaryText(string className);
+        protected abstract string GetConstructorSummaryText(string className, TypeParameterListSyntax typeParameterList);
 
         /// <summary>
         /// Gets the statement syntax body for a constructor.
@@ -258,10 +259,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             }
         }
 
-        private MemberDeclarationSyntax GetConstructorMethod(
-            INamedTypeSymbol namedTypeSymbol,
+        private MemberDeclarationSyntax GetConstructorMethod(INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
-            bool makeClassesPublic)
+            bool makeClassesPublic, TypeParameterListSyntax typeParameterList)
         {
             var className = GetClassNameIdentifier(namedTypeSymbol);
             var body = GetConstructorBody(isDerivedType);
@@ -285,7 +285,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 SyntaxKind.BaseConstructorInitializer,
                 baseInitializerArgumentList);
 
-            var summaryText = GetConstructorSummaryText(className);
+            var summaryText = GetConstructorSummaryText(className, typeParameterList);
             var summaryParameters = new (string paramName, string paramText)[]
             {
                 ("viewExpression", "expression representing the control on the view to bind to.")
