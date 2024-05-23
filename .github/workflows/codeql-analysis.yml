@@ -30,7 +30,7 @@ jobs:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_NOLOGO: true
       DOTNET_GENERATE_ASPNET_CERTIFICATE: false
-      SOLUTION_PATH: src\\Vetuviem.sln
+      solutionpath: src\Vetuviem.sln
 
     strategy:
       fail-fast: false
@@ -74,7 +74,7 @@ jobs:
 
     - name: Restore Packages
       run: |
-        dotnet restore ${{ env.SOLUTION_PATH }} /bl:artifacts\\binlog\\restore.binlog
+        dotnet restore ${{ env.solutionpath }} /bl:artifacts\\binlog\\restore.binlog
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
