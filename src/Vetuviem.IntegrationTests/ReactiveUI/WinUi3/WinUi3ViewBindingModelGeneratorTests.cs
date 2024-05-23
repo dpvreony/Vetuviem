@@ -5,9 +5,9 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
-using ReactiveUI.WinUI3.VetuviemGenerator;
 using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.Testing;
+using Vetuviem.WinUi.SourceGenerator;
 using Xunit.Abstractions;
 
 namespace Vetuviem.IntegrationTests.ReactiveUI.WinUi3
