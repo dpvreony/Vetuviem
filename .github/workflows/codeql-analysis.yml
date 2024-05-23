@@ -46,6 +46,17 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Install DotNet workloads
+      shell: bash
+      run: |
+        dotnet workload install android ios tvos macos maui wasm-tools
+        dotnet workload list
+
     - name: Install Windows SDK 10.0.16299
       shell: pwsh
       run: |
@@ -58,15 +69,8 @@ jobs:
         $process.Start()
         $process.WaitForExit()
 
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-
     - name: Add MSBuild to PATH
-      uses: glennawatson/setup-msbuild@v1.0.3
-      with:
-        prerelease: true
+      uses: microsoft/setup-msbuild@v2.0.0
 
     # This mitigates an issue with websdk projects loading analyzers from old packages.
     - name: Cleanup nuget local storage
