@@ -4,7 +4,7 @@
 
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.WPF.VetuviemGenerator
+namespace Vetuviem.WPF.SourceGenerator
 {
     /// <summary>
     /// UI Platform resolver for WPF.

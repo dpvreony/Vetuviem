@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.WPF.VetuviemGenerator
+namespace Vetuviem.WPF.SourceGenerator
 {
     /// <summary>
     /// Control Binding Model Source Generator for WPF.

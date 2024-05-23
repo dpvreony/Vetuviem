@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.WinUI3.VetuviemGenerator
+namespace Vetuviem.WinUi.SourceGenerator
 {
     /// <summary>
     /// Source Generator for Control Binding Models for the WinUI3 platform.

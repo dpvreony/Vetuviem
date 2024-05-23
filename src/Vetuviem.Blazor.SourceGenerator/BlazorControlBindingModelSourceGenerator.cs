@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.Blazor.VetuviemGenerator
+namespace Vetuviem.Blazor.SourceGenerator
 {
     /// <summary>
     /// Control Binding Model Source Generator for Blazor.

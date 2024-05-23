@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.Winforms.VetuviemGenerator
+namespace Vetuviem.Winforms.SourceGenerator
 {
     /// <summary>
     /// Source Generator for Control Binding Models for the Winforms platform.

@@ -4,7 +4,7 @@
 
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.Blazor.VetuviemGenerator
+namespace Vetuviem.Blazor.SourceGenerator
 {
     /// <summary>
     /// UI Platform resolver for Blazor.
