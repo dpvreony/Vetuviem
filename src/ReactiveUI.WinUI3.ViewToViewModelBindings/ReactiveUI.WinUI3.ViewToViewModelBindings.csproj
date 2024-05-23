@@ -19,6 +19,7 @@
     <TreatWarningsAsErrors />
     <!-- EnableCoreMrtTooling is workaround for: https://github.com/microsoft/WindowsAppSDK/issues/3939 -->
     <EnableCoreMrtTooling Condition=" '$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

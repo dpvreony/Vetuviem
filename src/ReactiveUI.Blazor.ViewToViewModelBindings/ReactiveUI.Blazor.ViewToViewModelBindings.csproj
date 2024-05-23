@@ -13,6 +13,7 @@
     <!--<WarningsAsErrors>8032,8785</WarningsAsErrors>-->
     <TreatWarningsAsErrors />
     <OutputType>Library</OutputType>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

@@ -11,6 +11,7 @@
     -->
     <!--<WarningsAsErrors>8032,8785</WarningsAsErrors>-->
     <TreatWarningsAsErrors />
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
