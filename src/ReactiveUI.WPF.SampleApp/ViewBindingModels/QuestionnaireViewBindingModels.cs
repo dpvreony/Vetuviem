@@ -110,8 +110,8 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
             return lengthRemaining switch
             {
                 < 0 => Brushes.Red,
-                < 10 => Brushes.OrangeRed,
-                < 20 => Brushes.Orange,
+                < 10 => Brushes.Orange,
+                < 20 => Brushes.Gold,
                 _ => Brushes.Black
             };
         }
