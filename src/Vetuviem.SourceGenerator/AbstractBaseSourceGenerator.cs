@@ -223,7 +223,7 @@ namespace Vetuviem.SourceGenerator
 
             // this is crude right now, look to see if roslyn can validate it, or produce a more expansive check.
             // todo: pass the csproj key and value back in the error.
-            if (rootNamespace.Any(c => char.IsLetter(c) && c != '.')) ;
+            if (rootNamespace.Any(c => char.IsLetter(c) && c != '.'))
             {
                 throw new InvalidOperationException("Root namespace in project config must be a valid namespace.");
             }

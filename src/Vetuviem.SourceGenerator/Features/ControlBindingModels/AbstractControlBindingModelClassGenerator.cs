@@ -171,6 +171,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="isDerivedType">Whether the named type symbol is derived from another type, other than base UI type for the platform.</param>
         /// <param name="controlClassFullName">Full Name of the Control Class.</param>
         /// <param name="platformName">Friendly Name for the platform.</param>
+        /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
         /// <returns>Modified Syntax List of Member declarations.</returns>
         protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(
             SyntaxList<MemberDeclarationSyntax> members,

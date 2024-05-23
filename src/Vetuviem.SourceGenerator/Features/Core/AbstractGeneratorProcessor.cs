@@ -27,6 +27,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="desiredBaseTypeIsInterface">Flag indicating whether the desiredBaseType is an interface.</param>
         /// <param name="desiredCommandInterface">Fully qualified name for the desired command interface, if any.</param>
         /// <param name="platformName">Name of the UI Platform.</param>
+        /// <param name="rootNamespace">The root namespace to place the binding classes inside.</param>
+        /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
         /// <returns>Namespace declaration containing generated code.</returns>
         public NamespaceDeclarationSyntax GenerateNamespaceDeclaration(
             NamespaceDeclarationSyntax namespaceDeclaration,
