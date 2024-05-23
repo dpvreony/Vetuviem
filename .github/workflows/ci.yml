@@ -20,14 +20,14 @@ jobs:
       solutionpath: src\Vetuviem.sln
       unittestprojectpath: src\Vetuviem.UnitTests\Vetuviem.UnitTests.csproj
     steps:
-    - name: Get Latest Visual Studio Version
-      shell: bash
-      run: |
-        dotnet tool update -g dotnet-vs
-        vs where release
-        vs update release Enterprise
-        vs modify release Enterprise +mobile +desktop +uwp +web
-        vs where release
+    #- name: Get Latest Visual Studio Version
+    #  shell: bash
+    #  run: |
+    #    dotnet tool update -g dotnet-vs
+    #    vs where release
+    #    vs update release Enterprise
+    #    vs modify release Enterprise +mobile +desktop +uwp +web
+    #    vs where release
         
     - name: Checkout code
       uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
@@ -98,11 +98,9 @@ jobs:
       run: |
         dotnet restore ${{ env.solutionpath }} /bl:artifacts\\binlog\\restore.binlog
 
-    # msbuild used because we run targets not supported by dotnet build
     - name: Run Build
       run: |
-        msbuild /t:build /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release
-      working-directory: src
+        dotnet build ${{ env.solutionpath }} --configuration Release --no-restore /bl:artifacts\\binlog\\build.binlog /p:ContinuousIntegrationBuild=true 
       
     - name: Run Unit Tests
       run: |
@@ -117,17 +115,12 @@ jobs:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Produce Nuget Packages
-      run: msbuild /t:pack /nowarn:MSB4011 /maxcpucount /p:NoPackageAnalysis=true /verbosity:minimal /p:Configuration=Release /p:PackageOutputPath=..\..\artifacts\nuget /p:ContinuousIntegrationBuild=true
-      working-directory: src
+      run: |
+        dotnet pack ${{ env.solutionpath }} --configuration Release --no-build /bl:artifacts\\binlog\\pack.binlog --nologo /p:PackageOutputPath=..\..\artifacts\nuget /p:ContinuousIntegrationBuild=true
 
     - name: List outdated packages
       run: |
         dotnet outdated -o artifacts\outdated\outdated.json src
-
-
-    - name: Run Resharper Duplicate Code Finder
-      run: |
-        jb dupfinder ${{ env.solutionpath }} -o=artifacts\dupfinder\report.xml
 
 # only store binlog on failure
     - name: store binlogs

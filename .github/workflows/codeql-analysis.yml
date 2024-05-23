@@ -58,10 +58,10 @@ jobs:
         $process.Start()
         $process.WaitForExit()
 
-    - name: Install .NET 7
+    - name: Setup .NET 8
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 7.0.x
+        dotnet-version: 8.0.x
 
     - name: Add MSBuild to PATH
       uses: glennawatson/setup-msbuild@v1.0.3
@@ -88,8 +88,7 @@ jobs:
 
     - name: Run Build
       run: |
-        msbuild /t:build,pack /p:Configuration=Release /maxcpucount /bl:artifacts\\binlog\\build.binlog /p:ContinuousIntegrationBuild=true /p:PackageOutputPath=..\..\artifacts\nuget /p:UseSharedCompilation=false
-      working-directory: src
+        dotnet build ${{ env.solutionpath }} --configuration Release --no-restore /bl:artifacts\\binlog\\build.binlog /p:ContinuousIntegrationBuild=true 
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl
