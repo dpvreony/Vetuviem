@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.Blazor.ViewToVie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.Winforms.ViewToViewModelBindings", "ReactiveUI.Winforms.ViewToViewModelBindings\ReactiveUI.Winforms.ViewToViewModelBindings.csproj", "{C9725484-7946-4F06-9B58-89073A9E2637}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.UWP.ViewToViewModelBindings", "ReactiveUI.UWP.ViewToViewModelBindings\ReactiveUI.UWP.ViewToViewModelBindings.csproj", "{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.Maui.ViewToViewModelBindings", "ReactiveUI.Maui.ViewToViewModelBindings\ReactiveUI.Maui.ViewToViewModelBindings.csproj", "{15274B47-731E-4352-9CBD-2639C548D9A9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactiveUI.WinUI3.ViewToViewModelBindings", "ReactiveUI.WinUI3.ViewToViewModelBindings\ReactiveUI.WinUI3.ViewToViewModelBindings.csproj", "{3AA61E19-4EC3-4B5E-B7DB-3AB65F931F6C}"
@@ -37,21 +35,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{106C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{501219CE-ED6E-4F1F-B7EE-8BE7A6E954B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vetuviem.WPF.SourceGenerator", "Vetuviem.WPF.SourceGenerator\Vetuviem.WPF.SourceGenerator.csproj", "{1549FDF9-CD19-4F49-BD75-F1B80937C348}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vetuviem.WPF.SourceGenerator", "Vetuviem.WPF.SourceGenerator\Vetuviem.WPF.SourceGenerator.csproj", "{1549FDF9-CD19-4F49-BD75-F1B80937C348}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vetuviem.Blazor.SourceGenerator", "Vetuviem.Blazor.SourceGenerator\Vetuviem.Blazor.SourceGenerator.csproj", "{F6A263A7-A2E2-4D23-9EB8-D2BBE32524BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vetuviem.Blazor.SourceGenerator", "Vetuviem.Blazor.SourceGenerator\Vetuviem.Blazor.SourceGenerator.csproj", "{F6A263A7-A2E2-4D23-9EB8-D2BBE32524BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vetuviem.Maui.SourceGenerator", "Vetuviem.Maui.SourceGenerator\Vetuviem.Maui.SourceGenerator.csproj", "{C0AAF2C0-3247-4AC0-BFC0-D7B6F83EA852}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vetuviem.Maui.SourceGenerator", "Vetuviem.Maui.SourceGenerator\Vetuviem.Maui.SourceGenerator.csproj", "{C0AAF2C0-3247-4AC0-BFC0-D7B6F83EA852}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veutviem.Winforms.SourceGenerator", "Veutviem.Winforms.SourceGenerator\Veutviem.Winforms.SourceGenerator.csproj", "{8E81CC53-B0AF-4268-87EC-EA632D2A0C54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Veutviem.Winforms.SourceGenerator", "Veutviem.Winforms.SourceGenerator\Veutviem.Winforms.SourceGenerator.csproj", "{8E81CC53-B0AF-4268-87EC-EA632D2A0C54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veutviem.UWP.SourceGenerator", "Veutviem.UWP.SourceGenerator\Veutviem.UWP.SourceGenerator.csproj", "{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vetuviem.WinUi.SourceGenerator", "Vetuviem.WinUi.SourceGenerator\Vetuviem.WinUi.SourceGenerator.csproj", "{AC734E46-4706-4DC2-8721-C8CF353E4826}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vetuviem.WinUi.SourceGenerator", "Vetuviem.WinUi.SourceGenerator\Vetuviem.WinUi.SourceGenerator.csproj", "{AC734E46-4706-4DC2-8721-C8CF353E4826}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vetuviem.Winforms.SourceGenerator", "Vetuviem.Winforms.SourceGenerator\Vetuviem.Winforms.SourceGenerator.csproj", "{A9B84E86-4851-45AB-8CF6-ADEB2943C233}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vetuviem.Winforms.SourceGenerator", "Vetuviem.Winforms.SourceGenerator\Vetuviem.Winforms.SourceGenerator.csproj", "{A9B84E86-4851-45AB-8CF6-ADEB2943C233}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vetuviem.Avalonia.SourceGenerator", "Vetuviem.Avalonia.SourceGenerator\Vetuviem.Avalonia.SourceGenerator.csproj", "{00BC63E3-7FD3-483E-A2E0-CCB9897947E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vetuviem.Avalonia.SourceGenerator", "Vetuviem.Avalonia.SourceGenerator\Vetuviem.Avalonia.SourceGenerator.csproj", "{00BC63E3-7FD3-483E-A2E0-CCB9897947E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -267,26 +263,6 @@ Global
 		{C9725484-7946-4F06-9B58-89073A9E2637}.Release|x64.Build.0 = Release|Any CPU
 		{C9725484-7946-4F06-9B58-89073A9E2637}.Release|x86.ActiveCfg = Release|Any CPU
 		{C9725484-7946-4F06-9B58-89073A9E2637}.Release|x86.Build.0 = Release|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Debug|ARM.Build.0 = Debug|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Debug|x64.Build.0 = Debug|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Debug|x86.Build.0 = Debug|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Release|ARM.ActiveCfg = Release|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Release|ARM.Build.0 = Release|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Release|ARM64.Build.0 = Release|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Release|x64.ActiveCfg = Release|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Release|x64.Build.0 = Release|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Release|x86.ActiveCfg = Release|Any CPU
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D}.Release|x86.Build.0 = Release|Any CPU
 		{15274B47-731E-4352-9CBD-2639C548D9A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{15274B47-731E-4352-9CBD-2639C548D9A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15274B47-731E-4352-9CBD-2639C548D9A9}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -427,26 +403,6 @@ Global
 		{8E81CC53-B0AF-4268-87EC-EA632D2A0C54}.Release|x64.Build.0 = Release|Any CPU
 		{8E81CC53-B0AF-4268-87EC-EA632D2A0C54}.Release|x86.ActiveCfg = Release|Any CPU
 		{8E81CC53-B0AF-4268-87EC-EA632D2A0C54}.Release|x86.Build.0 = Release|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Debug|ARM.Build.0 = Debug|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Debug|x64.Build.0 = Debug|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Debug|x86.Build.0 = Debug|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Release|ARM.ActiveCfg = Release|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Release|ARM.Build.0 = Release|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Release|ARM64.Build.0 = Release|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Release|x64.ActiveCfg = Release|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Release|x64.Build.0 = Release|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Release|x86.ActiveCfg = Release|Any CPU
-		{FB6D58CC-650F-48DC-979F-C64B3B6EA5B1}.Release|x86.Build.0 = Release|Any CPU
 		{AC734E46-4706-4DC2-8721-C8CF353E4826}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC734E46-4706-4DC2-8721-C8CF353E4826}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC734E46-4706-4DC2-8721-C8CF353E4826}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -518,7 +474,6 @@ Global
 		{5B08D59B-BAB8-4A3B-B26C-524B2A6D0D03} = {501219CE-ED6E-4F1F-B7EE-8BE7A6E954B0}
 		{6AA6FCEA-10D6-4F4D-94C0-1109E2225B03} = {1B3AF279-0165-4820-947C-222B1AE379D9}
 		{C9725484-7946-4F06-9B58-89073A9E2637} = {1B3AF279-0165-4820-947C-222B1AE379D9}
-		{A061F6CA-F9CC-4BC5-89DA-D14E529CF49D} = {1B3AF279-0165-4820-947C-222B1AE379D9}
 		{15274B47-731E-4352-9CBD-2639C548D9A9} = {1B3AF279-0165-4820-947C-222B1AE379D9}
 		{3AA61E19-4EC3-4B5E-B7DB-3AB65F931F6C} = {1B3AF279-0165-4820-947C-222B1AE379D9}
 		{D8E39D69-FD9A-4ACF-8743-048EF199884C} = {106C1632-9789-48A3-B7D0-FE793EC46DB8}

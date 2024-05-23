@@ -11,7 +11,6 @@
     <ProjectReference Include="..\Vetuviem.Winforms.SourceGenerator\Vetuviem.Winforms.SourceGenerator.csproj" />
     <ProjectReference Include="..\Vetuviem.WinUi.SourceGenerator\Vetuviem.WinUi.SourceGenerator.csproj" />
     <ProjectReference Include="..\Vetuviem.WPF.SourceGenerator\Vetuviem.WPF.SourceGenerator.csproj" />
-    <ProjectReference Include="..\Veutviem.UWP.SourceGenerator\Veutviem.UWP.SourceGenerator.csproj" />
   </ItemGroup>
 
 </Project>
