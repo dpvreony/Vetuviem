@@ -4,26 +4,29 @@
 
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.Winforms.VetuviemGenerator
+namespace Vetuviem.Blazor.SourceGenerator
 {
     /// <summary>
-    /// UI Platform resolver for Windows Forms.
+    /// UI Platform resolver for Blazor.
     /// </summary>
-    public sealed class WinformsPlatformResolver : IPlatformResolver
+    public sealed class BlazorPlatformResolver : IPlatformResolver
     {
         /// <inheritdoc />
         public string[] GetAssemblyNames()
         {
             return new[]
             {
-                "System.Windows.Forms.dll",
+                "Microsoft.AspNetCore.Components.dll",
+                "Microsoft.AspNetCore.Components.Forms.dll",
+                "Microsoft.AspNetCore.Components.Web.dll",
+                "ReactiveUI.Blazor.dll",
             };
         }
 
         /// <inheritdoc />
         public string GetBaseUiElement()
         {
-            return "global::System.Windows.Forms.Control";
+            return "global::Microsoft.AspNetCore.Components.IComponent";
         }
 
         /// <inheritdoc />

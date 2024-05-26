@@ -4,35 +4,26 @@
 
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.WPF.VetuviemGenerator
+namespace Vetuviem.WinUi.SourceGenerator
 {
     /// <summary>
-    /// UI Platform resolver for WPF.
+    /// UI Platform resolver for WinUI3.
     /// </summary>
-    public sealed class WpfPlatformResolver : IPlatformResolver
+    public sealed class WinUi3PlatformResolver : IPlatformResolver
     {
         /// <inheritdoc />
         public string[] GetAssemblyNames()
         {
             return new[]
             {
-                "PresentationCore.dll",
-                "PresentationFramework.dll",
-                "PresentationFramework.Aero.dll",
-                "PresentationFramework.Aero2.dll",
-                "PresentationFramework.AeroLite.dll",
-                "PresentationFramework.Classic.dll",
-                "PresentationFramework.Luna.dll",
-                "PresentationFramework.Royale.dll",
-                "PresentationUI.dll",
-                "ReactiveUI.Wpf.dll",
+                "Microsoft.WinUI.dll",
             };
         }
 
         /// <inheritdoc />
         public string GetBaseUiElement()
         {
-            return "global::System.Windows.UIElement";
+            return "global::Microsoft.UI.Xaml.UIElement";
         }
 
         /// <inheritdoc />

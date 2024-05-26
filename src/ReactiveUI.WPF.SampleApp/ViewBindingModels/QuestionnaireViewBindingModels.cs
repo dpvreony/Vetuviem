@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using ReactiveUI.WPF.SampleApp.ViewModels;
 using ReactiveUI.WPF.SampleApp.Views;
-using ReactiveUI.Wpf.ViewToViewModelBindings.System.Windows.Controls;
+using VetuviemGenerated.Wpf.ViewToViewModelBindings.System.Windows.Controls;
 using Vetuviem.Core;
 
 namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
@@ -105,13 +105,13 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
             };
         }
 
-        private static Brush GetBrushForLengthRemaining(int lengthRemaining)
+        private static SolidColorBrush GetBrushForLengthRemaining(int lengthRemaining)
         {
             return lengthRemaining switch
             {
                 < 0 => Brushes.Red,
-                < 10 => Brushes.OrangeRed,
-                < 20 => Brushes.Orange,
+                < 10 => Brushes.Orange,
+                < 20 => Brushes.Gold,
                 _ => Brushes.Black
             };
         }

@@ -27,4 +27,9 @@
       <HintPath>$(MSBuildProgramFiles32)\Windows Kits\10\UnionMetadata\10.0.16299.0\Windows.winmd</HintPath>
     </Reference>
   </ItemGroup>
+
+  <Import Project="..\Vetuviem.SourceGenerator\Vetuviem-SourceGenerator.props" />
+  <PropertyGroup>
+    <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
+  </PropertyGroup>
 </Project>

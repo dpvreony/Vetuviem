@@ -30,7 +30,7 @@ jobs:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_NOLOGO: true
       DOTNET_GENERATE_ASPNET_CERTIFICATE: false
-      SOLUTION_PATH: src\\Vetuviem.sln
+      solutionpath: src\Vetuviem.sln
 
     strategy:
       fail-fast: false
@@ -46,6 +46,17 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Install DotNet workloads
+      shell: bash
+      run: |
+        dotnet workload install android ios tvos macos maui wasm-tools
+        dotnet workload list
+
     - name: Install Windows SDK 10.0.16299
       shell: pwsh
       run: |
@@ -58,15 +69,8 @@ jobs:
         $process.Start()
         $process.WaitForExit()
 
-    - name: Install .NET 7
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 7.0.x
-
     - name: Add MSBuild to PATH
-      uses: glennawatson/setup-msbuild@v1.0.3
-      with:
-        prerelease: true
+      uses: microsoft/setup-msbuild@v2.0.0
 
     # This mitigates an issue with websdk projects loading analyzers from old packages.
     - name: Cleanup nuget local storage
@@ -74,7 +78,7 @@ jobs:
 
     - name: Restore Packages
       run: |
-        dotnet restore ${{ env.SOLUTION_PATH }} /bl:artifacts\\binlog\\restore.binlog
+        dotnet restore ${{ env.solutionpath }} /bl:artifacts\\binlog\\restore.binlog
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -88,8 +92,7 @@ jobs:
 
     - name: Run Build
       run: |
-        msbuild /t:build,pack /p:Configuration=Release /maxcpucount /bl:artifacts\\binlog\\build.binlog /p:ContinuousIntegrationBuild=true /p:PackageOutputPath=..\..\artifacts\nuget /p:UseSharedCompilation=false
-      working-directory: src
+        dotnet build ${{ env.solutionpath }} --configuration Release --no-restore /bl:artifacts\\binlog\\build.binlog /p:ContinuousIntegrationBuild=true 
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 https://git.io/JvXDl

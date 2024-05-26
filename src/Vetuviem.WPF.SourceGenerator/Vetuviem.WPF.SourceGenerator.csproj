@@ -6,7 +6,7 @@
     <DebugType>full</DebugType>
     <DebugSymbols>True</DebugSymbols>
     <DevelopmentDependency>true</DevelopmentDependency>
-    <IsPackable>False</IsPackable>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
   </PropertyGroup>
 
@@ -14,6 +14,9 @@
     <ProjectReference Include="..\Vetuviem.SourceGenerator\Vetuviem.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="true" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(ProjectDir)..\Vetuviem.SourceGenerator\bin\$(Configuration)\netstandard2.0\Vetuviem.SourceGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="..\Vetuviem.SourceGenerator\Vetuviem-SourceGenerator.props" Pack="true" PackagePath="build/$(ProjectName).props" Visible="false" />
     <Analyzer Include="$(ProjectDir)..\Vetuviem.SourceGenerator\bin\$(Configuration)\netstandard2.0\Vetuviem.SourceGenerator.dll" />
   </ItemGroup>
 

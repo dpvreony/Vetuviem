@@ -30,7 +30,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string? desiredCommandInterface,
             bool isDerivedType,
             string controlClassFullName,
-            string platformName)
+            string platformName,
+            bool makeClassesPublic)
         {
             return members;
         }
@@ -47,7 +48,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         }
 
         /// <inheritdoc />
-        protected override string GetConstructorSummaryText(string className)
+        protected override string GetConstructorSummaryText(string className, TypeParameterListSyntax typeParameterList)
         {
             return $"Initializes a new instance of the <see cref=\"{className}{{TView, TViewModel}}\"/> class.";
         }
@@ -83,7 +84,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string baseUiElement,
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
-            string platformName)
+            string platformName,
+            string rootNamespace)
         {
             if (namedTypeSymbol == null)
             {
@@ -103,7 +105,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     .Replace("global::", string.Empty);
 
             var baseViewBindingModelClassName =
-                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.Unbound{namedTypeSymbol.Name}ControlBindingModel";
+                $"global::{rootNamespace}.{subNameSpace}.Unbound{namedTypeSymbol.Name}ControlBindingModel";
 
             var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
 

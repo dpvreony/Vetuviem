@@ -6,13 +6,13 @@ using Microsoft.CodeAnalysis;
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.WPF.VetuviemGenerator
+namespace Vetuviem.WinUi.SourceGenerator
 {
     /// <summary>
-    /// Control Binding Model Source Generator for WPF.
+    /// Source Generator for Control Binding Models for the WinUI3 platform.
     /// </summary>
     [Generator]
-    public sealed class WpfControlBindingModelSourceGenerator : AbstractControlBindingModelSourceGenerator
+    public sealed class WinUi3ControlBindingModelSourceGenerator : AbstractControlBindingModelSourceGenerator
     {
         /// <inheritdoc />
         protected override MetadataReference? CheckIfShouldAddMissingAssemblyReference(string assemblyOfInterest)
@@ -23,13 +23,13 @@ namespace ReactiveUI.WPF.VetuviemGenerator
         /// <inheritdoc />
         protected override string GetPlatformName()
         {
-            return "Wpf";
+            return "WinUi3";
         }
 
         /// <inheritdoc />
         protected override IPlatformResolver GetPlatformResolver()
         {
-            return new WpfPlatformResolver();
+            return new WinUi3PlatformResolver();
         }
     }
 }

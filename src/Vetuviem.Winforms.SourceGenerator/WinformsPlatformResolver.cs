@@ -4,32 +4,32 @@
 
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.UWP.VetuviemGenerator
+namespace Vetuviem.Winforms.SourceGenerator
 {
     /// <summary>
-    /// UI Platform resolver for UWP.
+    /// UI Platform resolver for Windows Forms.
     /// </summary>
-    public sealed class UwpPlatformResolver : IPlatformResolver
+    public sealed class WinformsPlatformResolver : IPlatformResolver
     {
         /// <inheritdoc />
         public string[] GetAssemblyNames()
         {
             return new[]
             {
-                @"C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.16299.0\Windows.winmd",
+                "System.Windows.Forms.dll",
             };
         }
 
         /// <inheritdoc />
         public string GetBaseUiElement()
         {
-            return "global::Windows.UI.Xaml.UIElement";
+            return "global::System.Windows.Forms.Control";
         }
 
         /// <inheritdoc />
-        public string GetCommandInterface()
+        public string? GetCommandInterface()
         {
-            return "global::Windows.UI.Xaml.Input.ICommand";
+            return null;
         }
     }
 }

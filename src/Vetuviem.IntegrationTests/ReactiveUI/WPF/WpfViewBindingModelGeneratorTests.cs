@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.CodeAnalysis;
-using ReactiveUI.WPF.VetuviemGenerator;
 using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.Testing;
+using Vetuviem.WPF.SourceGenerator;
 using Xunit.Abstractions;
 
 namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
@@ -33,6 +33,11 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
             /// <inheritdoc />
             protected override void AddReferenceAssemblies(IList<MetadataReference> metadataReferences)
             {
+                if (metadataReferences == null)
+                {
+                    throw new ArgumentNullException(nameof(metadataReferences));
+                }
+
                 var trustedAssembliesPaths = GetPlatformAssemblyPaths();
                 if (trustedAssembliesPaths == null)
                 {
@@ -42,6 +47,10 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
                 foreach (string trustedAssembliesPath in trustedAssembliesPaths)
                 {
                     var metadataReference = MetadataReference.CreateFromFile(trustedAssembliesPath);
+                    if (metadataReference == null)
+                    {
+                        throw new InvalidOperationException($"Failed to create metadata reference for {trustedAssembliesPath}");
+                    }
                     metadataReferences.Add(metadataReference);
                 }
             }

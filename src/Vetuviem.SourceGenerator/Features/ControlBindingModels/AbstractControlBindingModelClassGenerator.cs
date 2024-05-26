@@ -22,13 +22,15 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string? desiredCommandInterface,
-            string platformName)
+            string platformName,
+            string rootNamespace,
+            bool makeClassesPublic)
         {
             var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
 
             var controlClassFullName = namedTypeSymbol.GetFullName();
 
-            var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+            var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword));
             modifiers = GetClassModifiers(modifiers);
 
             var constraintClauses = GetTypeParameterConstraintClauseSyntaxes(controlClassFullName, namedTypeSymbol);
@@ -42,13 +44,14 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 baseUiElement,
                 controlClassFullName,
                 classDeclaration,
-                platformName);
+                platformName,
+                rootNamespace);
 
             var isDerivedType = !controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase) && namedTypeSymbol.BaseType?.BaseType != null;
 
-            var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, isDerivedType));
+            var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, isDerivedType, makeClassesPublic, typeParameterList));
 
-            members = ApplyMembers(members, namedTypeSymbol, desiredCommandInterface, isDerivedType, controlClassFullName, platformName);
+            members = ApplyMembers(members, namedTypeSymbol, desiredCommandInterface, isDerivedType, controlClassFullName, platformName, makeClassesPublic);
 
             return classDeclaration
                 .WithModifiers(modifiers)
@@ -168,6 +171,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="isDerivedType">Whether the named type symbol is derived from another type, other than base UI type for the platform.</param>
         /// <param name="controlClassFullName">Full Name of the Control Class.</param>
         /// <param name="platformName">Friendly Name for the platform.</param>
+        /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
         /// <returns>Modified Syntax List of Member declarations.</returns>
         protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(
             SyntaxList<MemberDeclarationSyntax> members,
@@ -175,7 +179,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string? desiredCommandInterface,
             bool isDerivedType,
             string controlClassFullName,
-            string platformName);
+            string platformName,
+            bool makeClassesPublic);
 
         /// <summary>
         /// Gets the class name identifier from a named type symbol.
@@ -188,8 +193,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// Gets the constructor XML DOC summary for a constructor.
         /// </summary>
         /// <param name="className">Name of the class.</param>
+        /// <param name="typeParameterList"></param>
         /// <returns>XML DOC summary string.</returns>
-        protected abstract string GetConstructorSummaryText(string className);
+        protected abstract string GetConstructorSummaryText(string className, TypeParameterListSyntax typeParameterList);
 
         /// <summary>
         /// Gets the statement syntax body for a constructor.
@@ -213,13 +219,15 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="controlClassFullName">Full name of the control class.</param>
         /// <param name="classDeclaration">Existing class declaration to extend.</param>
         /// <param name="platformName">Friendly Name for the UI platform.</param>
+        /// <param name="rootNamespace">The root namespace to place the code in.</param>
         /// <returns>Modified Class Declaration Syntax.</returns>
         protected abstract ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
-            string platformName);
+            string platformName,
+            string rootNamespace);
 
         /// <summary>
         /// Gets a collection of type constraint clauses.
@@ -252,9 +260,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             }
         }
 
-        private MemberDeclarationSyntax GetConstructorMethod(
-            INamedTypeSymbol namedTypeSymbol,
-            bool isDerivedType)
+        private MemberDeclarationSyntax GetConstructorMethod(INamedTypeSymbol namedTypeSymbol,
+            bool isDerivedType,
+            bool makeClassesPublic, TypeParameterListSyntax typeParameterList)
         {
             var className = GetClassNameIdentifier(namedTypeSymbol);
             var body = GetConstructorBody(isDerivedType);
@@ -278,7 +286,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 SyntaxKind.BaseConstructorInitializer,
                 baseInitializerArgumentList);
 
-            var summaryText = GetConstructorSummaryText(className);
+            var summaryText = GetConstructorSummaryText(className, typeParameterList);
             var summaryParameters = new (string paramName, string paramText)[]
             {
                 ("viewExpression", "expression representing the control on the view to bind to.")
@@ -287,7 +295,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var declaration = SyntaxFactory.ConstructorDeclaration(className)
                 .WithInitializer(initializer)
                 .WithParameterList(parameters)
-                .AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+                .AddModifiers(SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword))
                 .AddBodyStatements(body.ToArray())
                 .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummaryComment(summaryText, summaryParameters));
 

@@ -19,11 +19,15 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="baseUiElement">The fully qualified name for the Base UI element for the platform.</param>
         /// <param name="desiredCommandInterface">The fully qualified name for the command interface, if the platform supports commands.</param>
         /// <param name="platformName">The name of the Platform code is being generated for.</param>
+        /// <param name="rootNamespace">The root namespace to place the binding classes inside.</param>
+        /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
         /// <returns>Class Declaration Syntax Node.</returns>
         ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string? desiredCommandInterface,
-            string platformName);
+            string platformName,
+            string rootNamespace,
+            bool makeClassesPublic);
     }
 }

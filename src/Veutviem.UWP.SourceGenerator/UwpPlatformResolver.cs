@@ -4,35 +4,32 @@
 
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.Blazor.VetuviemGenerator
+namespace Veutviem.UWP.SourceGenerator
 {
     /// <summary>
-    /// UI Platform resolver for Blazor.
+    /// UI Platform resolver for UWP.
     /// </summary>
-    public sealed class BlazorPlatformResolver : IPlatformResolver
+    public sealed class UwpPlatformResolver : IPlatformResolver
     {
         /// <inheritdoc />
         public string[] GetAssemblyNames()
         {
             return new[]
             {
-                "Microsoft.AspNetCore.Components.dll",
-                "Microsoft.AspNetCore.Components.Forms.dll",
-                "Microsoft.AspNetCore.Components.Web.dll",
-                "ReactiveUI.Blazor.dll",
+                @"C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.16299.0\Windows.winmd",
             };
         }
 
         /// <inheritdoc />
         public string GetBaseUiElement()
         {
-            return "global::Microsoft.AspNetCore.Components.IComponent";
+            return "global::Windows.UI.Xaml.UIElement";
         }
 
         /// <inheritdoc />
-        public string? GetCommandInterface()
+        public string GetCommandInterface()
         {
-            return null;
+            return "global::Windows.UI.Xaml.Input.ICommand";
         }
     }
 }

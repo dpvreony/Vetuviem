@@ -32,11 +32,13 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string? desiredCommandInterface,
             bool isDerivedType,
             string controlClassFullName,
-            string platformName)
+            string platformName,
+            bool makeClassesPublic)
         {
             members = members.AddRange(ControlBindingModelPropertyGenerator.GetProperties(
                 namedTypeSymbol,
-                desiredCommandInterface));
+                desiredCommandInterface,
+                makeClassesPublic));
 
             members = members.Add(GetApplyBindingsMethod(
                 namedTypeSymbol,
@@ -58,9 +60,10 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         }
 
         /// <inheritdoc />
-        protected override string GetConstructorSummaryText(string className)
+        protected override string GetConstructorSummaryText(string className, TypeParameterListSyntax typeParameterList)
         {
-            return $"Initializes a new instance of the <see cref=\"{className}{{TView, TViewModel, TControl}}\"/> class.";
+            var typeParams = string.Join(", ", typeParameterList.Parameters.Select(s => s.Identifier.ValueText));
+            return $"Initializes a new instance of the <see cref=\"{className}{{{typeParams}}}\"/> class.";
         }
 
         /// <inheritdoc />
@@ -96,7 +99,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string baseUiElement,
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
-            string platformName)
+            string platformName,
+            string rootNamespace)
         {
             if (namedTypeSymbol == null)
             {
@@ -150,7 +154,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     .Replace("global::", string.Empty);
 
             var baseViewBindingModelClassName =
-                $"global::ReactiveUI.{platformName}.ViewToViewModelBindings.{subNameSpace}.Unbound{baseClass.Name}ControlBindingModel";
+                $"global::{rootNamespace}.{subNameSpace}.Unbound{baseClass.Name}ControlBindingModel";
 
             var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
 
@@ -277,6 +281,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 "global::System.Action<global::System.IDisposable> registerForDisposalAction",
             });
 
+            // TODO: allow overrding public \ internal
             var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
                 .AddModifiers(
                     SyntaxFactory.Token(SyntaxKind.PublicKeyword),

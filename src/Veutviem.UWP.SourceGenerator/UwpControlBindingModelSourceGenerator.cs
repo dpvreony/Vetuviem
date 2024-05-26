@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace ReactiveUI.UWP.VetuviemGenerator
+namespace Veutviem.UWP.SourceGenerator
 {
     /// <summary>
     /// Source Generator for UWP View Binding Models.
