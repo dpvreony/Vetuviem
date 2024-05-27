@@ -12,6 +12,7 @@ using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Vetuviem.SourceGenerator.Features.Configuration;
 using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator
@@ -124,8 +125,13 @@ namespace Vetuviem.SourceGenerator
 
             globalOptions.TryGetBuildPropertyValue("Vetuviem_Make_Classes_Public", out var makeClassesPublicAsString);
             bool.TryParse(makeClassesPublicAsString, out var makeClassesPublic);
+
             globalOptions.TryGetBuildPropertyValue("Vetuviem_Assemblies", out var assemblies);
             var assembliesArray = assemblies?.Split(';');
+
+            globalOptions.TryGetBuildPropertyValue("Vetuviem_Assembly_Mode", out var assemblyModeAsString);
+
+            var assemblyMode = GetAssemblyMode(assemblyModeAsString);
 
             // base type name only used if passing a custom set of assemblies to search for.
             // allows for 3rd parties to use the generator and produce a custom namespace that inherits off the root, or custom namespace.
@@ -150,9 +156,11 @@ namespace Vetuviem.SourceGenerator
             //}
 #endif
 
-            // TODO: allow the assemblies to be overriden by config.
-            // TODO: allow the classes to be internal rather than public
-            var assembliesOfInterest = platformResolver.GetAssemblyNames();
+            var assembliesOfInterest = GetAssembliesOfInterest(platformResolver, assembliesArray, assemblyMode);
+            if (assembliesOfInterest.Length == 0)
+            {
+                return null;
+            }
 
             if (cancellationToken.IsCancellationRequested)
             {
@@ -212,6 +220,43 @@ namespace Vetuviem.SourceGenerator
                 makeClassesPublic);
 
             return result;
+        }
+
+        private static AssemblyMode GetAssemblyMode(string? assemblyModeAsString)
+        {
+            if (string.IsNullOrWhiteSpace(assemblyModeAsString))
+            {
+                return AssemblyMode.Replace;
+            }
+
+            if ( !Enum.TryParse<AssemblyMode>(assemblyModeAsString, out var assemblyMode))
+            {
+                return assemblyMode;
+            }
+
+            throw new InvalidOperationException("Invalid assembly mode.");
+        }
+
+        private static string[] GetAssembliesOfInterest(IPlatformResolver platformResolver, string[]? assembliesArray,
+            AssemblyMode assemblyMode)
+        {
+            var assembliesOfInterest = platformResolver.GetAssemblyNames();
+            if (assembliesArray?.Length > 0)
+            {
+                switch (assemblyMode)
+                {
+                    case AssemblyMode.Replace:
+                        assembliesOfInterest = assembliesArray;
+                        break;
+                    case AssemblyMode.Extend:
+                        assembliesOfInterest = assembliesOfInterest.Concat(assembliesArray).ToArray();
+                        break;
+                    default:
+                        throw new InvalidOperationException("Invalid assembly mode.");
+                }
+            }
+
+            return assembliesOfInterest;
         }
 
         private void ValidateRootNamespace(string? rootNamespace)
