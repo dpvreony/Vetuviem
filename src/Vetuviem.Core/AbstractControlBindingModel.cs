@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using System.Reactive.Disposables;
 
 namespace Vetuviem.Core
 {
@@ -36,5 +37,11 @@ namespace Vetuviem.Core
             TView view,
             TViewModel viewModel,
             Action<IDisposable> disposeAction);
+
+        /// <inheritdoc/>
+        public abstract void ApplyBindings(
+            TView view,
+            TViewModel viewModel,
+            CompositeDisposable disposeAction);
     }
 }
