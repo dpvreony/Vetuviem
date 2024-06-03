@@ -127,7 +127,11 @@ namespace Vetuviem.SourceGenerator
             bool.TryParse(makeClassesPublicAsString, out var makeClassesPublic);
 
             globalOptions.TryGetBuildPropertyValue("Vetuviem_Assemblies", out var assemblies);
-            var assembliesArray = assemblies?.Split(';');
+            var assembliesArray = assemblies?.Split(
+                [';'],
+                StringSplitOptions.RemoveEmptyEntries)
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToArray();
 
             globalOptions.TryGetBuildPropertyValue("Vetuviem_Assembly_Mode", out var assemblyModeAsString);
 
@@ -237,7 +241,9 @@ namespace Vetuviem.SourceGenerator
             throw new InvalidOperationException("Invalid assembly mode.");
         }
 
-        private static string[] GetAssembliesOfInterest(IPlatformResolver platformResolver, string[]? assembliesArray,
+        private static string[] GetAssembliesOfInterest(
+            IPlatformResolver platformResolver,
+            string[]? assembliesArray,
             AssemblyMode assemblyMode)
         {
             var assembliesOfInterest = platformResolver.GetAssemblyNames();
