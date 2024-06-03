@@ -15,9 +15,9 @@ using Xunit.Abstractions;
 namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
 {
     /// <summary>
-    /// Unit Tests for the ViewBinding Model Source Generator.
+    /// Unit Tests for the ViewBinding Model Source Generator for MahApps Metro.
     /// </summary>
-    public static class WpfViewBindingModelGeneratorTests
+    public static class MahAppsMetroViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
         public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WpfControlBindingModelSourceGenerator, ControlBindingModelGeneratorProcessor>

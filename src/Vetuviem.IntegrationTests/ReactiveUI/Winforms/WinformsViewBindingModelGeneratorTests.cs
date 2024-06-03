@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.Testing;
 using Vetuviem.Winforms.SourceGenerator;
@@ -28,6 +29,12 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Winforms
             public ExecuteMethod(ITestOutputHelper output)
                 : base(output)
             {
+            }
+
+            /// <inheritdoc />
+            protected override AnalyzerConfigOptionsProvider? GetAnalyzerConfigOptionsProvider()
+            {
+                return null;
             }
 
             /// <inheritdoc />
