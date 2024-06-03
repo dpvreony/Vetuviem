@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using System.Reactive.Disposables;
 using ReactiveUI;
 
 namespace Vetuviem.Core
@@ -23,5 +24,13 @@ namespace Vetuviem.Core
         /// <param name="viewModel">The viewmodel.</param>
         /// <param name="disposeAction">The action to register disposals against.</param>
         void ApplyBindings(TView view, TViewModel viewModel, Action<IDisposable> disposeAction);
+
+        /// <summary>
+        /// Applies the binding between the view and the view model.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="viewModel">The viewmodel.</param>
+        /// <param name="compositeDisposable">The disposable container to register disposals against.</param>
+        void ApplyBindings(TView view, TViewModel viewModel, CompositeDisposable compositeDisposable);
     }
 }

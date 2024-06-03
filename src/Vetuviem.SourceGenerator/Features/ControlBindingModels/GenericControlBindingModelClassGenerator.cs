@@ -40,7 +40,12 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 desiredCommandInterface,
                 makeClassesPublic));
 
-            members = members.Add(GetApplyBindingsMethod(
+            members = members.Add(GetApplyBindingsWithDisposableActionMethod(
+                namedTypeSymbol,
+                isDerivedType,
+                desiredCommandInterface));
+
+            members = members.Add(GetApplyBindingsWithCompositeDisposableMethod(
                 namedTypeSymbol,
                 isDerivedType,
                 desiredCommandInterface));
@@ -261,7 +266,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return sep;
         }
 
-        private static MemberDeclarationSyntax GetApplyBindingsMethod(
+        private static MemberDeclarationSyntax GetApplyBindingsWithDisposableActionMethod(
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string? desiredCommandInterface)
@@ -279,6 +284,37 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 "TView view",
                 "TViewModel viewModel",
                 "global::System.Action<global::System.IDisposable> registerForDisposalAction",
+            });
+
+            // TODO: allow overrding public \ internal
+            var declaration = SyntaxFactory.MethodDeclaration(returnType, methodName)
+                .AddModifiers(
+                    SyntaxFactory.Token(SyntaxKind.PublicKeyword),
+                    SyntaxFactory.Token(SyntaxKind.OverrideKeyword))
+                .WithParameterList(parameters)
+                .AddBodyStatements(methodBody)
+                .WithLeadingTrivia(XmlSyntaxFactory.InheritdocSyntax);
+            return declaration;
+        }
+
+        private static MemberDeclarationSyntax GetApplyBindingsWithCompositeDisposableMethod(
+            INamedTypeSymbol namedTypeSymbol,
+            bool isDerivedType,
+            string? desiredCommandInterface)
+        {
+            const string methodName = "ApplyBindings";
+            var returnType = SyntaxFactory.ParseTypeName("void");
+
+            var methodBody = GetApplyBindingCompositeDisposableMethodBody(
+                namedTypeSymbol,
+                isDerivedType,
+                desiredCommandInterface);
+
+            var parameters = RoslynGenerationHelpers.GetParams(new[]
+            {
+                "TView view",
+                "TViewModel viewModel",
+                "global::System.Reactive.Disposables.CompositeDisposable compositeDisposable",
             });
 
             // TODO: allow overrding public \ internal
@@ -339,6 +375,80 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 var invokeArgs = new[]
                     {
                         "registerForDisposalAction",
+                        "view",
+                        "viewModel",
+                        $"global::Vetuviem.Core.ExpressionHelpers.GetControlPropertyExpressionFromViewExpression<TView, TControl, {propType}>(VetuviemControlBindingExpression, \"{propertySymbol.Name}\")",
+                    };
+
+                var invocationStatement = RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
+                    $"this",
+                    propertySymbol.Name,
+                    "ApplyBinding",
+                    invokeArgs);
+
+                AddInvocationStatementToRelevantCollection(
+                    propertySymbol,
+                    desiredCommandInterface,
+                    invocationStatement,
+                    commandBindingStatements,
+                    oneWayBindingStatements,
+                    twoWayBindingStatements);
+            }
+
+            body.AddRange(commandBindingStatements);
+            body.AddRange(oneWayBindingStatements);
+            body.AddRange(twoWayBindingStatements);
+
+            return body.ToArray();
+        }
+
+        private static StatementSyntax[] GetApplyBindingCompositeDisposableMethodBody(
+            INamedTypeSymbol namedTypeSymbol,
+            bool isDerivedType,
+            string? desiredCommandInterface)
+        {
+            var body = new List<StatementSyntax>();
+
+            var properties = namedTypeSymbol
+                .GetMembers()
+                .Where(x => x.Kind == SymbolKind.Property)
+                .ToArray();
+
+            if (isDerivedType)
+            {
+                var baseInvokeArgs = new[]
+                {
+                    "view",
+                    "viewModel",
+                    "compositeDisposable",
+                };
+                body.Add(SyntaxFactory.ExpressionStatement(RoslynGenerationHelpers.GetMethodOnVariableInvocationExpression("base", "ApplyBindings", baseInvokeArgs, false)));
+            }
+
+            var controlFullName = namedTypeSymbol.GetFullName();
+
+            var commandBindingStatements = new List<StatementSyntax>(properties.Length);
+            var oneWayBindingStatements = new List<StatementSyntax>(properties.Length);
+            var twoWayBindingStatements = new List<StatementSyntax>(properties.Length);
+
+            foreach (var prop in properties)
+            {
+                var propertySymbol = prop as IPropertySymbol;
+
+                if (propertySymbol == null
+                    || propertySymbol.IsIndexer
+                    || propertySymbol.IsOverride
+                    || propertySymbol.DeclaredAccessibility != Accessibility.Public
+                    || propertySymbol.ExplicitInterfaceImplementations.Any())
+                {
+                    continue;
+                }
+
+                var propType = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+                var invokeArgs = new[]
+                    {
+                        "compositeDisposable",
                         "view",
                         "viewModel",
                         $"global::Vetuviem.Core.ExpressionHelpers.GetControlPropertyExpressionFromViewExpression<TView, TControl, {propType}>(VetuviemControlBindingExpression, \"{propertySymbol.Name}\")",

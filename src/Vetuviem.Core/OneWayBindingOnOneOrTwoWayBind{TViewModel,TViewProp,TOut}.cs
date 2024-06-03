@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq.Expressions;
+using System.Reactive.Disposables;
 using ReactiveUI;
 
 namespace Vetuviem.Core
@@ -52,6 +53,26 @@ namespace Vetuviem.Core
                 _viewModelBinding,
                 viewBinding,
                 _converterBinding));
+        }
+
+        /// <inheritdoc/>
+        public void ApplyBinding<TView>(
+            CompositeDisposable compositeDisposable,
+            TView view,
+            TViewModel viewModel,
+            Expression<Func<TView, TOut>> viewBinding)
+            where TView : class, IViewFor<TViewModel>
+        {
+            if (compositeDisposable == null)
+            {
+                throw new ArgumentNullException(nameof(compositeDisposable));
+            }
+
+            view.OneWayBind(
+                viewModel,
+                _viewModelBinding,
+                viewBinding,
+                _converterBinding).DisposeWith(compositeDisposable);
         }
     }
 }

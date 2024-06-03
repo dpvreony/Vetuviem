@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq.Expressions;
+using System.Reactive.Disposables;
 using ReactiveUI;
 
 namespace Vetuviem.Core
@@ -26,6 +27,21 @@ namespace Vetuviem.Core
         /// <param name="viewBinding">Expression of the View Property to Bind to.</param>
         void ApplyBinding<TView>(
             Action<IDisposable> d,
+            TView view,
+            TViewModel viewModel,
+            Expression<Func<TView, TViewProp>> viewBinding)
+            where TView : class, IViewFor<TViewModel>;
+
+        /// <summary>
+        /// Applies a View to View Model Binding.
+        /// </summary>
+        /// <typeparam name="TView">The type for the view.</typeparam>
+        /// <param name="compositeDisposable">The disposable action registration. Used to clean up when bindings fall out of scope.</param>
+        /// <param name="view">The instance of the View to bind.</param>
+        /// <param name="viewModel">The instance of the ViewModel to Bind.</param>
+        /// <param name="viewBinding">Expression of the View Property to Bind to.</param>
+        void ApplyBinding<TView>(
+            CompositeDisposable compositeDisposable,
             TView view,
             TViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)

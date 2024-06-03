@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reactive.Disposables;
 using ReactiveUI;
 
 namespace Vetuviem.Core
@@ -31,6 +32,22 @@ namespace Vetuviem.Core
                     view,
                     viewModel,
                     disposeWithAction);
+            }
+        }
+
+        /// <inheritdoc />
+        public void ApplyBindings(
+            CompositeDisposable compositeDisposable,
+            TView view,
+            TViewModel viewModel)
+        {
+            var bindings = GetBindings();
+            foreach (var viewBindingModel in bindings)
+            {
+                viewBindingModel.ApplyBindings(
+                    view,
+                    viewModel,
+                    compositeDisposable);
             }
         }
 
