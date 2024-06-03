@@ -3,6 +3,7 @@
     <CompilerVisibleProperty Include="Vetuviem_Root_Namespace" />
     <CompilerVisibleProperty Include="Vetuviem_Make_Classes_Public" />
     <CompilerVisibleProperty Include="Vetuviem_Assemblies" />
+    <CompilerVisibleProperty Include="Vetuviem_Assembly_Mode" />
     <CompilerVisibleProperty Include="Vetuviem_Base_Namespace" />
   </ItemGroup>
 </Project>
