@@ -128,7 +128,7 @@ namespace Vetuviem.SourceGenerator
 
             globalOptions.TryGetBuildPropertyValue("Vetuviem_Assemblies", out var assemblies);
             var assembliesArray = assemblies?.Split(
-                [';'],
+                [','],
                 StringSplitOptions.RemoveEmptyEntries)
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .ToArray();

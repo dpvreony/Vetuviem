@@ -8,6 +8,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using Castle.Core.Logging;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -80,7 +81,15 @@ namespace Vetuviem.Testing
                     hasErrors |= generatorDiag.Severity == DiagnosticSeverity.Error;
                 }
 
+                foreach (var newCompSyntaxTree in newComp.SyntaxTrees)
+                {
+                    _logger.LogInformation("Syntax Tree:");
+                    _logger.LogInformation(newCompSyntaxTree.GetText().ToString());
+                }
+
                 Assert.False(hasErrors);
+
+
             }
 
             /// <summary>
