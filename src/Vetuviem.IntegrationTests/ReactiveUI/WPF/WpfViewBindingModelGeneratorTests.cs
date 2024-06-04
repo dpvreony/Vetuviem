@@ -32,6 +32,12 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
             }
 
             /// <inheritdoc />
+            protected override string GetProjectSourceCode()
+            {
+                return string.Empty;
+            }
+
+            /// <inheritdoc />
             protected override AnalyzerConfigOptionsProvider? GetAnalyzerConfigOptionsProvider()
             {
                 return null;

@@ -61,7 +61,9 @@ namespace Vetuviem.Testing
 
                 AddReferenceAssemblies(references);
 
-                var comp = CreateCompilation(string.Empty, references);
+                var source = GetProjectSourceCode();
+
+                var comp = CreateCompilation(source, references);
 
                 var analyzerConfigOptionsProvider = GetAnalyzerConfigOptionsProvider();
 
@@ -91,6 +93,8 @@ namespace Vetuviem.Testing
 
 
             }
+
+            protected abstract string GetProjectSourceCode();
 
             /// <summary>
             /// Gets the analyzer config options provider to test with.
