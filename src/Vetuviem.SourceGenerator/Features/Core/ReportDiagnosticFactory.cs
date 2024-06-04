@@ -45,7 +45,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         {
             return InfoDiagnostic(
                 ReportDiagnosticIds.StartingScanOfAssembly,
-                $"Starting Scan Of Namespace: {metadataReference.Display}");
+                $"Starting Scan Of Assembly: {metadataReference.Display}");
         }
 
         /// <summary>

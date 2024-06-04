@@ -8,8 +8,10 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using Castle.Core.Logging;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
@@ -61,8 +63,11 @@ namespace Vetuviem.Testing
 
                 var comp = CreateCompilation(string.Empty, references);
 
+                var analyzerConfigOptionsProvider = GetAnalyzerConfigOptionsProvider();
+
                 var newComp = RunGenerators(
                     comp,
+                    analyzerConfigOptionsProvider,
                     out var generatorDiags,
                     instance);
 
@@ -76,8 +81,22 @@ namespace Vetuviem.Testing
                     hasErrors |= generatorDiag.Severity == DiagnosticSeverity.Error;
                 }
 
+                foreach (var newCompSyntaxTree in newComp.SyntaxTrees)
+                {
+                    _logger.LogInformation("Syntax Tree:");
+                    _logger.LogInformation(newCompSyntaxTree.GetText().ToString());
+                }
+
                 Assert.False(hasErrors);
+
+
             }
+
+            /// <summary>
+            /// Gets the analyzer config options provider to test with.
+            /// </summary>
+            /// <returns>Analyzer Config Options.</returns>
+            protected abstract AnalyzerConfigOptionsProvider? GetAnalyzerConfigOptionsProvider();
 
             /// <summary>
             /// Allows addition of platform specific metadata references. Unit Tests start in an agnostic fashion
@@ -99,15 +118,31 @@ namespace Vetuviem.Testing
                 references: reference,
                 options: new CSharpCompilationOptions(OutputKind.ConsoleApplication));
 
-            private static GeneratorDriver CreateDriver(Compilation compilation, params ISourceGenerator[] generators) => CSharpGeneratorDriver.Create(
+            private static GeneratorDriver CreateDriver(
+                Compilation compilation,
+                AnalyzerConfigOptionsProvider? analyzerConfigOptionsProvider,
+                params ISourceGenerator[] generators) => CSharpGeneratorDriver.Create(
                 generators: ImmutableArray.Create(generators),
                 additionalTexts: ImmutableArray<AdditionalText>.Empty,
                 parseOptions: (CSharpParseOptions)compilation.SyntaxTrees.First().Options,
-                optionsProvider: null);
+                optionsProvider: analyzerConfigOptionsProvider);
 
-            private static Compilation RunGenerators(Compilation compilation, out ImmutableArray<Diagnostic> diagnostics, params ISourceGenerator[] generators)
+            private static Compilation RunGenerators(
+                Compilation compilation,
+                AnalyzerConfigOptionsProvider? analyzerConfigOptionsProvider,
+                out ImmutableArray<Diagnostic> diagnostics,
+                params ISourceGenerator[] generators)
             {
-                CreateDriver(compilation, generators).RunGeneratorsAndUpdateCompilation(compilation, out var updatedCompilation, out diagnostics);
+                var driver = CreateDriver(
+                    compilation,
+                    analyzerConfigOptionsProvider,
+                    generators);
+
+                driver.RunGeneratorsAndUpdateCompilation(
+                    compilation,
+                    out var updatedCompilation,
+                    out diagnostics);
+
                 return updatedCompilation;
             }
         }

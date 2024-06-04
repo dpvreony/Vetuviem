@@ -15,9 +15,9 @@ using Xunit.Abstractions;
 namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
 {
     /// <summary>
-    /// Unit Tests for the ViewBinding Model Source Generator.
+    /// Unit Tests for the ViewBinding Model Source Generator for MahApps Metro.
     /// </summary>
-    public static class WpfViewBindingModelGeneratorTests
+    public static class MahAppsMetroViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
         public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WpfControlBindingModelSourceGenerator, ControlBindingModelGeneratorProcessor>
@@ -34,7 +34,12 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
             /// <inheritdoc />
             protected override AnalyzerConfigOptionsProvider? GetAnalyzerConfigOptionsProvider()
             {
-                return null;
+                var globalOptions = new InMemoryAnalyzerConfigOptions();
+                globalOptions.Add(
+                    "build_property.Vetuviem_Assemblies",
+                    "ControlzEx.dll,MahApps.Metro.dll,MahApps.Metro.SimpleChildWindow.dll");
+
+                return new InMemoryAnalyzerConfigOptionsProvider(globalOptions);
             }
 
             /// <inheritdoc />
