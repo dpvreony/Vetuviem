@@ -31,7 +31,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool isDerivedType,
             string controlClassFullName,
             string platformName,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool includeObsoleteItems)
         {
             return members;
         }

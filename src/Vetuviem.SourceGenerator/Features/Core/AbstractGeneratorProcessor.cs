@@ -29,9 +29,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="platformName">Name of the UI Platform.</param>
         /// <param name="rootNamespace">The root namespace to place the binding classes inside.</param>
         /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
+        /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
         /// <returns>Namespace declaration containing generated code.</returns>
-        public NamespaceDeclarationSyntax GenerateNamespaceDeclaration(
-            NamespaceDeclarationSyntax namespaceDeclaration,
+        public NamespaceDeclarationSyntax GenerateNamespaceDeclaration(NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference[] assembliesOfInterest,
             Compilation compilation,
             Action<Diagnostic> reportDiagnosticAction,
@@ -40,7 +40,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string? desiredCommandInterface,
             string platformName,
             string rootNamespace,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool includeObsoleteItems)
         {
             if (namespaceDeclaration == null)
             {
@@ -87,7 +88,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     desiredCommandInterface,
                     platformName,
                     rootNamespace,
-                    makeClassesPublic);
+                    makeClassesPublic,
+                    includeObsoleteItems);
             }
 
             return namespaceDeclaration;
@@ -112,8 +114,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             }
         }
 
-        private static void CheckTypeForUiType(
-            INamedTypeSymbol namedTypeSymbol,
+        private static void CheckTypeForUiType(INamedTypeSymbol namedTypeSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
@@ -123,7 +124,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             Func<IClassGenerator>[] classGenerators,
             List<MemberDeclarationSyntax> memberDeclarationSyntaxes,
             string rootNamespace,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool includeObsoleteItems)
         {
             var fullName = namedTypeSymbol.GetFullName();
 
@@ -159,6 +161,14 @@ namespace Vetuviem.SourceGenerator.Features.Core
             previouslyGeneratedClasses.Add(fullName);
             reportDiagnosticAction(ReportDiagnosticFactory.HasDesiredBaseType(baseUiElement, namedTypeSymbol));
 
+            // check for obsolete attribute
+            var attributes = namedTypeSymbol.GetAttributes();
+            if (!includeObsoleteItems && attributes.Any(a => a.AttributeClass?.GetFullName().Equals("global::System.ObsoleteAttribute", StringComparison.Ordinal) == true))
+            {
+                reportDiagnosticAction(ReportDiagnosticFactory.IsObsoleteType(namedTypeSymbol));
+                return;
+            }
+
             foreach (var classGeneratorFactory in classGenerators)
             {
                 var generator = classGeneratorFactory();
@@ -168,7 +178,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     desiredCommandInterface,
                     platformName,
                     rootNamespace,
-                    makeClassesPublic);
+                    makeClassesPublic,
+                    includeObsoleteItems);
 
                 memberDeclarationSyntaxes.Add(generatedClass);
             }
@@ -212,8 +223,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return false;
         }
 
-        private NamespaceDeclarationSyntax CheckAssemblyForUiTypes(
-            NamespaceDeclarationSyntax namespaceDeclaration,
+        private NamespaceDeclarationSyntax CheckAssemblyForUiTypes(NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference metadataReference,
             Compilation compilation,
             Action<Diagnostic> reportDiagnosticAction,
@@ -223,7 +233,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string? desiredCommandInterface,
             string platformName,
             string rootNamespace,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool includeObsoleteItems)
         {
             reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfAssembly(metadataReference));
 
@@ -257,7 +268,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     platformName,
                     classGenerators,
                     rootNamespace,
-                    makeClassesPublic);
+                    makeClassesPublic,
+                    includeObsoleteItems);
 
                 if (nestedDeclarationSyntax != null)
                 {
@@ -280,8 +292,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             return namespaceDeclaration;
         }
 
-        private NamespaceDeclarationSyntax? CheckNamespaceForUiTypes(
-            INamespaceSymbol namespaceSymbol,
+        private NamespaceDeclarationSyntax? CheckNamespaceForUiTypes(INamespaceSymbol namespaceSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
@@ -290,7 +301,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string platformName,
             Func<IClassGenerator>[] classGenerators,
             string rootNamespace,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool includeObsoleteItems)
         {
             reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfNamespace(namespaceSymbol));
 
@@ -311,7 +323,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     classGenerators,
                     nestedMembers,
                     rootNamespace,
-                    makeClassesPublic);
+                    makeClassesPublic,
+                    includeObsoleteItems);
             }
 
             var nestedSymbols = namespaceSymbol.GetNamespaceMembers();
@@ -328,7 +341,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     platformName,
                     classGenerators,
                     rootNamespace,
-                    makeClassesPublic);
+                    makeClassesPublic,
+                    includeObsoleteItems);
 
                 if (nestedNamespace != null)
                 {

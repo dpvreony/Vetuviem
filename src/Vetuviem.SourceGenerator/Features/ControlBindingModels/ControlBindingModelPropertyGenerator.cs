@@ -24,11 +24,13 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="namedTypeSymbol">The type to check the properties on.</param>
         /// <param name="desiredCommandInterface">The fully qualified typename for the Command interface used by the UI platform, if it uses one.</param>
         /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
+        /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
         /// <returns>List of property declarations.</returns>
         public static SyntaxList<MemberDeclarationSyntax> GetProperties(
             INamedTypeSymbol namedTypeSymbol,
             string? desiredCommandInterface,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool includeObsoleteItems)
         {
             if (namedTypeSymbol == null)
             {
@@ -51,6 +53,15 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     || propertySymbol.IsOverride
                     || propertySymbol.DeclaredAccessibility != Accessibility.Public
                     || propertySymbol.ExplicitInterfaceImplementations.Any())
+                {
+                    continue;
+                }
+
+                // check for obsolete attribute
+                var attributes = propertySymbol.GetAttributes();
+                if (!includeObsoleteItems && attributes.Any(a => a.AttributeClass?.GetFullName().Equals(
+                        "global::System.ObsoleteAttribute",
+                        StringComparison.Ordinal) == true))
                 {
                     continue;
                 }

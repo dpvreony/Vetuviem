@@ -83,5 +83,10 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// Diagnostic ID for when the desired base type symbol has not been found on a type.
         /// </summary>
         public const string DesiredBaseTypeSymbolSearchNotNamedTypeSymbol = "VET015";
+
+        /// <summary>
+        /// Diagnostic ID for when a type is obsolete and won't be generated.
+        /// </summary>
+        public const string IsObsoleteType = "VET016";
     }
 }
