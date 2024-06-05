@@ -141,6 +141,9 @@ namespace Vetuviem.SourceGenerator
             // allows for 3rd parties to use the generator and produce a custom namespace that inherits off the root, or custom namespace.
             globalOptions.TryGetBuildPropertyValue("Vetuviem_Base_Namespace", out var baseType);
 
+            globalOptions.TryGetBuildPropertyValue("Vetuviem_Include_Obsolete_Items", out var includeObsoleteItemsAsString);
+            bool.TryParse(includeObsoleteItemsAsString, out var includeObsoleteItems);
+
             var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(namespaceName));
 
             var compilation = context.Compilation;
@@ -221,7 +224,8 @@ namespace Vetuviem.SourceGenerator
                 desiredCommandInterface,
                 platformName,
                 namespaceName,
-                makeClassesPublic);
+                makeClassesPublic,
+                includeObsoleteItems);
 
             return result;
         }
