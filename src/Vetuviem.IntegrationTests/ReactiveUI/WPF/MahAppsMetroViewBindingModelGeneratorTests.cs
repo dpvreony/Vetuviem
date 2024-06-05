@@ -34,7 +34,15 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
             /// <inheritdoc />
             protected override string GetProjectSourceCode()
             {
-                return string.Empty;
+                return """
+                       public sealed class MainWindow : MahApps.Metro.Controls.MetroWindow
+                       {
+                           public MainWindow()
+                           {
+                               InitializeComponent();
+                           }
+                       }
+                       """;
             }
 
             /// <inheritdoc />
