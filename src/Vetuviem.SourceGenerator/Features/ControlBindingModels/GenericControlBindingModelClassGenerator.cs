@@ -33,22 +33,26 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool isDerivedType,
             string controlClassFullName,
             string platformName,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool includeObsoleteItems)
         {
             members = members.AddRange(ControlBindingModelPropertyGenerator.GetProperties(
                 namedTypeSymbol,
                 desiredCommandInterface,
-                makeClassesPublic));
+                makeClassesPublic,
+                includeObsoleteItems));
 
             members = members.Add(GetApplyBindingsWithDisposableActionMethod(
                 namedTypeSymbol,
                 isDerivedType,
-                desiredCommandInterface));
+                desiredCommandInterface,
+                includeObsoleteItems));
 
             members = members.Add(GetApplyBindingsWithCompositeDisposableMethod(
                 namedTypeSymbol,
                 isDerivedType,
-                desiredCommandInterface));
+                desiredCommandInterface,
+                includeObsoleteItems));
 
             return members;
         }
@@ -269,7 +273,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         private static MemberDeclarationSyntax GetApplyBindingsWithDisposableActionMethod(
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
-            string? desiredCommandInterface)
+            string? desiredCommandInterface,
+            bool includeObsoleteItems)
         {
             const string methodName = "ApplyBindings";
             var returnType = SyntaxFactory.ParseTypeName("void");
@@ -277,7 +282,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var methodBody = GetApplyBindingMethodBody(
                 namedTypeSymbol,
                 isDerivedType,
-                desiredCommandInterface);
+                desiredCommandInterface,
+                includeObsoleteItems);
 
             var parameters = RoslynGenerationHelpers.GetParams(new[]
             {
@@ -300,7 +306,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         private static MemberDeclarationSyntax GetApplyBindingsWithCompositeDisposableMethod(
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
-            string? desiredCommandInterface)
+            string? desiredCommandInterface,
+            bool includeObsoleteItems)
         {
             const string methodName = "ApplyBindings";
             var returnType = SyntaxFactory.ParseTypeName("void");
@@ -308,7 +315,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var methodBody = GetApplyBindingCompositeDisposableMethodBody(
                 namedTypeSymbol,
                 isDerivedType,
-                desiredCommandInterface);
+                desiredCommandInterface,
+                includeObsoleteItems);
 
             var parameters = RoslynGenerationHelpers.GetParams(new[]
             {
@@ -331,7 +339,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         private static StatementSyntax[] GetApplyBindingMethodBody(
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
-            string? desiredCommandInterface)
+            string? desiredCommandInterface,
+            bool includeObsoleteItems)
         {
             var body = new List<StatementSyntax>();
 
@@ -370,6 +379,15 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
+                // check for obsolete attribute
+                var attributes = propertySymbol.GetAttributes();
+                if (!includeObsoleteItems && attributes.Any(a => a.AttributeClass?.GetFullName().Equals(
+                        "global::System.ObsoleteAttribute",
+                        StringComparison.Ordinal) == true))
+                {
+                    continue;
+                }
+
                 var propType = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 
                 var invokeArgs = new[]
@@ -402,10 +420,10 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return body.ToArray();
         }
 
-        private static StatementSyntax[] GetApplyBindingCompositeDisposableMethodBody(
-            INamedTypeSymbol namedTypeSymbol,
+        private static StatementSyntax[] GetApplyBindingCompositeDisposableMethodBody(INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
-            string? desiredCommandInterface)
+            string? desiredCommandInterface,
+            bool includeObsoleteItems)
         {
             var body = new List<StatementSyntax>();
 
@@ -440,6 +458,15 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     || propertySymbol.IsOverride
                     || propertySymbol.DeclaredAccessibility != Accessibility.Public
                     || propertySymbol.ExplicitInterfaceImplementations.Any())
+                {
+                    continue;
+                }
+
+                // check for obsolete attribute
+                var attributes = propertySymbol.GetAttributes();
+                if (!includeObsoleteItems && attributes.Any(a => a.AttributeClass?.GetFullName().Equals(
+                        "global::System.ObsoleteAttribute",
+                        StringComparison.Ordinal) == true))
                 {
                     continue;
                 }

@@ -24,7 +24,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string? desiredCommandInterface,
             string platformName,
             string rootNamespace,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool includeObsoleteItems)
         {
             var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
 
@@ -51,7 +52,15 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, isDerivedType, makeClassesPublic, typeParameterList));
 
-            members = ApplyMembers(members, namedTypeSymbol, desiredCommandInterface, isDerivedType, controlClassFullName, platformName, makeClassesPublic);
+            members = ApplyMembers(
+                members,
+                namedTypeSymbol,
+                desiredCommandInterface,
+                isDerivedType,
+                controlClassFullName,
+                platformName,
+                makeClassesPublic,
+                includeObsoleteItems);
 
             return classDeclaration
                 .WithModifiers(modifiers)
@@ -172,6 +181,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="controlClassFullName">Full Name of the Control Class.</param>
         /// <param name="platformName">Friendly Name for the platform.</param>
         /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
+        /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
         /// <returns>Modified Syntax List of Member declarations.</returns>
         protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(
             SyntaxList<MemberDeclarationSyntax> members,
@@ -180,7 +190,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool isDerivedType,
             string controlClassFullName,
             string platformName,
-            bool makeClassesPublic);
+            bool makeClassesPublic,
+            bool includeObsoleteItems);
 
         /// <summary>
         /// Gets the class name identifier from a named type symbol.

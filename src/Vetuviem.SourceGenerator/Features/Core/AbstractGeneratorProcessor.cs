@@ -163,7 +163,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
             // check for obsolete attribute
             var attributes = namedTypeSymbol.GetAttributes();
-            if (!includeObsoleteItems && attributes.Any(a => a.AttributeClass?.Name.Equals("ObsoleteAttribute", StringComparison.Ordinal) == true))
+            if (!includeObsoleteItems && attributes.Any(a => a.AttributeClass?.GetFullName().Equals("global::System.ObsoleteAttribute", StringComparison.Ordinal) == true))
             {
                 reportDiagnosticAction(ReportDiagnosticFactory.IsObsoleteType(namedTypeSymbol));
                 return;
@@ -178,7 +178,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     desiredCommandInterface,
                     platformName,
                     rootNamespace,
-                    makeClassesPublic);
+                    makeClassesPublic,
+                    includeObsoleteItems);
 
                 memberDeclarationSyntaxes.Add(generatedClass);
             }
