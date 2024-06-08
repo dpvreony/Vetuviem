@@ -388,14 +388,23 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-                var propType = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+                var propType = propertySymbol.Type;
+                var propTypeDisplayString = propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+                var isCommand = !string.IsNullOrWhiteSpace(desiredCommandInterface) &&
+                                (propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Equals(desiredCommandInterface, StringComparison.Ordinal)
+                                 || propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)));
+
+                var expressionArg = isCommand
+                    ? propertySymbol.Name
+                    : $"global::Vetuviem.Core.ExpressionHelpers.GetControlPropertyExpressionFromViewExpression<TView, TControl, {propTypeDisplayString}>(VetuviemControlBindingExpression, \"{propertySymbol.Name}\")";
 
                 var invokeArgs = new[]
                     {
                         "registerForDisposalAction",
                         "view",
                         "viewModel",
-                        $"global::Vetuviem.Core.ExpressionHelpers.GetControlPropertyExpressionFromViewExpression<TView, TControl, {propType}>(VetuviemControlBindingExpression, \"{propertySymbol.Name}\")",
+                        expressionArg,
                     };
 
                 var invocationStatement = RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
@@ -406,7 +415,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
                 AddInvocationStatementToRelevantCollection(
                     propertySymbol,
-                    desiredCommandInterface,
+                    isCommand,
                     invocationStatement,
                     commandBindingStatements,
                     oneWayBindingStatements,
@@ -471,14 +480,23 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-                var propType = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+                var propType = propertySymbol.Type;
+                var propTypeDisplayString = propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+                var isCommand = !string.IsNullOrWhiteSpace(desiredCommandInterface) &&
+                                (propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Equals(desiredCommandInterface, StringComparison.Ordinal)
+                                || propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)));
+
+                var expressionArg = isCommand
+                    ? propertySymbol.Name
+                    : $"global::Vetuviem.Core.ExpressionHelpers.GetControlPropertyExpressionFromViewExpression<TView, TControl, {propTypeDisplayString}>(VetuviemControlBindingExpression, \"{propertySymbol.Name}\")";
 
                 var invokeArgs = new[]
                     {
                         "compositeDisposable",
                         "view",
                         "viewModel",
-                        $"global::Vetuviem.Core.ExpressionHelpers.GetControlPropertyExpressionFromViewExpression<TView, TControl, {propType}>(VetuviemControlBindingExpression, \"{propertySymbol.Name}\")",
+                        expressionArg,
                     };
 
                 var invocationStatement = RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
@@ -489,7 +507,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
                 AddInvocationStatementToRelevantCollection(
                     propertySymbol,
-                    desiredCommandInterface,
+                    isCommand,
                     invocationStatement,
                     commandBindingStatements,
                     oneWayBindingStatements,
@@ -505,22 +523,16 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
         private static void AddInvocationStatementToRelevantCollection(
             IPropertySymbol prop,
-            string? desiredCommandInterface,
+            bool isCommand,
             StatementSyntax invocation,
             ICollection<StatementSyntax> commandBindingStatements,
             ICollection<StatementSyntax> oneWayBindingStatements,
             ICollection<StatementSyntax> twoWayBindingStatements)
         {
-            if (!string.IsNullOrWhiteSpace(desiredCommandInterface))
+            if (isCommand)
             {
-                var propType = prop.Type;
-                var isCommand = propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Equals(desiredCommandInterface, StringComparison.Ordinal)
-                                || propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal));
-                if (isCommand)
-                {
-                    commandBindingStatements.Add(invocation);
-                    return;
-                }
+                commandBindingStatements.Add(invocation);
+                return;
             }
 
             if (prop.IsReadOnly)

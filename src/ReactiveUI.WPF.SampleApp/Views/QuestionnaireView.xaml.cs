@@ -25,6 +25,9 @@ namespace ReactiveUI.WPF.SampleApp.Views
 
         private void OnWhenActivated(Action<IDisposable> disposeWithAction)
         {
+#if TBC
+            disposeWithAction(this.BindCommand(ViewModel, vw => vw.LaunchInteraction, vm => vm.LaunchInteraction));
+#endif
             new QuestionnaireViewBindingModels().ApplyBindings(
                 disposeWithAction,
                 this,

@@ -4,7 +4,6 @@
 
 using System;
 using System.Linq.Expressions;
-using System.Reactive;
 using System.Reactive.Disposables;
 using System.Windows.Input;
 using ReactiveUI;
@@ -15,72 +14,19 @@ namespace Vetuviem.Core
     /// Represents a command binding between a control and a viewmodel.
     /// </summary>
     /// <typeparam name="TViewModel">The type for the viewmodel.</typeparam>
-    public class CommandBinding<TViewModel> : CommandBinding<TViewModel, Unit, Unit>
+    public class CommandBinding<TViewModel> : ICommandBinding<TViewModel, ICommand>
         where TViewModel : class
     {
+        private readonly Expression<Func<TViewModel, ICommand?>> _viewModelBinding;
+        private readonly string? _toEvent;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandBinding{TViewModel}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
         /// <param name="toEvent">If specified, bind to the specific event instead of the default.</param>
         public CommandBinding(
-            Expression<Func<TViewModel, ReactiveCommand<Unit, Unit>?>> viewModelBinding,
-            string? toEvent = null)
-            : base(
-                viewModelBinding,
-                toEvent)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Represents a command binding between a control and a viewmodel.
-    /// </summary>
-    /// <typeparam name="TViewModel">The type for the viewmodel.</typeparam>
-    /// <typeparam name="TResult">
-    /// The type of the values that are the result of command execution.
-    /// </typeparam>
-    public class CommandBinding<TViewModel, TResult> : CommandBinding<TViewModel, Unit, TResult>
-        where TViewModel : class
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandBinding{TViewModel, TResult}"/> class.
-        /// </summary>
-        /// <param name="viewModelBinding">Expression for the View Model binding.</param>
-        /// <param name="toEvent">If specified, bind to the specific event instead of the default.</param>
-        public CommandBinding(
-            Expression<Func<TViewModel, ReactiveCommand<Unit, TResult>?>> viewModelBinding,
-            string? toEvent = null)
-            : base(
-                viewModelBinding,
-                toEvent)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Represents a command binding between a control and a viewmodel.
-    /// </summary>
-    /// <typeparam name="TViewModel">The type for the viewmodel.</typeparam>
-    /// <typeparam name="TParam">
-    /// The type of parameter values passed in during command execution.
-    /// </typeparam>
-    /// <typeparam name="TResult">
-    /// The type of the values that are the result of command execution.
-    /// </typeparam>
-    public class CommandBinding<TViewModel, TParam, TResult> : ICommandBinding<TViewModel, ICommand>
-        where TViewModel : class
-    {
-        private readonly Expression<Func<TViewModel, ReactiveCommand<TParam, TResult>?>> _viewModelBinding;
-        private readonly string? _toEvent;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandBinding{TViewModel, TParam, TResult}"/> class.
-        /// </summary>
-        /// <param name="viewModelBinding">Expression for the View Model binding.</param>
-        /// <param name="toEvent">If specified, bind to the specific event instead of the default.</param>
-        public CommandBinding(
-            Expression<Func<TViewModel, ReactiveCommand<TParam, TResult>?>> viewModelBinding,
+            Expression<Func<TViewModel, ICommand?>> viewModelBinding,
             string? toEvent = null)
         {
             _viewModelBinding = viewModelBinding;

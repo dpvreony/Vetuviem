@@ -71,7 +71,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
                 vm => vm.AnswerFive,
                 vm => vm.AnswerFiveLengthRemaining);
 
-            LaunchInteraction = ReactiveCommand.CreateFromTask(() => OnLaunchInteraction());
+            LaunchInteraction = ReactiveCommand.CreateFromTask(OnLaunchInteraction);
         }
 
         /// <summary>

@@ -156,6 +156,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 prop,
                 desiredCommandInterface);
 
+#error we need to change command to handle the control type instead of the property type. This is because BindCommand binds to the control, not the property.
+
             var returnType = prop.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
             var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.{bindingName}<TViewModel, {returnType}>?");
             return type;
