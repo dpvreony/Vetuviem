@@ -511,6 +511,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             ICollection<StatementSyntax> oneWayBindingStatements,
             ICollection<StatementSyntax> twoWayBindingStatements)
         {
+            /*
             if (!string.IsNullOrWhiteSpace(desiredCommandInterface))
             {
                 var propType = prop.Type;
@@ -522,6 +523,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     return;
                 }
             }
+            */
 
             if (prop.IsReadOnly)
             {

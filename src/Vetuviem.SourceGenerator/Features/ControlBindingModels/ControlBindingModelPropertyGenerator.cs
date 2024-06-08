@@ -165,6 +165,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             IPropertySymbol prop,
             string? desiredCommandInterface)
         {
+            /*
             if (!string.IsNullOrWhiteSpace(desiredCommandInterface))
             {
                 var propType = prop.Type;
@@ -175,6 +176,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     return "ICommandBinding";
                 }
             }
+            */
 
             var bindingType = prop.IsReadOnly ? "One" : "OneOrTwo";
 
