@@ -42,7 +42,19 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 .Where(x => x.Kind == SymbolKind.Property)
                 .ToArray();
 
+            var fullName = namedTypeSymbol.GetFullName();
+
             var nodes = new List<MemberDeclarationSyntax>(properties.Length);
+
+            if (namedTypeSymbol.Interfaces.Any(interfaceName =>
+                    interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)))
+            {
+                var bindCommandPropertyDeclaration = GetBindCommandPropertyDeclaration(
+                    namedTypeSymbol,
+                    makeClassesPublic,
+                    fullName);
+                nodes.Add(bindCommandPropertyDeclaration);
+            }
 
             foreach (var prop in properties)
             {
@@ -74,15 +86,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-                var accessorList = new[]
-                {
-                    SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
-                        .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
-                    SyntaxFactory.AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
-                        .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
-                };
-
-                var fullName = namedTypeSymbol.GetFullName();
+                var accessorList = GetAccessorDeclarationSyntaxes();
 
                 var summary = XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
                     "Gets or sets the binding logic for {0}",
@@ -99,6 +103,34 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             }
 
             return new SyntaxList<MemberDeclarationSyntax>(nodes);
+        }
+
+        private static AccessorDeclarationSyntax[] GetAccessorDeclarationSyntaxes()
+        {
+            var accessorList = new[]
+            {
+                SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+                    .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
+                SyntaxFactory.AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
+                    .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
+            };
+            return accessorList;
+        }
+
+        private static MemberDeclarationSyntax GetBindCommandPropertyDeclaration(INamedTypeSymbol namedTypeSymbol,
+            bool makeClassesPublic, string fullName)
+        {
+            var accessorList = GetAccessorDeclarationSyntaxes();
+
+            var summary = XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
+                "Gets or sets the command binding logic for {0}",
+                fullName);
+
+            return GetBindCommandPropertyDeclaration(
+                namedTypeSymbol,
+                accessorList,
+                summary,
+                makeClassesPublic);
         }
 
         private static bool ReplacesBaseProperty(
@@ -128,6 +160,25 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return false;
         }
 
+        private static PropertyDeclarationSyntax GetBindCommandPropertyDeclaration(
+            INamedTypeSymbol namedTypeSymbol,
+            AccessorDeclarationSyntax[] accessorList,
+            IEnumerable<SyntaxTrivia> summary,
+            bool makeClassesPublic)
+        {
+            TypeSyntax type = GetCommandBindingTypeSyntax(namedTypeSymbol);
+
+            var result = SyntaxFactory.PropertyDeclaration(
+                    type,
+                    "BindCommand")
+                .AddModifiers(SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword))
+                .WithAccessorList(
+                    SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)))
+                .WithLeadingTrivia(summary);
+
+            return result;
+        }
+
         private static PropertyDeclarationSyntax GetPropertyDeclaration(
             IPropertySymbol prop,
             AccessorDeclarationSyntax[] accessorList,
@@ -148,6 +199,13 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return result;
         }
 
+        private static TypeSyntax GetCommandBindingTypeSyntax(INamedTypeSymbol namedTypeSymbol)
+        {
+            var returnType = namedTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.ICommandBinding<TViewModel, {returnType}>?");
+            return type;
+        }
+
         private static TypeSyntax GetBindingTypeSyntax(
             IPropertySymbol prop,
             string? desiredCommandInterface)
@@ -165,19 +223,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             IPropertySymbol prop,
             string? desiredCommandInterface)
         {
-            /*
-            if (!string.IsNullOrWhiteSpace(desiredCommandInterface))
-            {
-                var propType = prop.Type;
-                var isCommand = propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Equals(desiredCommandInterface, StringComparison.Ordinal)
-                    || propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal));
-                if (isCommand)
-                {
-                    return "ICommandBinding";
-                }
-            }
-            */
-
             var bindingType = prop.IsReadOnly ? "One" : "OneOrTwo";
 
             return $"I{bindingType}WayBind";

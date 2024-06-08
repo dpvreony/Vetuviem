@@ -38,7 +38,7 @@ namespace Vetuviem.WPF.SourceGenerator
         /// <inheritdoc />
         public string GetCommandInterface()
         {
-            return "global::System.Windows.Input.ICommand";
+            return "global::System.Windows.Input.ICommandSource";
         }
     }
 }

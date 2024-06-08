@@ -406,9 +406,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
                 AddInvocationStatementToRelevantCollection(
                     propertySymbol,
-                    desiredCommandInterface,
                     invocationStatement,
-                    commandBindingStatements,
                     oneWayBindingStatements,
                     twoWayBindingStatements);
             }
@@ -420,7 +418,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return body.ToArray();
         }
 
-        private static StatementSyntax[] GetApplyBindingCompositeDisposableMethodBody(INamedTypeSymbol namedTypeSymbol,
+        private static StatementSyntax[] GetApplyBindingCompositeDisposableMethodBody(
+            INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string? desiredCommandInterface,
             bool includeObsoleteItems)
@@ -489,9 +488,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
                 AddInvocationStatementToRelevantCollection(
                     propertySymbol,
-                    desiredCommandInterface,
                     invocationStatement,
-                    commandBindingStatements,
                     oneWayBindingStatements,
                     twoWayBindingStatements);
             }
@@ -505,9 +502,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
         private static void AddInvocationStatementToRelevantCollection(
             IPropertySymbol prop,
-            string? desiredCommandInterface,
             StatementSyntax invocation,
-            ICollection<StatementSyntax> commandBindingStatements,
             ICollection<StatementSyntax> oneWayBindingStatements,
             ICollection<StatementSyntax> twoWayBindingStatements)
         {

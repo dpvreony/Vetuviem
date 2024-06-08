@@ -25,7 +25,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
             // launch interaction
             yield return new ButtonControlBindingModel<QuestionnaireView, QuestionnaireViewModel>(vw => vw.LaunchInteraction)
             {
-                Command = new CommandBinding<QuestionnaireViewModel>(vm => vm.LaunchInteraction)
+                BindCommand = new CommandBinding<QuestionnaireViewModel>(vm => vm.LaunchInteraction)
             };
 
             // Forename
