@@ -30,7 +30,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             INamedTypeSymbol namedTypeSymbol,
             string? desiredCommandInterface,
             bool makeClassesPublic,
-            bool includeObsoleteItems)
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             if (namedTypeSymbol == null)
             {
@@ -46,13 +47,14 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var nodes = new List<MemberDeclarationSyntax>(properties.Length);
 
-            if (namedTypeSymbol.Interfaces.Any(interfaceName =>
-                    interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)))
+            if (!string.IsNullOrWhiteSpace(desiredCommandInterface)
+                && !string.IsNullOrWhiteSpace(platformCommandType)
+                && namedTypeSymbol.Interfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)))
             {
                 var bindCommandPropertyDeclaration = GetBindCommandPropertyDeclaration(
-                    namedTypeSymbol,
                     makeClassesPublic,
-                    fullName);
+                    fullName,
+                    platformCommandType!);
                 nodes.Add(bindCommandPropertyDeclaration);
             }
 
@@ -117,8 +119,10 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return accessorList;
         }
 
-        private static MemberDeclarationSyntax GetBindCommandPropertyDeclaration(INamedTypeSymbol namedTypeSymbol,
-            bool makeClassesPublic, string fullName)
+        private static MemberDeclarationSyntax GetBindCommandPropertyDeclaration(
+            bool makeClassesPublic,
+            string fullName,
+            string platformCommandType)
         {
             var accessorList = GetAccessorDeclarationSyntaxes();
 
@@ -127,10 +131,10 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 fullName);
 
             return GetBindCommandPropertyDeclaration(
-                namedTypeSymbol,
                 accessorList,
                 summary,
-                makeClassesPublic);
+                makeClassesPublic,
+                platformCommandType);
         }
 
         private static bool ReplacesBaseProperty(
@@ -161,12 +165,12 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         }
 
         private static PropertyDeclarationSyntax GetBindCommandPropertyDeclaration(
-            INamedTypeSymbol namedTypeSymbol,
             AccessorDeclarationSyntax[] accessorList,
             IEnumerable<SyntaxTrivia> summary,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            string platformCommandType)
         {
-            TypeSyntax type = GetCommandBindingTypeSyntax(namedTypeSymbol);
+            TypeSyntax type = GetCommandBindingTypeSyntax(platformCommandType);
 
             var result = SyntaxFactory.PropertyDeclaration(
                     type,
@@ -199,10 +203,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return result;
         }
 
-        private static TypeSyntax GetCommandBindingTypeSyntax(INamedTypeSymbol namedTypeSymbol)
+        private static TypeSyntax GetCommandBindingTypeSyntax(string platformCommandType)
         {
-            var returnType = namedTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.ICommandBinding<TViewModel, {returnType}>?");
+            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.ICommandBinding<TViewModel, {platformCommandType}>?");
             return type;
         }
 

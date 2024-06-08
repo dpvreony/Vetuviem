@@ -25,7 +25,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string platformName,
             string rootNamespace,
             bool makeClassesPublic,
-            bool includeObsoleteItems)
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
 
@@ -60,7 +61,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 controlClassFullName,
                 platformName,
                 makeClassesPublic,
-                includeObsoleteItems);
+                includeObsoleteItems,
+                platformCommandType);
 
             return classDeclaration
                 .WithModifiers(modifiers)
@@ -191,7 +193,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string controlClassFullName,
             string platformName,
             bool makeClassesPublic,
-            bool includeObsoleteItems);
+            bool includeObsoleteItems,
+            string? platformCommandType);
 
         /// <summary>
         /// Gets the class name identifier from a named type symbol.
