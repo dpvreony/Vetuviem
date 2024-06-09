@@ -4,7 +4,6 @@
 
 using System;
 using System.Linq.Expressions;
-using System.Reactive;
 using System.Reactive.Disposables;
 using System.Windows.Input;
 using ReactiveUI;
@@ -15,7 +14,7 @@ namespace Vetuviem.Core
     /// Represents a command binding between a control and a viewmodel.
     /// </summary>
     /// <typeparam name="TViewModel">The type for the viewmodel.</typeparam>
-    public sealed class CommandBinding<TViewModel> : ICommandBinding<TViewModel, ICommand>
+    public sealed class CommandBinding<TViewModel> : ICommandBinding<TViewModel>
         where TViewModel : class
     {
         private readonly Expression<Func<TViewModel, ICommand?>> _viewModelBinding;
@@ -35,11 +34,11 @@ namespace Vetuviem.Core
         }
 
         /// <inheritdoc/>
-        public void ApplyBinding<TView>(
+        public void ApplyBinding<TView, TViewProp>(
             Action<IDisposable> disposeAction,
             TView view,
             TViewModel viewModel,
-            Expression<Func<TView, ICommand>> viewBinding)
+            Expression<Func<TView, TViewProp>> viewBinding)
             where TView : class, IViewFor<TViewModel>
         {
             if (disposeAction == null)
@@ -70,11 +69,11 @@ namespace Vetuviem.Core
         }
 
         /// <inheritdoc/>
-        public void ApplyBinding<TView>(
+        public void ApplyBinding<TView, TViewProp>(
             CompositeDisposable compositeDisposable,
             TView view,
             TViewModel viewModel,
-            Expression<Func<TView, ICommand>> viewBinding)
+            Expression<Func<TView, TViewProp>> viewBinding)
             where TView : class, IViewFor<TViewModel>
         {
             if (compositeDisposable == null)

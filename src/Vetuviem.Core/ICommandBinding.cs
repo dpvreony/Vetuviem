@@ -13,19 +13,19 @@ namespace Vetuviem.Core
     /// Represents a View to View Model Binding for Commands.
     /// </summary>
     /// <typeparam name="TViewModel">The type for the ViewModel.</typeparam>
-    /// <typeparam name="TViewProp">The type for the View.</typeparam>
-    public interface ICommandBinding<TViewModel, TViewProp>
+    public interface ICommandBinding<TViewModel>
         where TViewModel : class
     {
         /// <summary>
         /// Applies a View to View Model Binding.
         /// </summary>
         /// <typeparam name="TView">The type for the view.</typeparam>
+        /// <typeparam name="TViewProp">The type for the View Property.</typeparam>
         /// <param name="d">The disposable action registration. Used to clean up when bindings fall out of scope.</param>
         /// <param name="view">The instance of the View to bind.</param>
         /// <param name="viewModel">The instance of the ViewModel to Bind.</param>
         /// <param name="viewBinding">Expression of the View Property to Bind to.</param>
-        void ApplyBinding<TView>(
+        void ApplyBinding<TView, TViewProp>(
             Action<IDisposable> d,
             TView view,
             TViewModel viewModel,
@@ -36,11 +36,12 @@ namespace Vetuviem.Core
         /// Applies a View to View Model Binding.
         /// </summary>
         /// <typeparam name="TView">The type for the view.</typeparam>
+        /// <typeparam name="TViewProp">The type for the View Property.</typeparam>
         /// <param name="compositeDisposable">The disposable action registration. Used to clean up when bindings fall out of scope.</param>
         /// <param name="view">The instance of the View to bind.</param>
         /// <param name="viewModel">The instance of the ViewModel to Bind.</param>
         /// <param name="viewBinding">Expression of the View Property to Bind to.</param>
-        void ApplyBinding<TView>(
+        void ApplyBinding<TView, TViewProp>(
             CompositeDisposable compositeDisposable,
             TView view,
             TViewModel viewModel,

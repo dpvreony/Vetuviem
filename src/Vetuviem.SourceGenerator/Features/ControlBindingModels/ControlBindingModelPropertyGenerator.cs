@@ -205,7 +205,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
         private static TypeSyntax GetCommandBindingTypeSyntax(string platformCommandType)
         {
-            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.ICommandBinding<TViewModel, {platformCommandType}>?");
+            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.ICommandBinding<TViewModel>?");
             return type;
         }
 

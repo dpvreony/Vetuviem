@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using ReactiveUI.WPF.SampleApp.ViewModels;
 using ReactiveUI.WPF.SampleApp.Views;
