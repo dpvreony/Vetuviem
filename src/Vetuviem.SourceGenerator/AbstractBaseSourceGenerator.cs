@@ -230,7 +230,7 @@ namespace Vetuviem.SourceGenerator
                     return namespaceDeclaration;
             }
 
-            var desiredCommandInterface = platformResolver.GetCommandInterface();
+            var desiredCommandInterface = platformResolver.GetCommandSourceInterface();
 
             var generatorProcessor = new TGeneratorProcessor();
 
@@ -247,7 +247,8 @@ namespace Vetuviem.SourceGenerator
                 platformName,
                 namespaceName,
                 makeClassesPublic,
-                includeObsoleteItems);
+                includeObsoleteItems,
+                platformResolver.GetCommandInterface());
 
             return result;
         }

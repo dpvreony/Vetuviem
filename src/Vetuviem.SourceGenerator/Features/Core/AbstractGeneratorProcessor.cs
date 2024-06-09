@@ -41,7 +41,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string platformName,
             string rootNamespace,
             bool makeClassesPublic,
-            bool includeObsoleteItems)
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             if (namespaceDeclaration == null)
             {
@@ -89,7 +90,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     platformName,
                     rootNamespace,
                     makeClassesPublic,
-                    includeObsoleteItems);
+                    includeObsoleteItems,
+                    platformCommandType);
             }
 
             return namespaceDeclaration;
@@ -125,7 +127,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             List<MemberDeclarationSyntax> memberDeclarationSyntaxes,
             string rootNamespace,
             bool makeClassesPublic,
-            bool includeObsoleteItems)
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             var fullName = namedTypeSymbol.GetFullName();
 
@@ -179,7 +182,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     platformName,
                     rootNamespace,
                     makeClassesPublic,
-                    includeObsoleteItems);
+                    includeObsoleteItems,
+                    platformCommandType);
 
                 memberDeclarationSyntaxes.Add(generatedClass);
             }
@@ -234,7 +238,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string platformName,
             string rootNamespace,
             bool makeClassesPublic,
-            bool includeObsoleteItems)
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfAssembly(metadataReference));
 
@@ -269,7 +274,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     classGenerators,
                     rootNamespace,
                     makeClassesPublic,
-                    includeObsoleteItems);
+                    includeObsoleteItems,
+                    platformCommandType);
 
                 if (nestedDeclarationSyntax != null)
                 {
@@ -302,7 +308,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             Func<IClassGenerator>[] classGenerators,
             string rootNamespace,
             bool makeClassesPublic,
-            bool includeObsoleteItems)
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfNamespace(namespaceSymbol));
 
@@ -324,7 +331,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     nestedMembers,
                     rootNamespace,
                     makeClassesPublic,
-                    includeObsoleteItems);
+                    includeObsoleteItems,
+                    platformCommandType);
             }
 
             var nestedSymbols = namespaceSymbol.GetNamespaceMembers();
@@ -342,7 +350,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     classGenerators,
                     rootNamespace,
                     makeClassesPublic,
-                    includeObsoleteItems);
+                    includeObsoleteItems,
+                    platformCommandType);
 
                 if (nestedNamespace != null)
                 {

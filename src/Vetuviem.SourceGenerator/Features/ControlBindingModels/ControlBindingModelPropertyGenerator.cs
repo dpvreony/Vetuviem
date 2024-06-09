@@ -30,7 +30,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             INamedTypeSymbol namedTypeSymbol,
             string? desiredCommandInterface,
             bool makeClassesPublic,
-            bool includeObsoleteItems)
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             if (namedTypeSymbol == null)
             {
@@ -42,7 +43,20 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 .Where(x => x.Kind == SymbolKind.Property)
                 .ToArray();
 
+            var fullName = namedTypeSymbol.GetFullName();
+
             var nodes = new List<MemberDeclarationSyntax>(properties.Length);
+
+            if (!string.IsNullOrWhiteSpace(desiredCommandInterface)
+                && !string.IsNullOrWhiteSpace(platformCommandType)
+                && namedTypeSymbol.Interfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)))
+            {
+                var bindCommandPropertyDeclaration = GetBindCommandPropertyDeclaration(
+                    makeClassesPublic,
+                    fullName,
+                    platformCommandType!);
+                nodes.Add(bindCommandPropertyDeclaration);
+            }
 
             foreach (var prop in properties)
             {
@@ -74,15 +88,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-                var accessorList = new[]
-                {
-                    SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
-                        .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
-                    SyntaxFactory.AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
-                        .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
-                };
-
-                var fullName = namedTypeSymbol.GetFullName();
+                var accessorList = GetAccessorDeclarationSyntaxes();
 
                 var summary = XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
                     "Gets or sets the binding logic for {0}",
@@ -99,6 +105,36 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             }
 
             return new SyntaxList<MemberDeclarationSyntax>(nodes);
+        }
+
+        private static AccessorDeclarationSyntax[] GetAccessorDeclarationSyntaxes()
+        {
+            var accessorList = new[]
+            {
+                SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+                    .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
+                SyntaxFactory.AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
+                    .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
+            };
+            return accessorList;
+        }
+
+        private static MemberDeclarationSyntax GetBindCommandPropertyDeclaration(
+            bool makeClassesPublic,
+            string fullName,
+            string platformCommandType)
+        {
+            var accessorList = GetAccessorDeclarationSyntaxes();
+
+            var summary = XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
+                "Gets or sets the command binding logic for {0}",
+                fullName);
+
+            return GetBindCommandPropertyDeclaration(
+                accessorList,
+                summary,
+                makeClassesPublic,
+                platformCommandType);
         }
 
         private static bool ReplacesBaseProperty(
@@ -128,6 +164,25 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return false;
         }
 
+        private static PropertyDeclarationSyntax GetBindCommandPropertyDeclaration(
+            AccessorDeclarationSyntax[] accessorList,
+            IEnumerable<SyntaxTrivia> summary,
+            bool makeClassesPublic,
+            string platformCommandType)
+        {
+            TypeSyntax type = GetCommandBindingTypeSyntax(platformCommandType);
+
+            var result = SyntaxFactory.PropertyDeclaration(
+                    type,
+                    "BindCommand")
+                .AddModifiers(SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword))
+                .WithAccessorList(
+                    SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)))
+                .WithLeadingTrivia(summary);
+
+            return result;
+        }
+
         private static PropertyDeclarationSyntax GetPropertyDeclaration(
             IPropertySymbol prop,
             AccessorDeclarationSyntax[] accessorList,
@@ -148,6 +203,12 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return result;
         }
 
+        private static TypeSyntax GetCommandBindingTypeSyntax(string platformCommandType)
+        {
+            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.ICommandBinding<TViewModel>?");
+            return type;
+        }
+
         private static TypeSyntax GetBindingTypeSyntax(
             IPropertySymbol prop,
             string? desiredCommandInterface)
@@ -165,17 +226,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             IPropertySymbol prop,
             string? desiredCommandInterface)
         {
-            if (!string.IsNullOrWhiteSpace(desiredCommandInterface))
-            {
-                var propType = prop.Type;
-                var isCommand = propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Equals(desiredCommandInterface, StringComparison.Ordinal)
-                    || propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal));
-                if (isCommand)
-                {
-                    return "ICommandBinding";
-                }
-            }
-
             var bindingType = prop.IsReadOnly ? "One" : "OneOrTwo";
 
             return $"I{bindingType}WayBind";

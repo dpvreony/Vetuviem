@@ -34,25 +34,29 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string controlClassFullName,
             string platformName,
             bool makeClassesPublic,
-            bool includeObsoleteItems)
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             members = members.AddRange(ControlBindingModelPropertyGenerator.GetProperties(
                 namedTypeSymbol,
                 desiredCommandInterface,
                 makeClassesPublic,
-                includeObsoleteItems));
+                includeObsoleteItems,
+                platformCommandType));
 
             members = members.Add(GetApplyBindingsWithDisposableActionMethod(
                 namedTypeSymbol,
                 isDerivedType,
                 desiredCommandInterface,
-                includeObsoleteItems));
+                includeObsoleteItems,
+                platformCommandType));
 
             members = members.Add(GetApplyBindingsWithCompositeDisposableMethod(
                 namedTypeSymbol,
                 isDerivedType,
                 desiredCommandInterface,
-                includeObsoleteItems));
+                includeObsoleteItems,
+                platformCommandType));
 
             return members;
         }
@@ -274,7 +278,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string? desiredCommandInterface,
-            bool includeObsoleteItems)
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             const string methodName = "ApplyBindings";
             var returnType = SyntaxFactory.ParseTypeName("void");
@@ -283,7 +288,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 namedTypeSymbol,
                 isDerivedType,
                 desiredCommandInterface,
-                includeObsoleteItems);
+                includeObsoleteItems,
+                platformCommandType);
 
             var parameters = RoslynGenerationHelpers.GetParams(new[]
             {
@@ -307,7 +313,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string? desiredCommandInterface,
-            bool includeObsoleteItems)
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             const string methodName = "ApplyBindings";
             var returnType = SyntaxFactory.ParseTypeName("void");
@@ -316,7 +323,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 namedTypeSymbol,
                 isDerivedType,
                 desiredCommandInterface,
-                includeObsoleteItems);
+                includeObsoleteItems,
+                platformCommandType);
 
             var parameters = RoslynGenerationHelpers.GetParams(new[]
             {
@@ -336,11 +344,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return declaration;
         }
 
-        private static StatementSyntax[] GetApplyBindingMethodBody(
-            INamedTypeSymbol namedTypeSymbol,
+        private static StatementSyntax[] GetApplyBindingMethodBody(INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string? desiredCommandInterface,
-            bool includeObsoleteItems)
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             var body = new List<StatementSyntax>();
 
@@ -365,6 +373,27 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var commandBindingStatements = new List<StatementSyntax>(properties.Length);
             var oneWayBindingStatements = new List<StatementSyntax>(properties.Length);
             var twoWayBindingStatements = new List<StatementSyntax>(properties.Length);
+
+            if (!string.IsNullOrWhiteSpace(desiredCommandInterface)
+                && !string.IsNullOrWhiteSpace(platformCommandType)
+                && namedTypeSymbol.Interfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)))
+            {
+                var invokeArgs = new[]
+                {
+                    "registerForDisposalAction",
+                    "view",
+                    "viewModel",
+                    "VetuviemControlBindingExpression",
+                };
+
+                var invocationStatement = RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
+                    $"this",
+                    "BindCommand",
+                    "ApplyBinding",
+                    invokeArgs);
+
+                commandBindingStatements.Add(invocationStatement);
+            }
 
             foreach (var prop in properties)
             {
@@ -406,9 +435,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
                 AddInvocationStatementToRelevantCollection(
                     propertySymbol,
-                    desiredCommandInterface,
                     invocationStatement,
-                    commandBindingStatements,
                     oneWayBindingStatements,
                     twoWayBindingStatements);
             }
@@ -423,7 +450,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         private static StatementSyntax[] GetApplyBindingCompositeDisposableMethodBody(INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string? desiredCommandInterface,
-            bool includeObsoleteItems)
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             var body = new List<StatementSyntax>();
 
@@ -443,11 +471,30 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 body.Add(SyntaxFactory.ExpressionStatement(RoslynGenerationHelpers.GetMethodOnVariableInvocationExpression("base", "ApplyBindings", baseInvokeArgs, false)));
             }
 
-            var controlFullName = namedTypeSymbol.GetFullName();
-
             var commandBindingStatements = new List<StatementSyntax>(properties.Length);
             var oneWayBindingStatements = new List<StatementSyntax>(properties.Length);
             var twoWayBindingStatements = new List<StatementSyntax>(properties.Length);
+
+            if (!string.IsNullOrWhiteSpace(desiredCommandInterface)
+                && !string.IsNullOrWhiteSpace(platformCommandType)
+                && namedTypeSymbol.Interfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)))
+            {
+                var invokeArgs = new[]
+                {
+                    "compositeDisposable",
+                    "view",
+                    "viewModel",
+                    "VetuviemControlBindingExpression",
+                };
+
+                var invocationStatement = RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
+                    $"this",
+                    "BindCommand",
+                    "ApplyBinding",
+                    invokeArgs);
+
+                commandBindingStatements.Add(invocationStatement);
+            }
 
             foreach (var prop in properties)
             {
@@ -471,27 +518,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-                var propType = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-
-                var invokeArgs = new[]
-                    {
-                        "compositeDisposable",
-                        "view",
-                        "viewModel",
-                        $"global::Vetuviem.Core.ExpressionHelpers.GetControlPropertyExpressionFromViewExpression<TView, TControl, {propType}>(VetuviemControlBindingExpression, \"{propertySymbol.Name}\")",
-                    };
-
-                var invocationStatement = RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
-                    $"this",
-                    propertySymbol.Name,
-                    "ApplyBinding",
-                    invokeArgs);
+                var invocationStatement = GetInvocationStatement(propertySymbol);
 
                 AddInvocationStatementToRelevantCollection(
                     propertySymbol,
-                    desiredCommandInterface,
                     invocationStatement,
-                    commandBindingStatements,
                     oneWayBindingStatements,
                     twoWayBindingStatements);
             }
@@ -503,14 +534,33 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return body.ToArray();
         }
 
+        private static StatementSyntax GetInvocationStatement(IPropertySymbol propertySymbol)
+        {
+            var propType = propertySymbol.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+            var invokeArgs = new[]
+            {
+                "compositeDisposable",
+                "view",
+                "viewModel",
+                $"global::Vetuviem.Core.ExpressionHelpers.GetControlPropertyExpressionFromViewExpression<TView, TControl, {propType}>(VetuviemControlBindingExpression, \"{propertySymbol.Name}\")",
+            };
+
+            var invocationStatement = RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
+                $"this",
+                propertySymbol.Name,
+                "ApplyBinding",
+                invokeArgs);
+            return invocationStatement;
+        }
+
         private static void AddInvocationStatementToRelevantCollection(
             IPropertySymbol prop,
-            string? desiredCommandInterface,
             StatementSyntax invocation,
-            ICollection<StatementSyntax> commandBindingStatements,
             ICollection<StatementSyntax> oneWayBindingStatements,
             ICollection<StatementSyntax> twoWayBindingStatements)
         {
+            /*
             if (!string.IsNullOrWhiteSpace(desiredCommandInterface))
             {
                 var propType = prop.Type;
@@ -522,6 +572,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     return;
                 }
             }
+            */
 
             if (prop.IsReadOnly)
             {

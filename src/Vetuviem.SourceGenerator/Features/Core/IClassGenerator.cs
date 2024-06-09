@@ -30,6 +30,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string platformName,
             string rootNamespace,
             bool makeClassesPublic,
-            bool includeObsoleteItems);
+            bool includeObsoleteItems,
+            string? platformCommandType);
     }
 }

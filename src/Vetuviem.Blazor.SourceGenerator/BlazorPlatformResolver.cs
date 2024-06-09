@@ -30,6 +30,12 @@ namespace Vetuviem.Blazor.SourceGenerator
         }
 
         /// <inheritdoc />
+        public string? GetCommandSourceInterface()
+        {
+            return null;
+        }
+
+        /// <inheritdoc />
         public string? GetCommandInterface()
         {
             return null;
