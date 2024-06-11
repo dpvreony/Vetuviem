@@ -112,7 +112,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                    && namedTypeSymbol.Interfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal))
                    // we don't want to generate the property if the base class already has it
                    // this happens if someone incorrectly applies the interface on a subclass as well as the base class
-                   && (namedTypeSymbol.BaseType == null || namedTypeSymbol.BaseType.Interfaces.All(interfaceName => !interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)));
+                   && (namedTypeSymbol.BaseType == null || namedTypeSymbol.BaseType.AllInterfaces.All(interfaceName => !interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)));
         }
 
         private static AccessorDeclarationSyntax[] GetAccessorDeclarationSyntaxes()
