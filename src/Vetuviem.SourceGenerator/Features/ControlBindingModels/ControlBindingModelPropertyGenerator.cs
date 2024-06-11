@@ -47,9 +47,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var nodes = new List<MemberDeclarationSyntax>(properties.Length);
 
-            if (!string.IsNullOrWhiteSpace(desiredCommandInterface)
-                && !string.IsNullOrWhiteSpace(platformCommandType)
-                && namedTypeSymbol.Interfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)))
+            if (ShouldGenerateCommandBindingProperty(namedTypeSymbol, desiredCommandInterface, platformCommandType))
             {
                 var bindCommandPropertyDeclaration = GetBindCommandPropertyDeclaration(
                     makeClassesPublic,
@@ -105,6 +103,16 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             }
 
             return new SyntaxList<MemberDeclarationSyntax>(nodes);
+        }
+
+        private static bool ShouldGenerateCommandBindingProperty(INamedTypeSymbol namedTypeSymbol, string? desiredCommandInterface, string? platformCommandType)
+        {
+            return !string.IsNullOrWhiteSpace(desiredCommandInterface)
+                   && !string.IsNullOrWhiteSpace(platformCommandType)
+                   && namedTypeSymbol.Interfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal))
+                   // we don't want to generate the property if the base class already has it
+                   // this happens if someone incorrectly applies the interface on a subclass as well as the base class
+                   && (namedTypeSymbol.BaseType == null || namedTypeSymbol.BaseType.Interfaces.All(interfaceName => !interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)));
         }
 
         private static AccessorDeclarationSyntax[] GetAccessorDeclarationSyntaxes()
