@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows10.0.19041</TargetFramework>
+    <LangVersion>9</LangVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>True</DebugSymbols>
+    <UseWPF>true</UseWPF>
+    <!--
+    If you're seeing CS8032 warnings, it can be because the upstream source generator dll has been rebuilt or you've changed the
+    target frameworks in this project. Visual Studio seems to have a cache that invalidates. Reloading Visual Studio can
+    solve the issue.
+    -->
+    <!--<WarningsAsErrors>8032,8785</WarningsAsErrors>-->
+    <TreatWarningsAsErrors />
+    <IsPackable>False</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vetuviem.Avalonia.SourceGenerator\Vetuviem.Avalonia.SourceGenerator.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\Vetuviem.SourceGenerator\Vetuviem-SourceGenerator.props" />
+  <PropertyGroup>
+    <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
+  </PropertyGroup>
+</Project>
