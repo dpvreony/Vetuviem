@@ -16,8 +16,9 @@ namespace Vetuviem.Avalonia.SourceGenerator
         {
             return new[]
             {
+                "Avalonia.Base.dll",
                 "Avalonia.Controls.dll",
-                "Avalonia.ReactiveUI.dll",
+                "Avalonia.ReactiveUI.dll"
             };
         }
 
