@@ -77,24 +77,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-                var treatAsNewImplementation = false;
-                if (ReplacesBaseProperty(propertySymbol, namedTypeSymbol))
-                {
-                    // avalonia has properties that are provided as "new" instances instead of overridden
-                    var declaringSyntaxReferences = propertySymbol.DeclaringSyntaxReferences;
-                    var declaringPropertySyntax = declaringSyntaxReferences.Single().GetSyntax() as PropertyDeclarationSyntax;
-                    if (declaringPropertySyntax?.Modifiers.Any(SyntaxKind.NewKeyword) == true)
-                    {
-                        treatAsNewImplementation = true;
-                    }
-                    else
-                    {
-                        // windows forms has an issue where some properties are overridden without a keyword
-                        // so need to ignore these
-                        continue;
-                    }
-
-                }
+                var treatAsNewImplementation = ReplacesBaseProperty(propertySymbol);
 
                 var accessorList = GetAccessorDeclarationSyntaxes();
 
@@ -156,31 +139,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 platformCommandType);
         }
 
-        private static bool ReplacesBaseProperty(
-            IPropertySymbol propertySymbol,
-            INamedTypeSymbol namedTypeSymbol)
+        private static bool ReplacesBaseProperty(IPropertySymbol propertySymbol)
         {
-            var wantedName = propertySymbol.Name;
-            var baseType = namedTypeSymbol.BaseType;
-            while (baseType != null)
-            {
-                var nameMatches = baseType.GetMembers()
-                    .Where(x => x.Kind == SymbolKind.Property && x.Name.Equals(wantedName, StringComparison.Ordinal))
-                    .Cast<IPropertySymbol>()
-                    .ToImmutableArray();
+            var accessor = propertySymbol.GetMethod ?? propertySymbol.SetMethod;
 
-                foreach (var nameMatch in nameMatches)
-                {
-                    if (SymbolEqualityComparer.Default.Equals(nameMatch.Type, propertySymbol.Type))
-                    {
-                        return true;
-                    }
-                }
-
-                baseType = baseType.BaseType;
-            }
-
-            return false;
+            return accessor is { HidesBaseMethodsByName: true };
         }
 
         private static PropertyDeclarationSyntax GetBindCommandPropertyDeclaration(
