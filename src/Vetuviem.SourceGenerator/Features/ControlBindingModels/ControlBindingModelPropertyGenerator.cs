@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -58,9 +59,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             foreach (var prop in properties)
             {
-                var propertySymbol = prop as IPropertySymbol;
-
-                if (propertySymbol == null
+                if (prop is not IPropertySymbol propertySymbol
                     || propertySymbol.IsIndexer
                     || propertySymbol.IsOverride
                     || propertySymbol.DeclaredAccessibility != Accessibility.Public
@@ -78,12 +77,23 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-                // windows forms has an issue where some properties are provided as "new" instances instead of overridden
-                // we're getting build warnings for these.
+                var treatAsNewImplementation = false;
                 if (ReplacesBaseProperty(propertySymbol, namedTypeSymbol))
                 {
-                    // for now we skip, but we may adjust our model moving forward to make them "new".
-                    continue;
+                    // avalonia has properties that are provided as "new" instances instead of overridden
+                    var declaringSyntaxReferences = propertySymbol.DeclaringSyntaxReferences;
+                    var declaringPropertySyntax = declaringSyntaxReferences.Single().GetSyntax() as PropertyDeclarationSyntax;
+                    if (declaringPropertySyntax?.Modifiers.Any(SyntaxKind.NewKeyword) == true)
+                    {
+                        treatAsNewImplementation = true;
+                    }
+                    else
+                    {
+                        // windows forms has an issue where some properties are overridden without a keyword
+                        // so need to ignore these
+                        continue;
+                    }
+
                 }
 
                 var accessorList = GetAccessorDeclarationSyntaxes();
@@ -97,7 +107,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     accessorList,
                     summary,
                     desiredCommandInterface,
-                    makeClassesPublic);
+                    makeClassesPublic,
+                    treatAsNewImplementation);
 
                 nodes.Add(propSyntax);
             }
@@ -196,17 +207,26 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             AccessorDeclarationSyntax[] accessorList,
             IEnumerable<SyntaxTrivia> summary,
             string? desiredCommandInterface,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool treatAsNewImplementation)
         {
             TypeSyntax type = GetBindingTypeSyntax(prop, desiredCommandInterface);
+
+            var modifiers =
+                SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword);
 
             var result = SyntaxFactory.PropertyDeclaration(
                     type,
                     prop.Name)
-                .AddModifiers(SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword))
+                .AddModifiers(modifiers)
                 .WithAccessorList(
                     SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)))
                 .WithLeadingTrivia(summary);
+
+            if (treatAsNewImplementation)
+            {
+                result = result.AddModifiers(SyntaxFactory.Token(SyntaxKind.NewKeyword));
+            }
 
             return result;
         }
