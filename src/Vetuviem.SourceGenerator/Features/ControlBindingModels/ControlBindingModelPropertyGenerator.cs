@@ -77,7 +77,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-                var treatAsNewImplementation = ReplacesBaseProperty(propertySymbol);
+                var treatAsNewImplementation = ReplacesBaseProperty(propertySymbol, namedTypeSymbol);
 
                 var accessorList = GetAccessorDeclarationSyntaxes();
 
@@ -139,11 +139,31 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 platformCommandType);
         }
 
-        private static bool ReplacesBaseProperty(IPropertySymbol propertySymbol)
+        private static bool ReplacesBaseProperty(
+            IPropertySymbol propertySymbol,
+            INamedTypeSymbol namedTypeSymbol)
         {
-            var accessor = propertySymbol.GetMethod ?? propertySymbol.SetMethod;
+            var wantedName = propertySymbol.Name;
+            var baseType = namedTypeSymbol.BaseType;
+            while (baseType != null)
+            {
+                var nameMatches = baseType.GetMembers()
+                    .Where(x => x.Kind == SymbolKind.Property && x.Name.Equals(wantedName, StringComparison.Ordinal))
+                    .Cast<IPropertySymbol>()
+                    .ToImmutableArray();
 
-            return accessor is { HidesBaseMethodsByName: true };
+                foreach (var nameMatch in nameMatches)
+                {
+                    if (SymbolEqualityComparer.Default.Equals(nameMatch.Type, propertySymbol.Type))
+                    {
+                        return !propertySymbol.IsOverride;
+                    }
+                }
+
+                baseType = baseType.BaseType;
+            }
+
+            return false;
         }
 
         private static PropertyDeclarationSyntax GetBindCommandPropertyDeclaration(
