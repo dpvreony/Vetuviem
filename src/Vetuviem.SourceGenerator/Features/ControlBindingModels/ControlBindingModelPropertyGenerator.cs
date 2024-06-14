@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -58,9 +59,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             foreach (var prop in properties)
             {
-                var propertySymbol = prop as IPropertySymbol;
-
-                if (propertySymbol == null
+                if (prop is not IPropertySymbol propertySymbol
                     || propertySymbol.IsIndexer
                     || propertySymbol.IsOverride
                     || propertySymbol.DeclaredAccessibility != Accessibility.Public
@@ -78,13 +77,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-                // windows forms has an issue where some properties are provided as "new" instances instead of overridden
-                // we're getting build warnings for these.
-                if (ReplacesBaseProperty(propertySymbol, namedTypeSymbol))
-                {
-                    // for now we skip, but we may adjust our model moving forward to make them "new".
-                    continue;
-                }
+                var treatAsNewImplementation = ReplacesBaseProperty(propertySymbol);
 
                 var accessorList = GetAccessorDeclarationSyntaxes();
 
@@ -97,7 +90,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     accessorList,
                     summary,
                     desiredCommandInterface,
-                    makeClassesPublic);
+                    makeClassesPublic,
+                    treatAsNewImplementation);
 
                 nodes.Add(propSyntax);
             }
@@ -145,31 +139,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 platformCommandType);
         }
 
-        private static bool ReplacesBaseProperty(
-            IPropertySymbol propertySymbol,
-            INamedTypeSymbol namedTypeSymbol)
+        private static bool ReplacesBaseProperty(IPropertySymbol propertySymbol)
         {
-            var wantedName = propertySymbol.Name;
-            var baseType = namedTypeSymbol.BaseType;
-            while (baseType != null)
-            {
-                var nameMatches = baseType.GetMembers()
-                    .Where(x => x.Kind == SymbolKind.Property && x.Name.Equals(wantedName, StringComparison.Ordinal))
-                    .Cast<IPropertySymbol>()
-                    .ToImmutableArray();
+            var accessor = propertySymbol.GetMethod ?? propertySymbol.SetMethod;
 
-                foreach (var nameMatch in nameMatches)
-                {
-                    if (SymbolEqualityComparer.Default.Equals(nameMatch.Type, propertySymbol.Type))
-                    {
-                        return true;
-                    }
-                }
-
-                baseType = baseType.BaseType;
-            }
-
-            return false;
+            return accessor is { HidesBaseMethodsByName: true };
         }
 
         private static PropertyDeclarationSyntax GetBindCommandPropertyDeclaration(
@@ -196,17 +170,26 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             AccessorDeclarationSyntax[] accessorList,
             IEnumerable<SyntaxTrivia> summary,
             string? desiredCommandInterface,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool treatAsNewImplementation)
         {
             TypeSyntax type = GetBindingTypeSyntax(prop, desiredCommandInterface);
+
+            var modifiers =
+                SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword);
 
             var result = SyntaxFactory.PropertyDeclaration(
                     type,
                     prop.Name)
-                .AddModifiers(SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword))
+                .AddModifiers(modifiers)
                 .WithAccessorList(
                     SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)))
                 .WithLeadingTrivia(summary);
+
+            if (treatAsNewImplementation)
+            {
+                result = result.AddModifiers(SyntaxFactory.Token(SyntaxKind.NewKeyword));
+            }
 
             return result;
         }
