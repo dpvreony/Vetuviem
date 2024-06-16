@@ -107,6 +107,10 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         }
 
         /// <inheritdoc />
+        protected override SyntaxToken[] GetConstructorModifiers(bool _) =>
+            [SyntaxFactory.Token(SyntaxKind.ProtectedKeyword)];
+
+        /// <inheritdoc />
         protected override ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
             INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
