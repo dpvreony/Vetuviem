@@ -274,9 +274,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             }
         }
 
-        private MemberDeclarationSyntax GetConstructorMethod(INamedTypeSymbol namedTypeSymbol,
+        private MemberDeclarationSyntax GetConstructorMethod(
+            INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
-            bool makeClassesPublic, TypeParameterListSyntax typeParameterList)
+            bool makeClassesPublic,
+            TypeParameterListSyntax typeParameterList)
         {
             var className = GetClassNameIdentifier(namedTypeSymbol);
             var body = GetConstructorBody(isDerivedType);
@@ -306,15 +308,19 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 ("viewExpression", "expression representing the control on the view to bind to.")
             };
 
+            var modifiers = GetConstructorModifiers(makeClassesPublic);
+
             var declaration = SyntaxFactory.ConstructorDeclaration(className)
                 .WithInitializer(initializer)
                 .WithParameterList(parameters)
-                .AddModifiers(SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword))
+                .AddModifiers(modifiers)
                 .AddBodyStatements(body.ToArray())
                 .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummaryComment(summaryText, summaryParameters));
 
             return declaration;
         }
+
+        protected abstract SyntaxToken[] GetConstructorModifiers(bool makeClassesPublic);
 
         private TypeParameterListSyntax GetTypeParameterListSyntax(INamedTypeSymbol namedTypeSymbol)
         {
