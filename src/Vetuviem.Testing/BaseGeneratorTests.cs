@@ -67,8 +67,6 @@ namespace Vetuviem.Testing
 
                 var analyzerConfigOptionsProvider = GetAnalyzerConfigOptionsProvider();
 
-                var analyzerConfigOptionsProvider = GetAnalyzerConfigOptionsProvider();
-
                 var newComp = RunGenerators(
                     comp,
                     analyzerConfigOptionsProvider,
@@ -97,12 +95,6 @@ namespace Vetuviem.Testing
             }
 
             protected abstract string GetProjectSourceCode();
-
-            /// <summary>
-            /// Gets the analyzer config options provider to test with.
-            /// </summary>
-            /// <returns>Analyzer Config Options.</returns>
-            protected abstract AnalyzerConfigOptionsProvider? GetAnalyzerConfigOptionsProvider();
 
             /// <summary>
             /// Gets the analyzer config options provider to test with.

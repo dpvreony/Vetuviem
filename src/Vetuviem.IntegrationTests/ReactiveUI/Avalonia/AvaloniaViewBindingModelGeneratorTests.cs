@@ -10,7 +10,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Vetuviem.Avalonia.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.Testing;
-using Vetuviem.Winforms.SourceGenerator;
 using Xunit.Abstractions;
 
 namespace Vetuviem.IntegrationTests.ReactiveUI.Avalonia
@@ -30,6 +29,12 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Avalonia
             public ExecuteMethod(ITestOutputHelper output)
                 : base(output)
             {
+            }
+
+            /// <inheritdoc />
+            protected override string GetProjectSourceCode()
+            {
+                return string.Empty;
             }
 
             /// <inheritdoc />
