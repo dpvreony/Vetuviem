@@ -32,6 +32,16 @@ namespace Vetuviem.SourceGenerator
         /// <inheritdoc />
         public void Execute(GeneratorExecutionContext context)
         {
+            GenerateFromAssemblies(context);
+            GenerateFromProjectSourceCode(context);
+        }
+
+        private void GenerateFromProjectSourceCode(GeneratorExecutionContext context)
+        {
+        }
+
+        private void GenerateFromAssemblies(GeneratorExecutionContext context)
+        {
             try
             {
                 context.ReportDiagnostic(ReportDiagnosticFactory.StartingSourceGenerator());
