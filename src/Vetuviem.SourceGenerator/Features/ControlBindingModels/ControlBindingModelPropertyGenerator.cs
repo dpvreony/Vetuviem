@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -24,11 +25,14 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="namedTypeSymbol">The type to check the properties on.</param>
         /// <param name="desiredCommandInterface">The fully qualified typename for the Command interface used by the UI platform, if it uses one.</param>
         /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
+        /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
         /// <returns>List of property declarations.</returns>
         public static SyntaxList<MemberDeclarationSyntax> GetProperties(
             INamedTypeSymbol namedTypeSymbol,
             string? desiredCommandInterface,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             if (namedTypeSymbol == null)
             {
@@ -40,13 +44,22 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 .Where(x => x.Kind == SymbolKind.Property)
                 .ToArray();
 
+            var fullName = namedTypeSymbol.GetFullName();
+
             var nodes = new List<MemberDeclarationSyntax>(properties.Length);
+
+            if (ShouldGenerateCommandBindingProperty(namedTypeSymbol, desiredCommandInterface, platformCommandType))
+            {
+                var bindCommandPropertyDeclaration = GetBindCommandPropertyDeclaration(
+                    makeClassesPublic,
+                    fullName,
+                    platformCommandType!);
+                nodes.Add(bindCommandPropertyDeclaration);
+            }
 
             foreach (var prop in properties)
             {
-                var propertySymbol = prop as IPropertySymbol;
-
-                if (propertySymbol == null
+                if (prop is not IPropertySymbol propertySymbol
                     || propertySymbol.IsIndexer
                     || propertySymbol.IsOverride
                     || propertySymbol.DeclaredAccessibility != Accessibility.Public
@@ -55,23 +68,18 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-                // windows forms has an issue where some properties are provided as "new" instances instead of overridden
-                // we're getting build warnings for these.
-                if (ReplacesBaseProperty(propertySymbol, namedTypeSymbol))
+                // check for obsolete attribute
+                var attributes = propertySymbol.GetAttributes();
+                if (!includeObsoleteItems && attributes.Any(a => a.AttributeClass?.GetFullName().Equals(
+                        "global::System.ObsoleteAttribute",
+                        StringComparison.Ordinal) == true))
                 {
-                    // for now we skip, but we may adjust our model moving forward to make them "new".
                     continue;
                 }
 
-                var accessorList = new[]
-                {
-                    SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
-                        .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
-                    SyntaxFactory.AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
-                        .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
-                };
+                var treatAsNewImplementation = ReplacesBaseProperty(propertySymbol, namedTypeSymbol);
 
-                var fullName = namedTypeSymbol.GetFullName();
+                var accessorList = GetAccessorDeclarationSyntaxes();
 
                 var summary = XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
                     "Gets or sets the binding logic for {0}",
@@ -82,12 +90,53 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     accessorList,
                     summary,
                     desiredCommandInterface,
-                    makeClassesPublic);
+                    makeClassesPublic,
+                    treatAsNewImplementation);
 
                 nodes.Add(propSyntax);
             }
 
             return new SyntaxList<MemberDeclarationSyntax>(nodes);
+        }
+
+        private static bool ShouldGenerateCommandBindingProperty(INamedTypeSymbol namedTypeSymbol, string? desiredCommandInterface, string? platformCommandType)
+        {
+            return !string.IsNullOrWhiteSpace(desiredCommandInterface)
+                   && !string.IsNullOrWhiteSpace(platformCommandType)
+                   && namedTypeSymbol.Interfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal))
+                   // we don't want to generate the property if the base class already has it
+                   // this happens if someone incorrectly applies the interface on a subclass as well as the base class
+                   && (namedTypeSymbol.BaseType == null || namedTypeSymbol.BaseType.AllInterfaces.All(interfaceName => !interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal)));
+        }
+
+        private static AccessorDeclarationSyntax[] GetAccessorDeclarationSyntaxes()
+        {
+            var accessorList = new[]
+            {
+                SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+                    .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
+                SyntaxFactory.AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
+                    .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
+            };
+            return accessorList;
+        }
+
+        private static MemberDeclarationSyntax GetBindCommandPropertyDeclaration(
+            bool makeClassesPublic,
+            string fullName,
+            string platformCommandType)
+        {
+            var accessorList = GetAccessorDeclarationSyntaxes();
+
+            var summary = XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
+                "Gets or sets the command binding logic for {0}",
+                fullName);
+
+            return GetBindCommandPropertyDeclaration(
+                accessorList,
+                summary,
+                makeClassesPublic,
+                platformCommandType);
         }
 
         private static bool ReplacesBaseProperty(
@@ -107,7 +156,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 {
                     if (SymbolEqualityComparer.Default.Equals(nameMatch.Type, propertySymbol.Type))
                     {
-                        return true;
+                        return !propertySymbol.IsOverride;
                     }
                 }
 
@@ -117,24 +166,58 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return false;
         }
 
-        private static PropertyDeclarationSyntax GetPropertyDeclaration(
-            IPropertySymbol prop,
+        private static PropertyDeclarationSyntax GetBindCommandPropertyDeclaration(
             AccessorDeclarationSyntax[] accessorList,
             IEnumerable<SyntaxTrivia> summary,
-            string? desiredCommandInterface,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            string platformCommandType)
         {
-            TypeSyntax type = GetBindingTypeSyntax(prop, desiredCommandInterface);
+            TypeSyntax type = GetCommandBindingTypeSyntax(platformCommandType);
 
             var result = SyntaxFactory.PropertyDeclaration(
                     type,
-                    prop.Name)
+                    "BindCommand")
                 .AddModifiers(SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword))
                 .WithAccessorList(
                     SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)))
                 .WithLeadingTrivia(summary);
 
             return result;
+        }
+
+        private static PropertyDeclarationSyntax GetPropertyDeclaration(
+            IPropertySymbol prop,
+            AccessorDeclarationSyntax[] accessorList,
+            IEnumerable<SyntaxTrivia> summary,
+            string? desiredCommandInterface,
+            bool makeClassesPublic,
+            bool treatAsNewImplementation)
+        {
+            TypeSyntax type = GetBindingTypeSyntax(prop, desiredCommandInterface);
+
+            var modifiers =
+                SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword);
+
+            var result = SyntaxFactory.PropertyDeclaration(
+                    type,
+                    prop.Name)
+                .AddModifiers(modifiers)
+                .WithAccessorList(
+                    SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)))
+                .WithLeadingTrivia(summary);
+
+            if (treatAsNewImplementation)
+            {
+                result = result.AddModifiers(SyntaxFactory.Token(SyntaxKind.NewKeyword));
+            }
+
+            return result;
+        }
+
+        private static TypeSyntax GetCommandBindingTypeSyntax(string platformCommandType)
+        {
+            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.ICommandBinding<TViewModel>?");
+            return type;
         }
 
         private static TypeSyntax GetBindingTypeSyntax(
@@ -154,17 +237,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             IPropertySymbol prop,
             string? desiredCommandInterface)
         {
-            if (!string.IsNullOrWhiteSpace(desiredCommandInterface))
-            {
-                var propType = prop.Type;
-                var isCommand = propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat).Equals(desiredCommandInterface, StringComparison.Ordinal)
-                    || propType.AllInterfaces.Any(interfaceName => interfaceName.GetFullName().Equals(desiredCommandInterface, StringComparison.Ordinal));
-                if (isCommand)
-                {
-                    return "ICommandBinding";
-                }
-            }
-
             var bindingType = prop.IsReadOnly ? "One" : "OneOrTwo";
 
             return $"I{bindingType}WayBind";

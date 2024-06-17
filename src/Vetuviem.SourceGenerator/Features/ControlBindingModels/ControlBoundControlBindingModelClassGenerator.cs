@@ -31,7 +31,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool isDerivedType,
             string controlClassFullName,
             string platformName,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             return members;
         }
@@ -78,6 +80,10 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             sep = sep.AddRange(new[] { viewForParameter, viewModelParameter });
             return sep;
         }
+
+        /// <inheritdoc />
+        protected override SyntaxToken[] GetConstructorModifiers(bool makeClassesPublic) =>
+            [SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword)];
 
         /// <inheritdoc />
         protected override ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(

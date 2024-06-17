@@ -1,4 +1,4 @@
-// Copyright (c) 2022 DPVreony and Contributors. All rights reserved.
+﻿// Copyright (c) 2022 DPVreony and Contributors. All rights reserved.
 // DPVreony and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -7,20 +7,21 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Vetuviem.Avalonia.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.Testing;
 using Vetuviem.Winforms.SourceGenerator;
 using Xunit.Abstractions;
 
-namespace Vetuviem.IntegrationTests.ReactiveUI.Winforms
+namespace Vetuviem.IntegrationTests.ReactiveUI.Avalonia
 {
     /// <summary>
     /// Unit Tests for the ViewBinding Model Source Generator.
     /// </summary>
-    public static class WinformsViewBindingModelGeneratorTests
+    public static class AvaloniaViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WinformsControlBindingModelSourceGenerator, ControlBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<AvaloniaControlBindingModelSourceGenerator, ControlBindingModelGeneratorProcessor>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
@@ -29,12 +30,6 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Winforms
             public ExecuteMethod(ITestOutputHelper output)
                 : base(output)
             {
-            }
-
-            /// <inheritdoc />
-            protected override string GetProjectSourceCode()
-            {
-                return string.Empty;
             }
 
             /// <inheritdoc />
@@ -65,9 +60,9 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Winforms
             }
 
             /// <inheritdoc />
-            protected override Func<WinformsControlBindingModelSourceGenerator> GetFactory()
+            protected override Func<AvaloniaControlBindingModelSourceGenerator> GetFactory()
             {
-                return () => new WinformsControlBindingModelSourceGenerator();
+                return () => new AvaloniaControlBindingModelSourceGenerator();
             }
 
             private static string[]? GetPlatformAssemblyPaths()

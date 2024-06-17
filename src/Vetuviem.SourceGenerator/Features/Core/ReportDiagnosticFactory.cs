@@ -133,6 +133,13 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 $"No global namespace in Assembly or Module Symbol: {metadataReference.Display}");
         }
 
+        public static Diagnostic IsObsoleteType(INamedTypeSymbol namedTypeSymbol)
+        {
+            return InfoDiagnostic(
+                ReportDiagnosticIds.IsObsoleteType,
+                $"{namedTypeSymbol.GetFullName()} is obsolete");
+        }
+
         private static Diagnostic InfoDiagnostic(
             string id,
             string message)

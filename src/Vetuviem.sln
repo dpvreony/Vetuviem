@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vetuviem.Winforms.SourceGen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vetuviem.Avalonia.SourceGenerator", "Vetuviem.Avalonia.SourceGenerator\Vetuviem.Avalonia.SourceGenerator.csproj", "{00BC63E3-7FD3-483E-A2E0-CCB9897947E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReactiveUI.Avalonia.ViewToViewModelBindings", "ReactiveUI.Avalonia.ViewToViewModelBindings\ReactiveUI.Avalonia.ViewToViewModelBindings.csproj", "{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -441,6 +443,26 @@ Global
 		{00BC63E3-7FD3-483E-A2E0-CCB9897947E0}.Release|x64.Build.0 = Release|Any CPU
 		{00BC63E3-7FD3-483E-A2E0-CCB9897947E0}.Release|x86.ActiveCfg = Release|Any CPU
 		{00BC63E3-7FD3-483E-A2E0-CCB9897947E0}.Release|x86.Build.0 = Release|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Debug|ARM.Build.0 = Debug|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Debug|x64.Build.0 = Debug|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Debug|x86.Build.0 = Debug|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Release|ARM.ActiveCfg = Release|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Release|ARM.Build.0 = Release|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Release|ARM64.Build.0 = Release|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Release|x64.ActiveCfg = Release|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Release|x64.Build.0 = Release|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Release|x86.ActiveCfg = Release|Any CPU
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -455,6 +477,7 @@ Global
 		{15274B47-731E-4352-9CBD-2639C548D9A9} = {1B3AF279-0165-4820-947C-222B1AE379D9}
 		{3AA61E19-4EC3-4B5E-B7DB-3AB65F931F6C} = {1B3AF279-0165-4820-947C-222B1AE379D9}
 		{D8E39D69-FD9A-4ACF-8743-048EF199884C} = {106C1632-9789-48A3-B7D0-FE793EC46DB8}
+		{ED7AD6E7-AA52-419A-A127-6AEA2933EEFB} = {1B3AF279-0165-4820-947C-222B1AE379D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C43A2D4-5AAF-4846-936D-75F742D25A81}

@@ -22,6 +22,12 @@ namespace Vetuviem.SourceGenerator.Features.Core
         string GetBaseUiElement();
 
         /// <summary>
+        /// Gets the fully qualified type that platform uses for binding controls to commands.
+        /// </summary>
+        /// <returns>Fully qualified type name, or null if no command implementation in the platform.</returns>
+        string? GetCommandSourceInterface();
+
+        /// <summary>
         /// Gets the fully qualified type that platform uses for commands.
         /// </summary>
         /// <returns>Fully qualified type name, or null if no command implementation in the platform.</returns>

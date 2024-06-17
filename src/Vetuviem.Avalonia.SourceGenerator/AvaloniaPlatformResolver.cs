@@ -4,41 +4,40 @@
 
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.Blazor.SourceGenerator
+namespace Vetuviem.Avalonia.SourceGenerator
 {
     /// <summary>
     /// UI Platform resolver for Blazor.
     /// </summary>
-    public sealed class BlazorPlatformResolver : IPlatformResolver
+    public sealed class AvaloniaPlatformResolver : IPlatformResolver
     {
         /// <inheritdoc />
         public string[] GetAssemblyNames()
         {
             return new[]
             {
-                "Microsoft.AspNetCore.Components.dll",
-                "Microsoft.AspNetCore.Components.Forms.dll",
-                "Microsoft.AspNetCore.Components.Web.dll",
-                "ReactiveUI.Blazor.dll",
+                "Avalonia.Base.dll",
+                "Avalonia.Controls.dll",
+                "Avalonia.ReactiveUI.dll"
             };
         }
 
         /// <inheritdoc />
         public string GetBaseUiElement()
         {
-            return "global::Microsoft.AspNetCore.Components.IComponent";
+            return "global::Avalonia.Visual";
         }
 
         /// <inheritdoc />
         public string? GetCommandSourceInterface()
         {
-            return null;
+            return "global::Avalonia.Input.ICommandSource";
         }
 
         /// <inheritdoc />
-        public string? GetCommandInterface()
+        public string GetCommandInterface()
         {
-            return null;
+            return "global::Avalonia.Input.ICommand";
         }
     }
 }

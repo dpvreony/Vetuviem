@@ -21,6 +21,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="platformName">The name of the Platform code is being generated for.</param>
         /// <param name="rootNamespace">The root namespace to place the binding classes inside.</param>
         /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
+        /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
         /// <returns>Class Declaration Syntax Node.</returns>
         ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,
@@ -28,6 +29,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string? desiredCommandInterface,
             string platformName,
             string rootNamespace,
-            bool makeClassesPublic);
+            bool makeClassesPublic,
+            bool includeObsoleteItems,
+            string? platformCommandType);
     }
 }

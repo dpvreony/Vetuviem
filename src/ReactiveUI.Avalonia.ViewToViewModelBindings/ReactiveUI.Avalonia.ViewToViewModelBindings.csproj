@@ -1,15 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <WindowsSdkPackageVersion>10.0.19041.29</WindowsSdkPackageVersion>
-    <UseWinUI>true</UseWinUI>
+    <TargetFramework>net8.0-windows10.0.19041</TargetFramework>
     <LangVersion>9</LangVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>True</DebugSymbols>
-    <Platforms>x86;x64</Platforms>
-    <RuntimeIdentifiers>win-x64;win-x86;win-arm64</RuntimeIdentifiers>
     <!--
     If you're seeing CS8032 warnings, it can be because the upstream source generator dll has been rebuilt or you've changed the
     target frameworks in this project. Visual Studio seems to have a cache that invalidates. Reloading Visual Studio can
@@ -17,17 +11,19 @@
     -->
     <!--<WarningsAsErrors>8032,8785</WarningsAsErrors>-->
     <TreatWarningsAsErrors />
-    <!-- EnableCoreMrtTooling is workaround for: https://github.com/microsoft/WindowsAppSDK/issues/3939 -->
-    <EnableCoreMrtTooling Condition=" '$(BuildingInsideVisualStudio)' != 'true' ">false</EnableCoreMrtTooling>
     <IsPackable>False</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240607001" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vetuviem.Avalonia.SourceGenerator\Vetuviem.Avalonia.SourceGenerator.csproj" OutputItemType="Analyzer" />
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
 
+  <Import Project="..\Vetuviem.SourceGenerator\Vetuviem-SourceGenerator.props" />
+  <PropertyGroup>
+    <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
+  </PropertyGroup>
 </Project>

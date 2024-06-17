@@ -7,12 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.10" />
     <PackageReference Include="MahApps.Metro" Version="2.4.10" />
     <PackageReference Include="MahApps.Metro.SimpleChildWindow" Version="2.2.1" />
     <PackageReference Include="ReactiveUI.WPF" Version="20.1.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vetuviem.Avalonia.SourceGenerator\Vetuviem.Avalonia.SourceGenerator.csproj" />
+    <ProjectReference Include="..\Vetuviem.Maui.SourceGenerator\Vetuviem.Maui.SourceGenerator.csproj" />
     <ProjectReference Include="..\Vetuviem.Testing\Vetuviem.Testing.csproj" />
     <ProjectReference Include="..\Vetuviem.Winforms.SourceGenerator\Vetuviem.Winforms.SourceGenerator.csproj" />
     <ProjectReference Include="..\Vetuviem.WinUi.SourceGenerator\Vetuviem.WinUi.SourceGenerator.csproj" />

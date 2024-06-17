@@ -120,26 +120,44 @@ namespace Vetuviem.SourceGenerator
 
             var configOptions = context.AnalyzerConfigOptions;
             var globalOptions = configOptions.GlobalOptions;
-            globalOptions.TryGetBuildPropertyValue("Vetuviem_Root_Namespace", out var rootNamespace);
+            globalOptions.TryGetBuildPropertyValue(
+                "Vetuviem_Root_Namespace",
+                out var rootNamespace);
             var namespaceName = GetNamespace(rootNamespace);
 
-            globalOptions.TryGetBuildPropertyValue("Vetuviem_Make_Classes_Public", out var makeClassesPublicAsString);
+            globalOptions.TryGetBuildPropertyValue(
+                "Vetuviem_Make_Classes_Public",
+                out var makeClassesPublicAsString);
             bool.TryParse(makeClassesPublicAsString, out var makeClassesPublic);
 
-            globalOptions.TryGetBuildPropertyValue("Vetuviem_Assemblies", out var assemblies);
+            globalOptions.TryGetBuildPropertyValue(
+                "Vetuviem_Assemblies",
+                out var assemblies);
             var assembliesArray = assemblies?.Split(
                 [','],
                 StringSplitOptions.RemoveEmptyEntries)
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .ToArray();
 
-            globalOptions.TryGetBuildPropertyValue("Vetuviem_Assembly_Mode", out var assemblyModeAsString);
+            globalOptions.TryGetBuildPropertyValue(
+                "Vetuviem_Assembly_Mode",
+                out var assemblyModeAsString);
 
             var assemblyMode = GetAssemblyMode(assemblyModeAsString);
 
             // base type name only used if passing a custom set of assemblies to search for.
             // allows for 3rd parties to use the generator and produce a custom namespace that inherits off the root, or custom namespace.
-            globalOptions.TryGetBuildPropertyValue("Vetuviem_Base_Namespace", out var baseType);
+            globalOptions.TryGetBuildPropertyValue(
+                "Vetuviem_Base_Namespace",
+                out var baseType);
+
+            globalOptions.TryGetBuildPropertyValue(
+                "Vetuviem_Include_Obsolete_Items",
+                out var includeObsoleteItemsAsString);
+            bool.TryParse(
+                includeObsoleteItemsAsString,
+                out var includeObsoleteItems);
+            // includeObsoleteItems = true;
 
             var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(namespaceName));
 
@@ -160,7 +178,10 @@ namespace Vetuviem.SourceGenerator
             //}
 #endif
 
-            var assembliesOfInterest = GetAssembliesOfInterest(platformResolver, assembliesArray, assemblyMode);
+            var assembliesOfInterest = GetAssembliesOfInterest(
+                platformResolver,
+                assembliesArray,
+                assemblyMode);
             if (assembliesOfInterest.Length == 0)
             {
                 return null;
@@ -177,12 +198,16 @@ namespace Vetuviem.SourceGenerator
             if (referencesOfInterest.Length != assembliesOfInterest.Length)
             {
                 // not got the expected count back, drop out.
-                context.ReportDiagnostic(ReportDiagnosticFactory.ReferencesOfInterestCountMismatch(assembliesOfInterest.Length, referencesOfInterest.Length));
+                context.ReportDiagnostic(ReportDiagnosticFactory.ReferencesOfInterestCountMismatch(
+                    assembliesOfInterest.Length,
+                    referencesOfInterest.Length));
                 return namespaceDeclaration;
             }
 
             var desiredBaseType = platformResolver.GetBaseUiElement();
-            var desiredNameWithoutGlobal = desiredBaseType.Replace("global::", string.Empty);
+            var desiredNameWithoutGlobal = desiredBaseType.Replace(
+                "global::",
+                string.Empty);
             var desiredBaseTypeSymbolMatch = compilation.GetTypeByMetadataName(desiredNameWithoutGlobal);
 
             if (desiredBaseTypeSymbolMatch == null)
@@ -205,7 +230,7 @@ namespace Vetuviem.SourceGenerator
                     return namespaceDeclaration;
             }
 
-            var desiredCommandInterface = platformResolver.GetCommandInterface();
+            var desiredCommandInterface = platformResolver.GetCommandSourceInterface();
 
             var generatorProcessor = new TGeneratorProcessor();
 
@@ -221,7 +246,9 @@ namespace Vetuviem.SourceGenerator
                 desiredCommandInterface,
                 platformName,
                 namespaceName,
-                makeClassesPublic);
+                makeClassesPublic,
+                includeObsoleteItems,
+                platformResolver.GetCommandInterface());
 
             return result;
         }
@@ -233,7 +260,9 @@ namespace Vetuviem.SourceGenerator
                 return AssemblyMode.Replace;
             }
 
-            if ( !Enum.TryParse<AssemblyMode>(assemblyModeAsString, out var assemblyMode))
+            if ( !Enum.TryParse<AssemblyMode>(
+                    assemblyModeAsString,
+                    out var assemblyMode))
             {
                 return assemblyMode;
             }

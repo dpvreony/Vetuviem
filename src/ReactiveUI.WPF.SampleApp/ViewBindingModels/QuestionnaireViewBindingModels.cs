@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using ReactiveUI.WPF.SampleApp.ViewModels;
 using ReactiveUI.WPF.SampleApp.Views;
@@ -25,7 +26,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
             // launch interaction
             yield return new ButtonControlBindingModel<QuestionnaireView, QuestionnaireViewModel>(vw => vw.LaunchInteraction)
             {
-                Command = new CommandBinding<QuestionnaireViewModel>(vm => vm.LaunchInteraction)
+                BindCommand = new CommandBinding<QuestionnaireViewModel>(vm => vm.LaunchInteraction)
             };
 
             // Forename

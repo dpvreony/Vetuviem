@@ -24,7 +24,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string? desiredCommandInterface,
             string platformName,
             string rootNamespace,
-            bool makeClassesPublic)
+            bool makeClassesPublic,
+            bool includeObsoleteItems,
+            string? platformCommandType)
         {
             var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
 
@@ -51,7 +53,16 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, isDerivedType, makeClassesPublic, typeParameterList));
 
-            members = ApplyMembers(members, namedTypeSymbol, desiredCommandInterface, isDerivedType, controlClassFullName, platformName, makeClassesPublic);
+            members = ApplyMembers(
+                members,
+                namedTypeSymbol,
+                desiredCommandInterface,
+                isDerivedType,
+                controlClassFullName,
+                platformName,
+                makeClassesPublic,
+                includeObsoleteItems,
+                platformCommandType);
 
             return classDeclaration
                 .WithModifiers(modifiers)
@@ -172,6 +183,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="controlClassFullName">Full Name of the Control Class.</param>
         /// <param name="platformName">Friendly Name for the platform.</param>
         /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
+        /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
         /// <returns>Modified Syntax List of Member declarations.</returns>
         protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(
             SyntaxList<MemberDeclarationSyntax> members,
@@ -180,7 +192,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool isDerivedType,
             string controlClassFullName,
             string platformName,
-            bool makeClassesPublic);
+            bool makeClassesPublic,
+            bool includeObsoleteItems,
+            string? platformCommandType);
 
         /// <summary>
         /// Gets the class name identifier from a named type symbol.
@@ -260,9 +274,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             }
         }
 
-        private MemberDeclarationSyntax GetConstructorMethod(INamedTypeSymbol namedTypeSymbol,
+        private MemberDeclarationSyntax GetConstructorMethod(
+            INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
-            bool makeClassesPublic, TypeParameterListSyntax typeParameterList)
+            bool makeClassesPublic,
+            TypeParameterListSyntax typeParameterList)
         {
             var className = GetClassNameIdentifier(namedTypeSymbol);
             var body = GetConstructorBody(isDerivedType);
@@ -292,15 +308,19 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 ("viewExpression", "expression representing the control on the view to bind to.")
             };
 
+            var modifiers = GetConstructorModifiers(makeClassesPublic);
+
             var declaration = SyntaxFactory.ConstructorDeclaration(className)
                 .WithInitializer(initializer)
                 .WithParameterList(parameters)
-                .AddModifiers(SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword))
+                .AddModifiers(modifiers)
                 .AddBodyStatements(body.ToArray())
                 .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummaryComment(summaryText, summaryParameters));
 
             return declaration;
         }
+
+        protected abstract SyntaxToken[] GetConstructorModifiers(bool makeClassesPublic);
 
         private TypeParameterListSyntax GetTypeParameterListSyntax(INamedTypeSymbol namedTypeSymbol)
         {
