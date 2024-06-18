@@ -32,17 +32,17 @@ namespace Vetuviem.SourceGenerator
         /// <inheritdoc />
         public void Execute(GeneratorExecutionContext context)
         {
-            var settings = GetConfiguration(context);
-            GenerateFromAssemblies(context);
-            GenerateFromProjectSourceCode(context);
+            var configurationModel = GetConfiguration(context);
+            GenerateFromAssemblies(context, configurationModel);
+            GenerateFromProjectSourceCode(context, configurationModel);
         }
 
-        private static ConfigurationModel GetConfiguration(GeneratorExecutionContext context)
-        {
-            throw new NotImplementedException();
-        }
+        private static ConfigurationModel GetConfiguration(GeneratorExecutionContext context) =>
+            ConfigurationFactory.Create(context);
 
-        private void GenerateFromProjectSourceCode(GeneratorExecutionContext context)
+        private void GenerateFromProjectSourceCode(
+            GeneratorExecutionContext context,
+            ConfigurationModel configurationModel)
         {
             var compilation = context.Compilation;
             var syntaxTrees = compilation.SyntaxTrees;
@@ -52,13 +52,15 @@ namespace Vetuviem.SourceGenerator
             }
         }
 
-        private void GenerateFromAssemblies(GeneratorExecutionContext context)
+        private void GenerateFromAssemblies(
+            GeneratorExecutionContext context,
+            ConfigurationModel configurationModel)
         {
             try
             {
                 context.ReportDiagnostic(ReportDiagnosticFactory.StartingSourceGenerator());
 
-                var memberDeclarationSyntax = GenerateAsync(context, context.CancellationToken);
+                var memberDeclarationSyntax = Generate(context, configurationModel,  context.CancellationToken);
 
                 var nullableDirectiveTrivia = SyntaxFactory.NullableDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.EnableKeyword), true);
                 var trivia = SyntaxFactory.Trivia(nullableDirectiveTrivia);
@@ -131,8 +133,9 @@ namespace Vetuviem.SourceGenerator
         /// <param name="context">The transformation context being generated for.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The generated member syntax to be added to the project.</returns>
-        private MemberDeclarationSyntax? GenerateAsync(
+        private MemberDeclarationSyntax? Generate(
             GeneratorExecutionContext context,
+            ConfigurationModel configurationModel,
             CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -140,46 +143,7 @@ namespace Vetuviem.SourceGenerator
                 return null;
             }
 
-            var configOptions = context.AnalyzerConfigOptions;
-            var globalOptions = configOptions.GlobalOptions;
-            globalOptions.TryGetBuildPropertyValue(
-                "Vetuviem_Root_Namespace",
-                out var rootNamespace);
-            var namespaceName = GetNamespace(rootNamespace);
-
-            globalOptions.TryGetBuildPropertyValue(
-                "Vetuviem_Make_Classes_Public",
-                out var makeClassesPublicAsString);
-            bool.TryParse(makeClassesPublicAsString, out var makeClassesPublic);
-
-            globalOptions.TryGetBuildPropertyValue(
-                "Vetuviem_Assemblies",
-                out var assemblies);
-            var assembliesArray = assemblies?.Split(
-                [','],
-                StringSplitOptions.RemoveEmptyEntries)
-                .Where(s => !string.IsNullOrWhiteSpace(s))
-                .ToArray();
-
-            globalOptions.TryGetBuildPropertyValue(
-                "Vetuviem_Assembly_Mode",
-                out var assemblyModeAsString);
-
-            var assemblyMode = GetAssemblyMode(assemblyModeAsString);
-
-            // base type name only used if passing a custom set of assemblies to search for.
-            // allows for 3rd parties to use the generator and produce a custom namespace that inherits off the root, or custom namespace.
-            globalOptions.TryGetBuildPropertyValue(
-                "Vetuviem_Base_Namespace",
-                out var baseType);
-
-            globalOptions.TryGetBuildPropertyValue(
-                "Vetuviem_Include_Obsolete_Items",
-                out var includeObsoleteItemsAsString);
-            bool.TryParse(
-                includeObsoleteItemsAsString,
-                out var includeObsoleteItems);
-            // includeObsoleteItems = true;
+            var namespaceName = GetNamespace(configurationModel.RootNamespace);
 
             var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(namespaceName));
 
@@ -202,8 +166,8 @@ namespace Vetuviem.SourceGenerator
 
             var assembliesOfInterest = GetAssembliesOfInterest(
                 platformResolver,
-                assembliesArray,
-                assemblyMode);
+                configurationModel.AssembliesArray,
+                configurationModel.AssemblyMode);
             if (assembliesOfInterest.Length == 0)
             {
                 return null;
@@ -268,8 +232,8 @@ namespace Vetuviem.SourceGenerator
                 desiredCommandInterface,
                 platformName,
                 namespaceName,
-                makeClassesPublic,
-                includeObsoleteItems,
+                configurationModel.MakeClassesPublic,
+                configurationModel.IncludeObsoleteItems,
                 platformResolver.GetCommandInterface());
 
             return result;
@@ -277,16 +241,16 @@ namespace Vetuviem.SourceGenerator
 
         private static string[] GetAssembliesOfInterest(
             IPlatformResolver platformResolver,
-            string[]? assembliesArray,
+            IReadOnlyCollection<string>? assembliesArray,
             AssemblyMode assemblyMode)
         {
             var assembliesOfInterest = platformResolver.GetAssemblyNames();
-            if (assembliesArray?.Length > 0)
+            if (assembliesArray?.Count > 0)
             {
                 switch (assemblyMode)
                 {
                     case AssemblyMode.Replace:
-                        assembliesOfInterest = assembliesArray;
+                        assembliesOfInterest = assembliesArray.ToArray();
                         break;
                     case AssemblyMode.Extend:
                         assembliesOfInterest = assembliesOfInterest.Concat(assembliesArray).ToArray();

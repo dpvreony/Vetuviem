@@ -17,7 +17,7 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
     public sealed record ConfigurationModel(
         string? RootNamespace,
         bool MakeClassesPublic,
-        IReadOnlyCollection<string> AssembliesArray,
+        IReadOnlyCollection<string>? AssembliesArray,
         AssemblyMode AssemblyMode,
         string? BaseType,
         bool IncludeObsoleteItems);
