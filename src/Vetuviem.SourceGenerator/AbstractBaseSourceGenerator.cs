@@ -32,12 +32,24 @@ namespace Vetuviem.SourceGenerator
         /// <inheritdoc />
         public void Execute(GeneratorExecutionContext context)
         {
+            var settings = GetConfiguration(context);
             GenerateFromAssemblies(context);
             GenerateFromProjectSourceCode(context);
         }
 
+        private static ConfigurationModel GetConfiguration(GeneratorExecutionContext context)
+        {
+            throw new NotImplementedException();
+        }
+
         private void GenerateFromProjectSourceCode(GeneratorExecutionContext context)
         {
+            var compilation = context.Compilation;
+            var syntaxTrees = compilation.SyntaxTrees;
+            foreach (var syntaxTree in syntaxTrees)
+            {
+                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+            }
         }
 
         private void GenerateFromAssemblies(GeneratorExecutionContext context)
@@ -261,23 +273,6 @@ namespace Vetuviem.SourceGenerator
                 platformResolver.GetCommandInterface());
 
             return result;
-        }
-
-        private static AssemblyMode GetAssemblyMode(string? assemblyModeAsString)
-        {
-            if (string.IsNullOrWhiteSpace(assemblyModeAsString))
-            {
-                return AssemblyMode.Replace;
-            }
-
-            if ( !Enum.TryParse<AssemblyMode>(
-                    assemblyModeAsString,
-                    out var assemblyMode))
-            {
-                return assemblyMode;
-            }
-
-            throw new InvalidOperationException("Invalid assembly mode.");
         }
 
         private static string[] GetAssembliesOfInterest(
