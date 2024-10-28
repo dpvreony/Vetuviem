@@ -112,7 +112,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     .Replace("global::", string.Empty);
 
             var baseViewBindingModelClassName =
-                $"global::{rootNamespace}.{subNameSpace}.Unbound{namedTypeSymbol.Name}ControlBindingModel";
+                $"global::{rootNamespace}.{subNameSpace}.AbstractUnbound{namedTypeSymbol.Name}ControlBindingModel";
 
             var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
 
