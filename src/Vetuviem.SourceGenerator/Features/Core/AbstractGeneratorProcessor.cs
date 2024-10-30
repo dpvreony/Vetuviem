@@ -30,6 +30,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="rootNamespace">The root namespace to place the binding classes inside.</param>
         /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
         /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
+        /// <param name="platformCommandType"></param>
+        /// <param name="loggingFramework"></param>
         /// <returns>Namespace declaration containing generated code.</returns>
         public NamespaceDeclarationSyntax GenerateNamespaceDeclaration(NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference[] assembliesOfInterest,
@@ -42,7 +44,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string rootNamespace,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            LoggingFramework loggingFramework)
         {
             if (namespaceDeclaration == null)
             {
@@ -91,7 +94,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     rootNamespace,
                     makeClassesPublic,
                     includeObsoleteItems,
-                    platformCommandType);
+                    platformCommandType,
+                    loggingFramework);
             }
 
             return namespaceDeclaration;
@@ -128,7 +132,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string rootNamespace,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            LoggingFramework loggingFramework)
         {
             var fullName = namedTypeSymbol.GetFullName();
 
@@ -183,7 +188,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     rootNamespace,
                     makeClassesPublic,
                     includeObsoleteItems,
-                    platformCommandType);
+                    platformCommandType,
+                    loggingFramework);
 
                 memberDeclarationSyntaxes.Add(generatedClass);
             }
@@ -239,7 +245,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string rootNamespace,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            LoggingFramework loggingFramework)
         {
             reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfAssembly(metadataReference));
 
@@ -275,7 +282,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     rootNamespace,
                     makeClassesPublic,
                     includeObsoleteItems,
-                    platformCommandType);
+                    platformCommandType,
+                    loggingFramework);
 
                 if (nestedDeclarationSyntax != null)
                 {
@@ -309,7 +317,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string rootNamespace,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            LoggingFramework loggingFramework)
         {
             reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfNamespace(namespaceSymbol));
 
@@ -332,7 +341,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     rootNamespace,
                     makeClassesPublic,
                     includeObsoleteItems,
-                    platformCommandType);
+                    platformCommandType,
+                    loggingFramework);
             }
 
             var nestedSymbols = namespaceSymbol.GetNamespaceMembers();
@@ -351,7 +361,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     rootNamespace,
                     makeClassesPublic,
                     includeObsoleteItems,
-                    platformCommandType);
+                    platformCommandType,
+                    loggingFramework);
 
                 if (nestedNamespace != null)
                 {

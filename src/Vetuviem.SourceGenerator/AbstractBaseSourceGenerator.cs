@@ -157,6 +157,18 @@ namespace Vetuviem.SourceGenerator
             bool.TryParse(
                 includeObsoleteItemsAsString,
                 out var includeObsoleteItems);
+
+            var loggingFramework = LoggingFramework.None;
+            if (globalOptions.TryGetBuildPropertyValue(
+                    "Vetuviem_Logging_Framework",
+                    out var loggingFrameworkAsString))
+            {
+                if (!string.IsNullOrWhiteSpace(loggingFrameworkAsString) && !Enum.TryParse(loggingFrameworkAsString, true, out loggingFramework))
+                {
+                    throw new InvalidOperationException($"Invalid Vetuviem_Logging_Framework in project file: {loggingFrameworkAsString}");
+                }
+            }
+
             // includeObsoleteItems = true;
 
             var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(namespaceName));
@@ -248,7 +260,8 @@ namespace Vetuviem.SourceGenerator
                 namespaceName,
                 makeClassesPublic,
                 includeObsoleteItems,
-                platformResolver.GetCommandInterface());
+                platformResolver.GetCommandInterface(),
+                loggingFramework);
 
             return result;
         }

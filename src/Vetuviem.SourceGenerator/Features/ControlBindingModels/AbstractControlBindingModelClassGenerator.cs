@@ -18,15 +18,14 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
     public abstract class AbstractControlBindingModelClassGenerator : IClassGenerator
     {
         /// <inheritdoc />
-        public ClassDeclarationSyntax GenerateClass(
-            INamedTypeSymbol namedTypeSymbol,
+        public ClassDeclarationSyntax GenerateClass(INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string? desiredCommandInterface,
             string platformName,
             string rootNamespace,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType, LoggingFramework loggingFramework)
         {
             var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
 
