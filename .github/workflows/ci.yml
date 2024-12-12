@@ -19,30 +19,11 @@ jobs:
       DOTNET_GENERATE_ASPNET_CERTIFICATE: false
       solutionpath: src\Vetuviem.sln
       unittestprojectpath: src\Vetuviem.UnitTests\Vetuviem.UnitTests.csproj
-    steps:
-    #- name: Get Latest Visual Studio Version
-    #  shell: bash
-    #  run: |
-    #    dotnet tool update -g dotnet-vs
-    #    vs where release
-    #    vs update release Enterprise
-    #    vs modify release Enterprise +mobile +desktop +uwp +web
-    #    vs where release
-        
+    steps:        
     - name: Checkout code
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       with:
         fetch-depth: 0
-
-    #- name: Setup .NET Core 3.1
-    #  uses: actions/setup-dotnet@v3
-    #  with:
-    #    dotnet-version: 3.1.x
-
-    #- name: Setup .NET 5
-    #  uses: actions/setup-dotnet@v3
-    #  with:
-    #    dotnet-version: 5.0.x
 
     - name: Setup .NET 8
       uses: actions/setup-dotnet@v4
@@ -55,18 +36,6 @@ jobs:
         dotnet workload install android ios tvos macos maui wasm-tools
         dotnet workload list
         
-    - name: Install Windows SDK 10.0.16299
-      shell: pwsh
-      run: |
-        Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/p/?linkid=864422 -OutFile winsdk.exe
-        $startInfo = New-Object System.Diagnostics.ProcessStartInfo
-        $startInfo.FileName = "winsdk.exe"
-        $startInfo.Arguments = "/norestart /quiet"
-        $process = New-Object System.Diagnostics.Process
-        $process.StartInfo = $startInfo
-        $process.Start()
-        $process.WaitForExit()
-
     - name: NBGV
       id: nbgv
       uses: dotnet/nbgv@master
