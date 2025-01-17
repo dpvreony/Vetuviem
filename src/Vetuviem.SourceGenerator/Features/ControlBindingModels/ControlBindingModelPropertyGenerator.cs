@@ -148,16 +148,22 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             while (baseType != null)
             {
                 var nameMatches = baseType.GetMembers()
-                    .Where(x => x.Kind == SymbolKind.Property && x.Name.Equals(wantedName, StringComparison.Ordinal))
+                    .Where(x => x.Kind == SymbolKind.Property && x.Name.Equals(wantedName, StringComparison.Ordinal) && x.DeclaredAccessibility == Accessibility.Public)
                     .Cast<IPropertySymbol>()
                     .ToImmutableArray();
 
-                foreach (var nameMatch in nameMatches)
+                if (nameMatches.Length > 0)
                 {
-                    if (SymbolEqualityComparer.Default.Equals(nameMatch.Type, propertySymbol.Type))
+                    foreach (var nameMatch in nameMatches)
                     {
-                        return !propertySymbol.IsOverride;
+                        if (SymbolEqualityComparer.Default.Equals(nameMatch.Type, propertySymbol.Type))
+                        {
+                            return !propertySymbol.IsOverride;
+                        }
                     }
+
+                    // we didn't match by type, so assume it's a new implementation on a new type.
+                    return true;
                 }
 
                 baseType = baseType.BaseType;
