@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Update="Xunit.StaFact" Version="1.2.69" />
   </ItemGroup>
 
