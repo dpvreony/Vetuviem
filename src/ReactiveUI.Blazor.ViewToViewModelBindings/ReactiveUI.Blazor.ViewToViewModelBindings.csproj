@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.15" ReferenceOutputAssembly="true" />
-    <PackageReference Include="ReactiveUI.Blazor" Version="20.1.63" ReferenceOutputAssembly="true" />
+    <PackageReference Include="ReactiveUI.Blazor" Version="20.2.45" ReferenceOutputAssembly="true" />
   </ItemGroup>
 
   <ItemGroup>

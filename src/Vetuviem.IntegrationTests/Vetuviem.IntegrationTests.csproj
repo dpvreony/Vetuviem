@@ -10,7 +10,7 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.7" />
     <PackageReference Include="MahApps.Metro" Version="2.4.10" />
     <PackageReference Include="MahApps.Metro.SimpleChildWindow" Version="2.2.1" />
-    <PackageReference Include="ReactiveUI.WPF" Version="20.1.63" />
+    <PackageReference Include="ReactiveUI.WPF" Version="20.2.45" />
   </ItemGroup>
 
   <ItemGroup>
