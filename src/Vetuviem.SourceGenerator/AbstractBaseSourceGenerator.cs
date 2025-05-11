@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Vetuviem.SourceGenerator.Features.Configuration;
 using Vetuviem.SourceGenerator.Features.Core;
 
@@ -21,22 +23,49 @@ namespace Vetuviem.SourceGenerator
     /// Base logic for a source generator.
     /// </summary>
     /// <typeparam name="TGeneratorProcessor">The type for the generator processor.</typeparam>
-    public abstract class AbstractBaseSourceGenerator<TGeneratorProcessor> : ISourceGenerator
+    public abstract class AbstractBaseSourceGenerator<TGeneratorProcessor> : IIncrementalGenerator
         where TGeneratorProcessor : AbstractGeneratorProcessor, new()
     {
-        /// <inheritdoc />
-        public void Initialize(GeneratorInitializationContext context)
+        public void Initialize(IncrementalGeneratorInitializationContext context)
         {
+            var trigger = context.AnalyzerConfigOptionsProvider
+                .Combine(context.ParseOptionsProvider)
+                .Combine(context.MetadataReferencesProvider.Collect())
+                .Combine(context.CompilationProvider)
+                .Select((tuple, _) => 
+                {
+                    (
+                        (
+                            (
+                            AnalyzerConfigOptionsProvider analyzerConfigOptionsProvider,
+                            ParseOptions parseOptionsProvider),
+                        ImmutableArray<MetadataReference> metadataReferencesProvider),
+                    Compilation compilationProvider) = tuple;
+
+                    return (analyzerConfigOptionsProvider, parseOptionsProvider, metadataReferencesProvider, compilationProvider);
+                });
+
+            context.RegisterImplementationSourceOutput(
+                trigger, (productionContext, tuple) => Execute(
+                    productionContext,
+                    tuple.analyzerConfigOptionsProvider,
+                    tuple.parseOptionsProvider,
+                    tuple.metadataReferencesProvider,
+                    tuple.compilationProvider));
         }
 
-        /// <inheritdoc />
-        public void Execute(GeneratorExecutionContext context)
+        private void Execute(
+            SourceProductionContext context,
+            AnalyzerConfigOptionsProvider analyzerConfigOptionsProvider,
+            ParseOptions parseOptions,
+            ImmutableArray<MetadataReference> metadataReferencesProvider,
+            Compilation compilation)
         {
             try
             {
                 context.ReportDiagnostic(ReportDiagnosticFactory.StartingSourceGenerator());
 
-                var memberDeclarationSyntax = GenerateAsync(context, context.CancellationToken);
+                var memberDeclarationSyntax = GenerateAsync(context, analyzerConfigOptionsProvider, metadataReferencesProvider, compilation ,context.CancellationToken);
 
                 var nullableDirectiveTrivia = SyntaxFactory.NullableDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.EnableKeyword), true);
                 var trivia = SyntaxFactory.Trivia(nullableDirectiveTrivia);
@@ -48,8 +77,6 @@ namespace Vetuviem.SourceGenerator
                 }
 
                 memberDeclarationSyntax = memberDeclarationSyntax.WithLeadingTrivia(leadingSyntaxTriviaList);
-
-                var parseOptions = context.ParseOptions;
 
                 var cu = SyntaxFactory.CompilationUnit()
                     .AddMembers(memberDeclarationSyntax)
@@ -107,10 +134,14 @@ namespace Vetuviem.SourceGenerator
         /// Create the syntax tree representing the expansion of some member to which this attribute is applied.
         /// </summary>
         /// <param name="context">The transformation context being generated for.</param>
+        /// <param name="analyzerConfigOptionsProvider">Options from an analyzer config file keyed on a source file.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The generated member syntax to be added to the project.</returns>
         private MemberDeclarationSyntax? GenerateAsync(
-            GeneratorExecutionContext context,
+            SourceProductionContext context,
+            AnalyzerConfigOptionsProvider analyzerConfigOptionsProvider,
+            ImmutableArray<MetadataReference> metadataReferencesProvider,
+            Compilation compilation,
             CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -118,8 +149,7 @@ namespace Vetuviem.SourceGenerator
                 return null;
             }
 
-            var configOptions = context.AnalyzerConfigOptions;
-            var globalOptions = configOptions.GlobalOptions;
+            var globalOptions = analyzerConfigOptionsProvider.GlobalOptions;
             globalOptions.TryGetBuildPropertyValue(
                 "Vetuviem_Root_Namespace",
                 out var rootNamespace);
@@ -161,8 +191,6 @@ namespace Vetuviem.SourceGenerator
 
             var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(namespaceName));
 
-            var compilation = context.Compilation;
-
             var platformResolver = GetPlatformResolver();
 
 #if PLATFORMASSEMBLIES
@@ -193,7 +221,7 @@ namespace Vetuviem.SourceGenerator
             }
 
             var referencesOfInterest = GetReferencesOfInterest(
-                compilation.References,
+                metadataReferencesProvider,
                 assembliesOfInterest).ToArray();
             if (referencesOfInterest.Length != assembliesOfInterest.Length)
             {

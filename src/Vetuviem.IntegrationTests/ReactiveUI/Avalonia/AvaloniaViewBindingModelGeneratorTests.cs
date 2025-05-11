@@ -46,10 +46,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Avalonia
             /// <inheritdoc />
             protected override void AddReferenceAssemblies(IList<MetadataReference> metadataReferences)
             {
-                if (metadataReferences == null)
-                {
-                    throw new ArgumentNullException(nameof(metadataReferences));
-                }
+                ArgumentNullException.ThrowIfNull(metadataReferences);
 
                 var trustedAssembliesPaths = GetPlatformAssemblyPaths();
                 if (trustedAssembliesPaths == null)
