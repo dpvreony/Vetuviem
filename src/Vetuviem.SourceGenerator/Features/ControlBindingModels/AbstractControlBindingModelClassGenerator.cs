@@ -162,7 +162,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-                yield return SyntaxFactory.ParseTypeName(typeParameterSymbol.ToDisplayString());
+
+                string typeName = (typeParameterSymbol.TypeKind != TypeKind.TypeParameter ? "global::" : string.Empty)
+                              + typeParameterSymbol.ToDisplayString();
+
+                yield return SyntaxFactory.ParseTypeName(typeName);
             }
         }
 
