@@ -433,7 +433,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
                 var invocationStatement = RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
                     $"this",
-                    propertySymbol.Name,
+                    $"@{propertySymbol.Name}",
                     "ApplyBinding",
                     invokeArgs);
 
@@ -552,7 +552,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var invocationStatement = RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
                 $"this",
-                propertySymbol.Name,
+                $"@{propertySymbol.Name}",
                 "ApplyBinding",
                 invokeArgs);
             return invocationStatement;
