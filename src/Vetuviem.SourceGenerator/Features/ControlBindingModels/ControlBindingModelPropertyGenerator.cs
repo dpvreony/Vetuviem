@@ -206,7 +206,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var result = SyntaxFactory.PropertyDeclaration(
                     type,
-                    prop.Name)
+                    "@" + prop.Name)
                 .AddModifiers(modifiers)
                 .WithAccessorList(
                     SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)))
