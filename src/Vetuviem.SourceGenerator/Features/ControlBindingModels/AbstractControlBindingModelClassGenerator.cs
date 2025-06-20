@@ -163,7 +163,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 }
 
 
-                string typeName = (typeParameterSymbol.TypeKind != TypeKind.TypeParameter ? "global::" : string.Empty)
+                string typeName = (typeParameterSymbol.TypeKind != TypeKind.TypeParameter && typeParameterSymbol.SpecialType == SpecialType.None ? "global::" : string.Empty)
                               + typeParameterSymbol.ToDisplayString();
 
                 yield return SyntaxFactory.ParseTypeName(typeName);
