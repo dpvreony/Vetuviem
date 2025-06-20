@@ -83,7 +83,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
                 var summary = XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
                     "Gets or sets the binding logic for {0}",
-                    $"{fullName}.{prop.Name}");
+                    $"{fullName}.@{prop.Name}");
 
                 var propSyntax = GetPropertyDeclaration(
                     propertySymbol,
