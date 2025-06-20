@@ -70,7 +70,7 @@ namespace Vetuviem.Testing
                     comp,
                     analyzerConfigOptionsProvider,
                     out var generatorDiags,
-                    instance);
+                    instance.AsSourceGenerator());
 
                 _logger.LogInformation($"Generator Diagnostic count : {generatorDiags.Length}");
 
