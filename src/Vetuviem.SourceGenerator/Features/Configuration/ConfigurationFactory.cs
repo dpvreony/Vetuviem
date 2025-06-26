@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
 using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.Features.Configuration
 {
     public static class ConfigurationFactory
     {
-        public static ConfigurationModel Create(GeneratorExecutionContext context)
+        public static ConfigurationModel Create(AnalyzerConfigOptionsProvider analyzerConfigOptionsProvider)
         {
-            var configOptions = context.AnalyzerConfigOptions;
-            var globalOptions = configOptions.GlobalOptions;
+            var globalOptions = analyzerConfigOptionsProvider.GlobalOptions;
             globalOptions.TryGetBuildPropertyValue(
                 "Vetuviem_Root_Namespace",
                 out var rootNamespace);

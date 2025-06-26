@@ -61,35 +61,22 @@ namespace Vetuviem.SourceGenerator
             ImmutableArray<MetadataReference> metadataReferencesProvider,
             Compilation compilation)
         {
-            var configurationModel = GetConfiguration(context);
-            GenerateFromAssemblies(context, configurationModel);
-            GenerateFromProjectSourceCode(context, configurationModel);
-        }
-
-        private static ConfigurationModel GetConfiguration(GeneratorExecutionContext context) =>
-            ConfigurationFactory.Create(context);
-
-        private void GenerateFromProjectSourceCode(
-            GeneratorExecutionContext context,
-            ConfigurationModel configurationModel)
-        {
-            var compilation = context.Compilation;
-            var syntaxTrees = compilation.SyntaxTrees;
-            foreach (var syntaxTree in syntaxTrees)
-            {
-                var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            }
+            var configurationModel = ConfigurationFactory.Create(analyzerConfigOptionsProvider);
+            GenerateFromAssemblies(context, configurationModel, parseOptions, metadataReferencesProvider, compilation);
         }
 
         private void GenerateFromAssemblies(
-            GeneratorExecutionContext context,
-            ConfigurationModel configurationModel)
+            SourceProductionContext context,
+            ConfigurationModel configurationModel,
+            ParseOptions parseOptions,
+            ImmutableArray<MetadataReference> metadataReferencesProvider,
+            Compilation compilation)
         {
             try
             {
                 context.ReportDiagnostic(ReportDiagnosticFactory.StartingSourceGenerator());
 
-                var memberDeclarationSyntax = GenerateAsync(context, analyzerConfigOptionsProvider, metadataReferencesProvider, compilation ,context.CancellationToken);
+                var memberDeclarationSyntax = GenerateAsync(context, configurationModel, metadataReferencesProvider, compilation ,context.CancellationToken);
 
                 var nullableDirectiveTrivia = SyntaxFactory.NullableDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.EnableKeyword), true);
                 var trivia = SyntaxFactory.Trivia(nullableDirectiveTrivia);
@@ -158,12 +145,11 @@ namespace Vetuviem.SourceGenerator
         /// Create the syntax tree representing the expansion of some member to which this attribute is applied.
         /// </summary>
         /// <param name="context">The transformation context being generated for.</param>
-        /// <param name="analyzerConfigOptionsProvider">Options from an analyzer config file keyed on a source file.</param>
         /// <param name="cancellationToken">A cancellation token.</param>
         /// <returns>The generated member syntax to be added to the project.</returns>
         private MemberDeclarationSyntax? GenerateAsync(
             SourceProductionContext context,
-            AnalyzerConfigOptionsProvider analyzerConfigOptionsProvider,
+            ConfigurationModel configurationModel,
             ImmutableArray<MetadataReference> metadataReferencesProvider,
             Compilation compilation,
             CancellationToken cancellationToken)
@@ -173,62 +159,11 @@ namespace Vetuviem.SourceGenerator
                 return null;
             }
 
-            var globalOptions = analyzerConfigOptionsProvider.GlobalOptions;
-            globalOptions.TryGetBuildPropertyValue(
-                "Vetuviem_Root_Namespace",
-                out var rootNamespace);
-            var namespaceName = GetNamespace(rootNamespace);
-
-            globalOptions.TryGetBuildPropertyValue(
-                "Vetuviem_Make_Classes_Public",
-                out var makeClassesPublicAsString);
-            bool.TryParse(makeClassesPublicAsString, out var makeClassesPublic);
-
-            globalOptions.TryGetBuildPropertyValue(
-                "Vetuviem_Assemblies",
-                out var assemblies);
-            var assembliesArray = assemblies?.Split(
-                [','],
-                StringSplitOptions.RemoveEmptyEntries)
-                .Where(s => !string.IsNullOrWhiteSpace(s))
-                .ToArray();
-
-            globalOptions.TryGetBuildPropertyValue(
-                "Vetuviem_Assembly_Mode",
-                out var assemblyModeAsString);
-
-            var assemblyMode = GetAssemblyMode(assemblyModeAsString);
-
-            // base type name only used if passing a custom set of assemblies to search for.
-            // allows for 3rd parties to use the generator and produce a custom namespace that inherits off the root, or custom namespace.
-            globalOptions.TryGetBuildPropertyValue(
-                "Vetuviem_Base_Namespace",
-                out var baseType);
-
-            globalOptions.TryGetBuildPropertyValue(
-                "Vetuviem_Include_Obsolete_Items",
-                out var includeObsoleteItemsAsString);
-            bool.TryParse(
-                includeObsoleteItemsAsString,
-                out var includeObsoleteItems);
-            // includeObsoleteItems = true;
+            var namespaceName = GetNamespace(configurationModel.RootNamespace);
 
             var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(namespaceName));
 
             var platformResolver = GetPlatformResolver();
-
-#if PLATFORMASSEMBLIES
-            //// we work on assumption we have the references already in the build chain
-            //var trustedAssembliesPaths = GetPlatformAssemblyPaths(context);
-            //if (trustedAssembliesPaths == null || trustedAssembliesPaths.Length == 0)
-            //{
-            //    // we don't have the assemblies
-            //    // we can fall back to searching for the reference assemblies path
-            //    // or trigger nuget
-            //    // for now we drop out
-            //    return namespaceDeclaration;
-            //}
-#endif
 
             var assembliesOfInterest = GetAssembliesOfInterest(
                 platformResolver,
