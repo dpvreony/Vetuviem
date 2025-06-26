@@ -106,7 +106,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 }
 
                 var hasNotNullConstraint = typeParameterSymbol.HasNotNullConstraint;
-                if (hasNotNullConstraint)
+                if (hasNotNullConstraint || AnyBaseHasNotNullConstraint(namedTypeSymbol, typeParameterSymbol))
                 {
                     var notNullIdentifierName = SyntaxFactory.IdentifierName("notnull");
                     var notNullTypeConstraint = SyntaxFactory.TypeConstraint(notNullIdentifierName);
@@ -162,7 +162,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-                yield return SyntaxFactory.ParseTypeName(typeParameterSymbol.ToDisplayString());
+
+                string typeName = (typeParameterSymbol.TypeKind != TypeKind.TypeParameter && typeParameterSymbol.SpecialType == SpecialType.None ? "global::" : string.Empty)
+                              + typeParameterSymbol.ToDisplayString();
+
+                yield return SyntaxFactory.ParseTypeName(typeName);
             }
         }
 
@@ -321,6 +325,45 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         }
 
         protected abstract SyntaxToken[] GetConstructorModifiers(bool makeClassesPublic);
+
+        private static bool BaseClassHasNotNullConstraint(INamedTypeSymbol derivedTypeSymbol, ITypeParameterSymbol typeParameterSymbol)
+        {
+            var baseType = derivedTypeSymbol.BaseType;
+            if (baseType == null || !baseType.IsGenericType)
+                return false;
+
+            // Find the index of the type parameter in the derived class
+            int paramIndex = derivedTypeSymbol.TypeParameters.IndexOf(typeParameterSymbol);
+            if (paramIndex < 0 || paramIndex >= baseType.TypeArguments.Length)
+                return false;
+
+            // Get the corresponding type parameter symbol from the base type definition
+            var baseTypeDef = baseType.OriginalDefinition;
+            if (paramIndex >= baseTypeDef.TypeParameters.Length)
+                return false;
+
+            var baseTypeParam = baseTypeDef.TypeParameters[paramIndex];
+            return baseTypeParam.HasNotNullConstraint;
+        }
+
+        private static bool AnyBaseHasNotNullConstraint(INamedTypeSymbol derivedTypeSymbol, ITypeParameterSymbol typeParameterSymbol)
+        {
+            // Find the index of the type parameter in the derived class
+            int paramIndex = derivedTypeSymbol.TypeParameters.IndexOf(typeParameterSymbol);
+            if (paramIndex < 0)
+                return false;
+
+            INamedTypeSymbol? current = derivedTypeSymbol.BaseType;
+            while (current != null && current.TypeParameters.Length > paramIndex)
+            {
+                var baseTypeParam = current.TypeParameters[paramIndex];
+                if (baseTypeParam.HasNotNullConstraint)
+                    return true;
+
+                current = current.BaseType;
+            }
+            return false;
+        }
 
         private TypeParameterListSyntax GetTypeParameterListSyntax(INamedTypeSymbol namedTypeSymbol)
         {

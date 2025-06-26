@@ -4,39 +4,36 @@
 
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.Winforms.SourceGenerator
+namespace Vetuviem.Maui.SourceGenerator
 {
-    /// <summary>
-    /// UI Platform resolver for Windows Forms.
-    /// </summary>
-    public sealed class WinformsPlatformResolver : IPlatformResolver
+    public sealed class MauiPlatformResolver : IPlatformResolver
     {
         /// <inheritdoc />
         public string[] GetAssemblyNames()
         {
             return new[]
             {
-                "System.Windows.Forms.dll",
-                "ReactiveUI.Winforms.dll",
+                "Microsoft.Maui.Controls.dll",
+                "ReactiveUI.Maui.dll",
             };
         }
 
         /// <inheritdoc />
         public string GetBaseUiElement()
         {
-            return "global::System.Windows.Forms.Control";
+            return "global::Microsoft.Maui.Controls.Element";
         }
 
         /// <inheritdoc />
-        public string? GetCommandSourceInterface()
+        public string GetCommandSourceInterface()
         {
-            return null;
+            return "global::System.Windows.Input.ICommandSource";
         }
 
         /// <inheritdoc />
-        public string? GetCommandInterface()
+        public string GetCommandInterface()
         {
-            return null;
+            return "global::System.Windows.Input.ICommand";
         }
     }
 }

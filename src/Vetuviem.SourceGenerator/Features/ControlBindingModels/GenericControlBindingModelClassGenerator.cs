@@ -69,7 +69,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 throw new ArgumentNullException(nameof(namedTypeSymbol));
             }
 
-            return $"Unbound{namedTypeSymbol.Name}ControlBindingModel";
+            return $"AbstractUnbound{namedTypeSymbol.Name}ControlBindingModel";
         }
 
         /// <inheritdoc />
@@ -171,7 +171,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     .Replace("global::", string.Empty);
 
             var baseViewBindingModelClassName =
-                $"global::{rootNamespace}.{subNameSpace}.Unbound{baseClass.Name}ControlBindingModel";
+                $"global::{rootNamespace}.{subNameSpace}.AbstractUnbound{baseClass.Name}ControlBindingModel";
 
             var baseTypeIdentifier = SyntaxFactory.Identifier(baseViewBindingModelClassName);
 
@@ -433,7 +433,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
                 var invocationStatement = RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
                     $"this",
-                    propertySymbol.Name,
+                    $"@{propertySymbol.Name}",
                     "ApplyBinding",
                     invokeArgs);
 
@@ -552,7 +552,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var invocationStatement = RoslynGenerationHelpers.GetMethodOnPropertyOfVariableInvocationSyntax(
                 $"this",
-                propertySymbol.Name,
+                $"@{propertySymbol.Name}",
                 "ApplyBinding",
                 invokeArgs);
             return invocationStatement;

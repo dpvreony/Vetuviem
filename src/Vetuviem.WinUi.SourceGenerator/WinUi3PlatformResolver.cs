@@ -17,6 +17,7 @@ namespace Vetuviem.WinUi.SourceGenerator
             return new[]
             {
                 "Microsoft.WinUI.dll",
+                "ReactiveUI.WinUI.dll"
             };
         }
 
