@@ -151,7 +151,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             // ensure we inherit from our desired element.
             if (namedTypeSymbol.IsSealed ||
                 namedTypeSymbol.IsStatic ||
-                (!HasDesiredBaseType(
+                (!NamedTypeSymbolHelpers.HasDesiredBaseType(
                      baseUiElement,
                      desiredBaseTypeIsInterface,
                      namedTypeSymbol) &&
@@ -187,44 +187,6 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
                 memberDeclarationSyntaxes.Add(generatedClass);
             }
-        }
-
-        private static bool HasDesiredBaseType(
-            string desiredBaseType,
-            bool desiredBaseTypeIsInterface,
-            INamedTypeSymbol namedTypeSymbol)
-        {
-            var baseType = namedTypeSymbol;
-
-            while (baseType != null)
-            {
-                var baseTypeFullName = baseType.GetFullName();
-                if (desiredBaseTypeIsInterface)
-                {
-                    var interfaces = baseType.Interfaces;
-                    if (interfaces != null && baseType.Interfaces.Any(i => i.GetFullName().Equals(desiredBaseType, StringComparison.Ordinal)))
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    if (baseTypeFullName.Equals(desiredBaseType, StringComparison.Ordinal))
-                    {
-                        return true;
-                    }
-                }
-
-                if (baseTypeFullName.Equals("global::System.Object", StringComparison.Ordinal))
-                {
-                    // we can drop out 1 iteration early
-                    return false;
-                }
-
-                baseType = baseType.BaseType;
-            }
-
-            return false;
         }
 
         private NamespaceDeclarationSyntax CheckAssemblyForUiTypes(NamespaceDeclarationSyntax namespaceDeclaration,
