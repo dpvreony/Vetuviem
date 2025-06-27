@@ -6,18 +6,18 @@ using Microsoft.CodeAnalysis;
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.WinUi.SourceGenerator
+namespace Vetuviem.Winforms.SourceGenerator
 {
     /// <summary>
     /// Project level Control Binding Model Source Generator for WPF.
     /// </summary>
     [Generator]
-    public sealed class WinUI3ProjectControlBindingModelSourceGenerator : AbstractProjectControlBindingModelSourceGenerator
+    public sealed class WinformsProjectControlBindingModelSourceGenerator : AbstractProjectControlBindingModelSourceGenerator
     {
         /// <inheritdoc />
-        protected override string GetPlatformName() => "WinUi3";
+        protected override string GetPlatformName() => "Winforms";
 
         /// <inheritdoc/>
-        protected override IPlatformResolver GetPlatformResolver() => new WinUi3PlatformResolver();
+        protected override IPlatformResolver GetPlatformResolver() => new WinformsPlatformResolver();
     }
 }
