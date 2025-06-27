@@ -71,13 +71,12 @@ namespace Vetuviem.WPF.SourceGenerator
                 return;
             }
 
-            // TODO: Generate the binding model source code here.
             var memberDeclarationSyntaxes = new SyntaxList<MemberDeclarationSyntax>();
 
             var rootNamespace = configurationModel.RootNamespace;
 
             var classGenerators = GetClassGenerators();
-            const string platformName = "WPF";
+            const string platformName = "Wpf";
             var desiredNamespace = GetNamespace(rootNamespace, platformName);
             foreach (var classGeneratorFactory in classGenerators)
             {
@@ -92,11 +91,13 @@ namespace Vetuviem.WPF.SourceGenerator
                     configurationModel.IncludeObsoleteItems,
                     platformResolver.GetCommandInterface());
 
-                memberDeclarationSyntaxes.Add(generatedClass);
+                memberDeclarationSyntaxes = memberDeclarationSyntaxes.Add(generatedClass);
             }
 
+            // We need the controls namespace as the generator makes assumptions about the placing of the bound and unbound control binding model classes.
+            var controlNamespace = namedTypeSymbol.ContainingNamespace.ToString();
 
-            var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(desiredNamespace));
+            var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName($"{desiredNamespace}.{controlNamespace}"));
             namespaceDeclaration = namespaceDeclaration
                 .WithMembers(memberDeclarationSyntaxes);
             var nullableDirectiveTrivia = SyntaxFactory.NullableDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.EnableKeyword), true);
