@@ -1,6 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
+using Vetuviem.SourceGenerator.Features.Configuration;
+using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.WPF.SourceGenerator
@@ -10,20 +16,37 @@ namespace Vetuviem.WPF.SourceGenerator
     {
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
-           var classDeclarations = context.SyntaxProvider
+            var classDeclarations = context.SyntaxProvider
                 .CreateSyntaxProvider(
                     static (s, _) => s is ClassDeclarationSyntax,
                     static (ctx, _) => ctx);
 
+            // TODO: the combine syntax is horrid, pull the bunch of helpers from nucleotide that do this cleaner.
+            var trigger = classDeclarations.Combine(context.AnalyzerConfigOptionsProvider)
+                .Combine(context.ParseOptionsProvider)
+                .Select(
+                    (tuple1, _) => (
+                        SyntaxProvider: tuple1.Left.Left,
+                        AnalyzerConfigOptions: tuple1.Left.Right,
+                        ParseOptions: tuple1.Right));
+
             context.RegisterSourceOutput(
-                classDeclarations,
-                static (productionContext, syntaxContext) => DoSourceGenerationForClass(productionContext, syntaxContext));
+                trigger,
+                static (productionContext, tuple) => DoSourceGenerationForClass(
+                    productionContext,
+                    tuple.SyntaxProvider,
+                    tuple.AnalyzerConfigOptions,
+                    tuple.ParseOptions));
         }
 
         private static void DoSourceGenerationForClass(
             SourceProductionContext productionContext,
-            GeneratorSyntaxContext syntaxContext)
+            GeneratorSyntaxContext syntaxContext,
+            AnalyzerConfigOptionsProvider analyzerConfigOptionsProvider,
+            ParseOptions parseOptions)
         {
+            var configurationModel = ConfigurationFactory.Create(analyzerConfigOptionsProvider);
+
             // it would be nice to cache some of this such as the platform resolver, but need to get it working first.
             if (syntaxContext.SemanticModel.GetDeclaredSymbol(syntaxContext.Node) is not INamedTypeSymbol namedTypeSymbol)
             {
@@ -42,24 +65,71 @@ namespace Vetuviem.WPF.SourceGenerator
                 return;
             }
 
-            if (!IsDesiredUiType(namedTypeSymbol, syntaxContext, productionContext))
+            var platformResolver = new WpfPlatformResolver();
+            if (!IsDesiredUiType(namedTypeSymbol, syntaxContext, productionContext, platformResolver))
             {
                 return;
             }
 
             // TODO: Generate the binding model source code here.
+            var memberDeclarationSyntaxes = new SyntaxList<MemberDeclarationSyntax>();
+
+            var rootNamespace = configurationModel.RootNamespace;
+
+            var classGenerators = GetClassGenerators();
+            const string platformName = "WPF";
+            var desiredNamespace = GetNamespace(rootNamespace, platformName);
+            foreach (var classGeneratorFactory in classGenerators)
+            {
+                var generator = classGeneratorFactory();
+                var generatedClass = generator.GenerateClass(
+                    namedTypeSymbol,
+                    platformResolver.GetBaseUiElement(),
+                    platformResolver.GetCommandInterface(),
+                    platformName,
+                    desiredNamespace,
+                    configurationModel.MakeClassesPublic,
+                    configurationModel.IncludeObsoleteItems,
+                    platformResolver.GetCommandInterface());
+
+                memberDeclarationSyntaxes.Add(generatedClass);
+            }
+
+
+            var namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(desiredNamespace));
+            namespaceDeclaration = namespaceDeclaration
+                .WithMembers(memberDeclarationSyntaxes);
+            var nullableDirectiveTrivia = SyntaxFactory.NullableDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.EnableKeyword), true);
+            var trivia = SyntaxFactory.Trivia(nullableDirectiveTrivia);
+            var leadingSyntaxTriviaList = SyntaxFactory.TriviaList(trivia);
+
+            namespaceDeclaration = namespaceDeclaration.WithLeadingTrivia(leadingSyntaxTriviaList);
+
+            var cu = SyntaxFactory.CompilationUnit()
+                .AddMembers(namespaceDeclaration)
+                .NormalizeWhitespace();
+
+            var sourceText = SyntaxFactory.SyntaxTree(
+                    cu,
+                    parseOptions,
+                    encoding: Encoding.UTF8)
+                .GetText();
+
             var hintName = $"{namedTypeSymbol}.g.cs";
-            productionContext.AddSource(hintName, "// TODO: code generation");
+
+            productionContext.AddSource(
+                hintName,
+                sourceText);
+
         }
 
-        private static bool IsDesiredUiType(
-            INamedTypeSymbol namedTypeSymbol,
+        private static bool IsDesiredUiType(INamedTypeSymbol namedTypeSymbol,
             GeneratorSyntaxContext generatorSyntaxContext,
-            SourceProductionContext productionContext)
+            SourceProductionContext productionContext,
+            WpfPlatformResolver platformResolver)
         {
             var compilation = generatorSyntaxContext.SemanticModel.Compilation;
 
-            var platformResolver = new WpfPlatformResolver();
             var desiredBaseType = platformResolver.GetBaseUiElement();
             var desiredNameWithoutGlobal = desiredBaseType.Replace(
                 "global::",
@@ -107,6 +177,25 @@ namespace Vetuviem.WPF.SourceGenerator
             }
 
             return true;
+        }
+
+        private static Func<IClassGenerator>[] GetClassGenerators()
+        {
+            return new Func<IClassGenerator>[]
+            {
+                () => new GenericControlBindingModelClassGenerator(),
+                () => new ControlBoundControlBindingModelClassGenerator(),
+            };
+        }
+
+        private static string GetNamespace(string? rootNamespace, string platformName)
+        {
+            if (string.IsNullOrWhiteSpace(rootNamespace))
+            {
+                rootNamespace = "VetuviemGenerated";
+            }
+
+            return $"{rootNamespace}.{platformName}.ViewToViewModelBindings";
         }
     }
 }
