@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vetuviem.Maui.SourceGenerator\Vetuviem.Maui.SourceGenerator.csproj" OutputItemType="Analyzer" />
+    <ProjectReference Include="..\Vetuviem.Maui.SourceGenerator\Vetuviem.Maui.SourceGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
 
