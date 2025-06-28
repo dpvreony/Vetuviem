@@ -125,12 +125,26 @@ namespace Vetuviem.SourceGenerator
                     encoding: Encoding.UTF8)
                 .GetText();
 
-            var hintName = $"{namedTypeSymbol}.g.cs";
+            var hintName = $"{GetSafeFileName(namedTypeSymbol)}.g.cs";
 
             productionContext.AddSource(
                 hintName,
                 sourceText);
 
+        }
+
+        private static string GetSafeFileName(INamedTypeSymbol symbol)
+        {
+            var name = symbol.ToString();
+
+            // Remove or replace other invalid filename characters
+            var invalidChars = System.IO.Path.GetInvalidFileNameChars();
+            foreach (var c in invalidChars)
+            {
+                name = name.Replace(c, '_');
+            }
+
+            return name;
         }
 
         private static bool IsDesiredUiType(INamedTypeSymbol namedTypeSymbol,
