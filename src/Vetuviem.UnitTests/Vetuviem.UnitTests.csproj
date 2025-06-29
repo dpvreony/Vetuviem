@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageReference Update="Xunit.StaFact" Version="1.2.69" />
+    <PackageReference Update="Xunit.StaFact" Version="2.1.7" />
   </ItemGroup>
 
 </Project>
