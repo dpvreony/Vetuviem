@@ -162,7 +162,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
-
                 string typeName = (typeParameterSymbol.TypeKind != TypeKind.TypeParameter && typeParameterSymbol.SpecialType == SpecialType.None ? "global::" : string.Empty)
                               + typeParameterSymbol.ToDisplayString();
 
