@@ -68,7 +68,7 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
                 return AssemblyMode.Replace;
             }
 
-            if (!Enum.TryParse<AssemblyMode>(
+            if (Enum.TryParse<AssemblyMode>(
                     assemblyModeAsString,
                     out var assemblyMode))
             {
