@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -105,6 +106,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     typeParameterConstraintSyntaxList.Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
                 }
 
+                if (typeParameterSymbol.HasValueTypeConstraint)
+                {
+                    typeParameterConstraintSyntaxList.Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.StructConstraint));
+                }
+
                 var hasNotNullConstraint = typeParameterSymbol.HasNotNullConstraint;
                 if (hasNotNullConstraint || AnyBaseHasNotNullConstraint(namedTypeSymbol, typeParameterSymbol))
                 {
@@ -162,8 +168,14 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
+                // this deals with nullable hiding the type we're prefixing.
+                var typeToCheckForGlobalPrefix =
+                    typeParameterSymbol is INamedTypeSymbol namedTypeSymbol &&
+                    typeParameterSymbol.Name.Equals("Nullable")
+                        ? namedTypeSymbol.TypeArguments.First()
+                        : typeParameterSymbol;
 
-                string typeName = (typeParameterSymbol.TypeKind != TypeKind.TypeParameter && typeParameterSymbol.SpecialType == SpecialType.None ? "global::" : string.Empty)
+                string typeName = (typeToCheckForGlobalPrefix.TypeKind != TypeKind.TypeParameter && typeToCheckForGlobalPrefix.SpecialType == SpecialType.None ? "global::" : string.Empty)
                               + typeParameterSymbol.ToDisplayString();
 
                 yield return SyntaxFactory.ParseTypeName(typeName);
