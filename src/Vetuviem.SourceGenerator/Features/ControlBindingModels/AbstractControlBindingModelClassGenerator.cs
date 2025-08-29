@@ -106,6 +106,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     typeParameterConstraintSyntaxList.Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
                 }
 
+                if (typeParameterSymbol.HasValueTypeConstraint)
+                {
+                    typeParameterConstraintSyntaxList.Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.StructConstraint));
+                }
+
                 var hasNotNullConstraint = typeParameterSymbol.HasNotNullConstraint;
                 if (hasNotNullConstraint || AnyBaseHasNotNullConstraint(namedTypeSymbol, typeParameterSymbol))
                 {
