@@ -7,12 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vetuviem.Blazor.SourceGenerator\Vetuviem.Blazor.SourceGenerator.csproj" />
     <ProjectReference Include="..\Vetuviem.Testing\Vetuviem.Testing.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageReference Update="Xunit.StaFact" Version="1.2.69" />
   </ItemGroup>
 
 </Project>

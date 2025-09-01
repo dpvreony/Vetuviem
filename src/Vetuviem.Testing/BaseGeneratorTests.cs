@@ -12,10 +12,10 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.Extensions.Logging;
+using NetTestRegimentation.XUnit.Logging;
 using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Vetuviem.Testing
 {
@@ -30,7 +30,7 @@ namespace Vetuviem.Testing
         /// </summary>
         /// <typeparam name="TGenerator">The type for the source generator.</typeparam>
         /// <typeparam name="TGeneratorProcessor">The type for the source generator processor.</typeparam>
-        public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor> : Foundatio.Xunit.TestWithLoggingBase
+        public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor> : TestWithLoggingBase
             where TGenerator : AbstractBaseSourceGenerator<TGeneratorProcessor>
             where TGeneratorProcessor : AbstractGeneratorProcessor, new()
         {
@@ -72,25 +72,23 @@ namespace Vetuviem.Testing
                     out var generatorDiags,
                     instance.AsSourceGenerator());
 
-                _logger.LogInformation($"Generator Diagnostic count : {generatorDiags.Length}");
+                Logger.LogInformation($"Generator Diagnostic count : {generatorDiags.Length}");
 
                 var hasErrors = false;
                 foreach (var generatorDiag in generatorDiags)
                 {
-                    _logger.LogInformation(generatorDiag.ToString());
+                    Logger.LogInformation(generatorDiag.ToString());
 
                     hasErrors |= generatorDiag.Severity == DiagnosticSeverity.Error;
                 }
 
                 foreach (var newCompSyntaxTree in newComp.SyntaxTrees)
                 {
-                    _logger.LogInformation("Syntax Tree:");
-                    _logger.LogInformation(newCompSyntaxTree.GetText().ToString());
+                    Logger.LogInformation("Syntax Tree:");
+                    Logger.LogInformation(newCompSyntaxTree.GetText().ToString());
                 }
 
                 Assert.False(hasErrors);
-
-
             }
 
             protected abstract string GetProjectSourceCode();
