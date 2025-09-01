@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows10.0.19041</TargetFramework>
+    <TargetFramework>net9.0-windows10.0.19041</TargetFramework>
     <UseWpf>True</UseWpf>
-    <IsPackable>False</IsPackable>
+    <Nullable>enable</Nullable>
+    <NoWarn>CA1034,CA1515</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
