@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Vetuviem.Blazor.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.Testing;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace Vetuviem.IntegrationTests.ReactiveUI.Blazor
 {

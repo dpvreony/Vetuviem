@@ -10,7 +10,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.Testing;
 using Vetuviem.WPF.SourceGenerator;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
 {

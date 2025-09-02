@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "snitch": {
+      "version": "2.0.0",
+      "commands": [
+        "snitch"
+      ]
+    },
+    "configvalidate": {
+      "version": "1.0.0",
+      "commands": [
+        "config-validate"
+      ]
+    },
+    "jetbrains.resharper.globaltools": {
+      "version": "2025.2.0.1",
+      "commands": [
+        "jb"
+      ]
+    },
+    "dotnet-outdated-tool": {
+      "version": "4.6.8",
+      "commands": [
+        "dotnet-outdated"
+      ]
+    },
+    "microsoft.cst.applicationinspector.cli": {
+      "version": "1.9.44",
+      "commands": [
+        "appinspector"
+      ]
+    },
+    "dotnet-project-licenses": {
+      "version": "2.7.1",
+      "commands": [
+        "dotnet-project-licenses"
+      ]
+    },
+    "docfx": {
+      "version": "2.78.3",
+      "commands": [
+        "docfx"
+      ]
+    },
+    "microsoft.sbom.dotnettool": {
+      "version": "4.1.1",
+      "commands": [
+        "sbom-tool"
+      ]
+    }
+  }
+}

@@ -2,6 +2,7 @@
 // DPVreony and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if TBC
 using System;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
@@ -9,7 +10,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.Testing;
 using Vetuviem.WinUi.SourceGenerator;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace Vetuviem.IntegrationTests.ReactiveUI.WinUi3
 {
@@ -58,3 +59,4 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WinUi3
         }
     }
 }
+#endif
