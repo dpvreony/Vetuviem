@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.19" ReferenceOutputAssembly="true" />
-    <PackageReference Include="MudBlazor" Version="8.11.0" />
+    <PackageReference Include="MudBlazor" Version="8.12.0" />
     <PackageReference Include="ReactiveUI.Blazor" Version="20.4.1" ReferenceOutputAssembly="true" />
   </ItemGroup>
 
