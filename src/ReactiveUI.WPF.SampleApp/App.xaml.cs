@@ -3,8 +3,10 @@
 // See the LICENSE file in the project root for full license information.
 
 using System.Windows;
+using ReactiveUI.Builder;
 using ReactiveUI.WPF.SampleApp.ViewModels;
 using ReactiveUI.WPF.SampleApp.Views;
+using Splat;
 
 namespace ReactiveUI.WPF.SampleApp
 {
@@ -17,6 +19,11 @@ namespace ReactiveUI.WPF.SampleApp
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            var appInstance = RxAppBuilder.CreateReactiveUIBuilder()
+                .WithWpf()
+                .RegisterView<QuestionnaireView, QuestionnaireViewModel>()
+                .Build();
 
             var view = new QuestionnaireView
             {
