@@ -26,12 +26,6 @@
         "dotnet-outdated"
       ]
     },
-    "microsoft.cst.applicationinspector.cli": {
-      "version": "1.9.44",
-      "commands": [
-        "appinspector"
-      ]
-    },
     "dotnet-project-licenses": {
       "version": "2.7.1",
       "commands": [
