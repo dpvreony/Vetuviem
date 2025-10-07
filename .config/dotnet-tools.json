@@ -14,12 +14,6 @@
         "config-validate"
       ]
     },
-    "jetbrains.resharper.globaltools": {
-      "version": "2025.2.1",
-      "commands": [
-        "jb"
-      ]
-    },
     "dotnet-outdated-tool": {
       "version": "4.6.8",
       "commands": [
