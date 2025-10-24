@@ -19,7 +19,7 @@ jobs:
       pages: write
       id-token: write
       pull-requests: write
-    uses: dpvreony/github-action-workflows/.github/workflows/dotnet-ci.yml@v1.0.0
+    uses: dpvreony/github-action-workflows/.github/workflows/dotnet-ci.yml@v1.1.0
     with:
       solutionName: "Vetuviem"
     secrets:
