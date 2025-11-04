@@ -13,16 +13,19 @@ permissions:
 jobs:
   build:
     permissions:
-      actions: read
+      actions: write
       contents: write
       deployments: read
       pages: write
       id-token: write
       pull-requests: write
-    uses: dpvreony/github-action-workflows/.github/workflows/dotnet-ci.yml@v1.0.0
+      packages: read
+      security-events: write
+    uses: dpvreony/github-action-workflows/.github/workflows/dotnet-ci.yml@f3dd4d362e47338cbdf2f2c238928264de835334
     with:
+      buildOs: "windows"
       solutionName: "Vetuviem"
     secrets:
-      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      NUGET_USER: ${{ secrets.NUGET_USER }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
