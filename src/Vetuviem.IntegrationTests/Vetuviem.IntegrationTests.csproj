@@ -5,6 +5,7 @@
     <UseWpf>True</UseWpf>
     <Nullable>enable</Nullable>
     <NoWarn>CA1034,CA1515</NoWarn>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
   <ItemGroup>
