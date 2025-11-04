@@ -13,12 +13,14 @@ permissions:
 jobs:
   build:
     permissions:
-      actions: read
+      actions: write
       contents: write
       deployments: read
       pages: write
       id-token: write
       pull-requests: write
+      security-events: write
+      packages: read
     uses: dpvreony/github-action-workflows/.github/workflows/dotnet-ci.yml@v1.2.1
     with:
       solutionName: "Vetuviem"
