@@ -23,6 +23,7 @@ jobs:
       security-events: write
     uses: dpvreony/github-action-workflows/.github/workflows/dotnet-ci.yml@v1.2.1
     with:
+      buildOs: "windows"
       solutionName: "Vetuviem"
     secrets:
       NUGET_USER: ${{ secrets.NUGET_USER }}
