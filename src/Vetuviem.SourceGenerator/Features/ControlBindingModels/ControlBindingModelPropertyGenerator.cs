@@ -259,7 +259,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                             SyntaxFactory.AttributeArgument(
                                 SyntaxFactory.LiteralExpression(
                                     SyntaxKind.StringLiteralExpression,
-                                    SyntaxFactory.Literal(experimentalDiagnosticId)))
+                                    SyntaxFactory.Literal(experimentalDiagnosticId!)))
                         })));
 
                 var attributeList = SyntaxFactory.AttributeList(
