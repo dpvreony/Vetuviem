@@ -14,11 +14,13 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
     /// allows for 3rd parties to use the generator and produce a custom namespace that inherits off the root, or custom namespace.
     /// </param>
     /// <param name="IncludeObsoleteItems">Whether to include obsolete items in the generation.</param>
+    /// <param name="AllowExperimentalProperties">Whether to include properties marked with ExperimentalAttribute. If true, warnings will be suppressed.</param>
     public sealed record ConfigurationModel(
         string? RootNamespace,
         bool MakeClassesPublic,
         IReadOnlyCollection<string>? AssembliesArray,
         AssemblyMode AssemblyMode,
         string? BaseType,
-        bool IncludeObsoleteItems);
+        bool IncludeObsoleteItems,
+        bool AllowExperimentalProperties);
 }

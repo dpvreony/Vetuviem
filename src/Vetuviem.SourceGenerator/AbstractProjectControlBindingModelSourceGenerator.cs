@@ -98,7 +98,8 @@ namespace Vetuviem.SourceGenerator
                     desiredNamespace,
                     configurationModel.MakeClassesPublic,
                     configurationModel.IncludeObsoleteItems,
-                    platformResolver.GetCommandInterface());
+                    platformResolver.GetCommandInterface(),
+                    configurationModel.AllowExperimentalProperties);
 
                 memberDeclarationSyntaxes = memberDeclarationSyntaxes.Add(generatedClass);
             }
