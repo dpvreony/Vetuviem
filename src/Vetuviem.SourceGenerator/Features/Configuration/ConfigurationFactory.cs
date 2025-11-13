@@ -52,13 +52,21 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
                 includeObsoleteItemsAsString,
                 out var includeObsoleteItems);
 
+            globalOptions.TryGetBuildPropertyValue(
+                "Vetuviem_Allow_Experimental_Properties",
+                out var allowExperimentalPropertiesAsString);
+            bool.TryParse(
+                allowExperimentalPropertiesAsString,
+                out var allowExperimentalProperties);
+
             return new ConfigurationModel(
                 rootNamespace,
                 makeClassesPublic,
                 assembliesArray,
                 assemblyMode,
                 baseType,
-                includeObsoleteItems);
+                includeObsoleteItems,
+                allowExperimentalProperties);
         }
 
         private static AssemblyMode GetAssemblyMode(string? assemblyModeAsString)

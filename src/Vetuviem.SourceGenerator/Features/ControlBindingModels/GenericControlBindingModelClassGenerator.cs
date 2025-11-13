@@ -35,14 +35,16 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string platformName,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            bool allowExperimentalProperties)
         {
             members = members.AddRange(ControlBindingModelPropertyGenerator.GetProperties(
                 namedTypeSymbol,
                 desiredCommandInterface,
                 makeClassesPublic,
                 includeObsoleteItems,
-                platformCommandType));
+                platformCommandType,
+                allowExperimentalProperties));
 
             members = members.Add(GetApplyBindingsWithDisposableActionMethod(
                 namedTypeSymbol,

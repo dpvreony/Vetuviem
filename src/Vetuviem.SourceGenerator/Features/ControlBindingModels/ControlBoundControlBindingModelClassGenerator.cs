@@ -33,7 +33,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string platformName,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            bool allowExperimentalProperties)
         {
             return members;
         }

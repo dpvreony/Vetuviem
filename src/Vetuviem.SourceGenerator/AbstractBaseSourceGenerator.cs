@@ -235,7 +235,8 @@ namespace Vetuviem.SourceGenerator
                 namespaceName,
                 configurationModel.MakeClassesPublic,
                 configurationModel.IncludeObsoleteItems,
-                platformResolver.GetCommandInterface());
+                platformResolver.GetCommandInterface(),
+                configurationModel.AllowExperimentalProperties);
 
             return result;
         }
