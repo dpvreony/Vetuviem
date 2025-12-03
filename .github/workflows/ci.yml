@@ -25,6 +25,7 @@ jobs:
     with:
       buildOs: "windows"
       solutionName: "Vetuviem"
+      runIntTestsOnPrimaryOsOnly: true
     secrets:
       NUGET_USER: ${{ secrets.NUGET_USER }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
