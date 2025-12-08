@@ -108,19 +108,23 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     typeParameterConstraintSyntaxList.Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
                 }
 
-                if (typeParameterSymbol.HasValueTypeConstraint)
+                else if (typeParameterSymbol.HasValueTypeConstraint)
                 {
                     typeParameterConstraintSyntaxList.Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.StructConstraint));
                 }
 
-                var hasNotNullConstraint = typeParameterSymbol.HasNotNullConstraint;
-                if (hasNotNullConstraint || AnyBaseHasNotNullConstraint(namedTypeSymbol, typeParameterSymbol))
+                else
                 {
-                    var notNullIdentifierName = SyntaxFactory.IdentifierName("notnull");
-                    var notNullTypeConstraint = SyntaxFactory.TypeConstraint(notNullIdentifierName);
+                    var hasNotNullConstraint = typeParameterSymbol.HasNotNullConstraint;
+                    if (hasNotNullConstraint || AnyBaseHasNotNullConstraint(namedTypeSymbol, typeParameterSymbol))
+                    {
+                        var notNullIdentifierName = SyntaxFactory.IdentifierName("notnull");
+                        var notNullTypeConstraint = SyntaxFactory.TypeConstraint(notNullIdentifierName);
 
-                    typeParameterConstraintSyntaxList.Add(notNullTypeConstraint);
+                        typeParameterConstraintSyntaxList.Add(notNullTypeConstraint);
+                    }
                 }
+
 
 #if TODO
                 var constraintNullableAnnotations = typeParameterSymbol.ConstraintNullableAnnotations;
