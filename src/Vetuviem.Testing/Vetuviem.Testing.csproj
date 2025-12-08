@@ -10,8 +10,8 @@
   <ItemGroup>
     <PackageReference Include="NetTestRegimentation" Version="2.0.8" />
     <PackageReference Include="NetTestRegimentation.XUnit" Version="2.0.8" />
-    <PackageReference Include="xunit.v3.assert" Version="3.2.0" />
-    <PackageReference Include="xunit.v3.extensibility.core" Version="3.2.0" />
+    <PackageReference Include="xunit.v3.assert" Version="3.2.1" />
+    <PackageReference Include="xunit.v3.extensibility.core" Version="3.2.1" />
   </ItemGroup>
 
   <ItemGroup>
