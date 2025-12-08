@@ -27,7 +27,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string rootNamespace,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            bool allowExperimentalProperties)
         {
             var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
 
@@ -63,7 +64,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 platformName,
                 makeClassesPublic,
                 includeObsoleteItems,
-                platformCommandType);
+                platformCommandType,
+                allowExperimentalProperties);
 
             return classDeclaration
                 .WithModifiers(modifiers)
@@ -106,19 +108,23 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     typeParameterConstraintSyntaxList.Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint));
                 }
 
-                if (typeParameterSymbol.HasValueTypeConstraint)
+                else if (typeParameterSymbol.HasValueTypeConstraint)
                 {
                     typeParameterConstraintSyntaxList.Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.StructConstraint));
                 }
 
-                var hasNotNullConstraint = typeParameterSymbol.HasNotNullConstraint;
-                if (hasNotNullConstraint || AnyBaseHasNotNullConstraint(namedTypeSymbol, typeParameterSymbol))
+                else
                 {
-                    var notNullIdentifierName = SyntaxFactory.IdentifierName("notnull");
-                    var notNullTypeConstraint = SyntaxFactory.TypeConstraint(notNullIdentifierName);
+                    var hasNotNullConstraint = typeParameterSymbol.HasNotNullConstraint;
+                    if (hasNotNullConstraint || AnyBaseHasNotNullConstraint(namedTypeSymbol, typeParameterSymbol))
+                    {
+                        var notNullIdentifierName = SyntaxFactory.IdentifierName("notnull");
+                        var notNullTypeConstraint = SyntaxFactory.TypeConstraint(notNullIdentifierName);
 
-                    typeParameterConstraintSyntaxList.Add(notNullTypeConstraint);
+                        typeParameterConstraintSyntaxList.Add(notNullTypeConstraint);
+                    }
                 }
+
 
 #if TODO
                 var constraintNullableAnnotations = typeParameterSymbol.ConstraintNullableAnnotations;
@@ -200,6 +206,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="platformName">Friendly Name for the platform.</param>
         /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
         /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
+        /// <param name="platformCommandType">The platform-specific command type.</param>
+        /// <param name="allowExperimentalProperties">Whether to include properties marked with ExperimentalAttribute. If true, warnings will be suppressed.</param>
         /// <returns>Modified Syntax List of Member declarations.</returns>
         protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(
             SyntaxList<MemberDeclarationSyntax> members,
@@ -210,7 +218,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string platformName,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType);
+            string? platformCommandType,
+            bool allowExperimentalProperties);
 
         /// <summary>
         /// Gets the class name identifier from a named type symbol.

@@ -26,13 +26,16 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="desiredCommandInterface">The fully qualified typename for the Command interface used by the UI platform, if it uses one.</param>
         /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
         /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
+        /// <param name="platformCommandType">The platform-specific command type.</param>
+        /// <param name="allowExperimentalProperties">Whether to include properties marked with ExperimentalAttribute. If true, warnings will be suppressed.</param>
         /// <returns>List of property declarations.</returns>
         public static SyntaxList<MemberDeclarationSyntax> GetProperties(
             INamedTypeSymbol namedTypeSymbol,
             string? desiredCommandInterface,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            bool allowExperimentalProperties)
         {
             if (namedTypeSymbol == null)
             {
@@ -77,6 +80,28 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     continue;
                 }
 
+                // check for experimental attribute
+                var experimentalAttribute = attributes.FirstOrDefault(a => a.AttributeClass?.GetFullName().Equals(
+                    "global::System.Diagnostics.CodeAnalysis.ExperimentalAttribute",
+                    StringComparison.Ordinal) == true);
+
+                if (experimentalAttribute != null && !allowExperimentalProperties)
+                {
+                    // Skip experimental properties if not allowed
+                    continue;
+                }
+
+                // Extract diagnostic ID if experimental and allowed
+                string? experimentalDiagnosticId = null;
+                if (experimentalAttribute != null && allowExperimentalProperties && experimentalAttribute.ConstructorArguments.Length > 0)
+                {
+                    var diagnosticIdArg = experimentalAttribute.ConstructorArguments[0];
+                    if (diagnosticIdArg.Value is string diagId)
+                    {
+                        experimentalDiagnosticId = diagId;
+                    }
+                }
+
                 var treatAsNewImplementation = ReplacesBaseProperty(propertySymbol, namedTypeSymbol);
 
                 var accessorList = GetAccessorDeclarationSyntaxes();
@@ -91,7 +116,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     summary,
                     desiredCommandInterface,
                     makeClassesPublic,
-                    treatAsNewImplementation);
+                    treatAsNewImplementation,
+                    experimentalDiagnosticId);
 
                 nodes.Add(propSyntax);
             }
@@ -197,7 +223,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             IEnumerable<SyntaxTrivia> summary,
             string? desiredCommandInterface,
             bool makeClassesPublic,
-            bool treatAsNewImplementation)
+            bool treatAsNewImplementation,
+            string? experimentalDiagnosticId)
         {
             TypeSyntax type = GetBindingTypeSyntax(prop, desiredCommandInterface);
 
@@ -215,6 +242,30 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             if (treatAsNewImplementation)
             {
                 result = result.AddModifiers(SyntaxFactory.Token(SyntaxKind.NewKeyword));
+            }
+
+            // Add SuppressMessage attribute for experimental properties
+            if (!string.IsNullOrWhiteSpace(experimentalDiagnosticId))
+            {
+                var suppressMessageAttribute = SyntaxFactory.Attribute(
+                    SyntaxFactory.ParseName("global::System.Diagnostics.CodeAnalysis.SuppressMessage"),
+                    SyntaxFactory.AttributeArgumentList(
+                        SyntaxFactory.SeparatedList(new[]
+                        {
+                            SyntaxFactory.AttributeArgument(
+                                SyntaxFactory.LiteralExpression(
+                                    SyntaxKind.StringLiteralExpression,
+                                    SyntaxFactory.Literal("Usage"))),
+                            SyntaxFactory.AttributeArgument(
+                                SyntaxFactory.LiteralExpression(
+                                    SyntaxKind.StringLiteralExpression,
+                                    SyntaxFactory.Literal(experimentalDiagnosticId!)))
+                        })));
+
+                var attributeList = SyntaxFactory.AttributeList(
+                    SyntaxFactory.SingletonSeparatedList(suppressMessageAttribute));
+
+                result = result.AddAttributeLists(attributeList);
             }
 
             return result;

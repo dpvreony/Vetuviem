@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <LangVersion>9</LangVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>True</DebugSymbols>
@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ReactiveUI.Maui" Version="21.0.1" />
+    <PackageReference Include="ReactiveUI.Maui" Version="22.3.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,5 +26,6 @@
   <Import Project="..\Vetuviem.SourceGenerator\Vetuviem-SourceGenerator.props" />
   <PropertyGroup>
     <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
+    <Vetuviem_Include_Obsolete_Items>true</Vetuviem_Include_Obsolete_Items>
   </PropertyGroup>
 </Project>

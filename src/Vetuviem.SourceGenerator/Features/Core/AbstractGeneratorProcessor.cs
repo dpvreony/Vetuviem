@@ -30,6 +30,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="rootNamespace">The root namespace to place the binding classes inside.</param>
         /// <param name="makeClassesPublic">A flag indicating whether to expose the generated binding classes as public rather than internal. Set this to true if you're created a reusable library file.</param>
         /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
+        /// <param name="platformCommandType">The platform-specific command type.</param>
+        /// <param name="allowExperimentalProperties">Whether to include properties marked with ExperimentalAttribute. If true, warnings will be suppressed.</param>
         /// <returns>Namespace declaration containing generated code.</returns>
         public NamespaceDeclarationSyntax GenerateNamespaceDeclaration(NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference[] assembliesOfInterest,
@@ -42,7 +44,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string rootNamespace,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            bool allowExperimentalProperties)
         {
             if (namespaceDeclaration == null)
             {
@@ -91,7 +94,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     rootNamespace,
                     makeClassesPublic,
                     includeObsoleteItems,
-                    platformCommandType);
+                    platformCommandType,
+                    allowExperimentalProperties);
             }
 
             return namespaceDeclaration;
@@ -128,7 +132,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string rootNamespace,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            bool allowExperimentalProperties)
         {
             var fullName = namedTypeSymbol.GetFullName();
 
@@ -183,7 +188,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     rootNamespace,
                     makeClassesPublic,
                     includeObsoleteItems,
-                    platformCommandType);
+                    platformCommandType,
+                    allowExperimentalProperties);
 
                 memberDeclarationSyntaxes.Add(generatedClass);
             }
@@ -201,7 +207,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string rootNamespace,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            bool allowExperimentalProperties)
         {
             reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfAssembly(metadataReference));
 
@@ -237,7 +244,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     rootNamespace,
                     makeClassesPublic,
                     includeObsoleteItems,
-                    platformCommandType);
+                    platformCommandType,
+                    allowExperimentalProperties);
 
                 if (nestedDeclarationSyntax != null)
                 {
@@ -271,7 +279,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             string rootNamespace,
             bool makeClassesPublic,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            bool allowExperimentalProperties)
         {
             reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfNamespace(namespaceSymbol));
 
@@ -294,7 +303,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     rootNamespace,
                     makeClassesPublic,
                     includeObsoleteItems,
-                    platformCommandType);
+                    platformCommandType,
+                    allowExperimentalProperties);
             }
 
             var nestedSymbols = namespaceSymbol.GetNamespaceMembers();
@@ -313,7 +323,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     rootNamespace,
                     makeClassesPublic,
                     includeObsoleteItems,
-                    platformCommandType);
+                    platformCommandType,
+                    allowExperimentalProperties);
 
                 if (nestedNamespace != null)
                 {

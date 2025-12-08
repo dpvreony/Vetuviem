@@ -6,5 +6,6 @@
     <CompilerVisibleProperty Include="Vetuviem_Assembly_Mode" />
     <CompilerVisibleProperty Include="Vetuviem_Base_Namespace" />
     <CompilerVisibleProperty Include="Vetuviem_Include_Obsolete_Items" />
+    <CompilerVisibleProperty Include="Vetuviem_Allow_Experimental_Properties" />
   </ItemGroup>
 </Project>
