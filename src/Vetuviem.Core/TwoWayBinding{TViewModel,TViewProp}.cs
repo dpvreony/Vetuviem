@@ -5,6 +5,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
 using ReactiveUI;
 
 namespace Vetuviem.Core

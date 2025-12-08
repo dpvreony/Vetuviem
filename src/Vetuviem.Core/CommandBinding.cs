@@ -5,6 +5,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
 using System.Windows.Input;
 using ReactiveUI;
 
