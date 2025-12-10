@@ -21,7 +21,7 @@ jobs:
       pull-requests: write
       packages: read
       security-events: write
-    uses: dpvreony/github-action-workflows/.github/workflows/dotnet-ci.yml@d534472135054b91a54cf68a0e11d8ec1b9dd79f
+    uses: dpvreony/github-action-workflows/.github/workflows/dotnet-ci.yml@42860fe8b27e8764f00afc5a1e0235460380fadd
     with:
       buildOs: "windows"
       solutionName: "Vetuviem"
