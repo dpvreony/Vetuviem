@@ -235,14 +235,14 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     type,
                     "@" + prop.Name)
                 .AddModifiers(modifiers)
-                .WithAccessorList(
-                    SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)))
-                .WithLeadingTrivia(summary);
+                .WithAccessorList(SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)));
 
             if (treatAsNewImplementation)
             {
                 result = result.AddModifiers(SyntaxFactory.Token(SyntaxKind.NewKeyword));
             }
+
+            result = result.WithLeadingTrivia(summary);
 
             // Add SuppressMessage attribute for experimental properties
             if (!string.IsNullOrWhiteSpace(experimentalDiagnosticId))
