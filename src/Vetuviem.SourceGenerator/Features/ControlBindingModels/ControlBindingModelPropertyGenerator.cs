@@ -235,9 +235,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     type,
                     "@" + prop.Name)
                 .AddModifiers(modifiers)
-                .WithAccessorList(
-                    SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)))
-                .WithLeadingTrivia(summary);
+                .WithAccessorList(SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList)));
 
             if (treatAsNewImplementation)
             {
@@ -267,6 +265,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
                 result = result.AddAttributeLists(attributeList);
             }
+
+            result = result.WithLeadingTrivia(summary);
 
             return result;
         }
