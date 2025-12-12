@@ -242,8 +242,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 result = result.AddModifiers(SyntaxFactory.Token(SyntaxKind.NewKeyword));
             }
 
-            result = result.WithLeadingTrivia(summary);
-
             // Add SuppressMessage attribute for experimental properties
             if (!string.IsNullOrWhiteSpace(experimentalDiagnosticId))
             {
@@ -267,6 +265,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
                 result = result.AddAttributeLists(attributeList);
             }
+
+            result = result.WithLeadingTrivia(summary);
 
             return result;
         }
