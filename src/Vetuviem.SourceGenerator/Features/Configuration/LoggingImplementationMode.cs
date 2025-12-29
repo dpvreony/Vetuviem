@@ -17,11 +17,18 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
         /// <summary>
         /// Splat logging implementation will be generated.
         /// </summary>
-        Splat,
+        SplatViaServiceLocator,
+
+#if TBC
+        /// <summary>
+        /// Splat logging implementation will be generated.
+        /// </summary>
+        SplatViaDependencyInjection,
 
         /// <summary>
         /// Microsoft.Extensions.Logging implementation will be generated.
         /// </summary>
         MicrosoftExtensionsLogging
+#endif
     }
 }

@@ -79,7 +79,7 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
         {
             if (string.IsNullOrWhiteSpace(loggingImplementationModeAsString))
             {
-                return LoggingImplementationMode.Splat;
+                return LoggingImplementationMode.SplatViaServiceLocator;
             }
 
             if (Enum.TryParse<LoggingImplementationMode>(

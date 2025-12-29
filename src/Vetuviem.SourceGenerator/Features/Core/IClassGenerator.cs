@@ -4,6 +4,7 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Vetuviem.SourceGenerator.Features.Configuration;
 
 namespace Vetuviem.SourceGenerator.Features.Core
 {
@@ -24,6 +25,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
         /// <param name="platformCommandType">The platform-specific command type.</param>
         /// <param name="allowExperimentalProperties">Whether to include properties marked with ExperimentalAttribute. If true, warnings will be suppressed.</param>
+        /// <param name="loggingImplementationMode">Whether to generate a logging implementation, and if so, which type of integration.</param>
         /// <returns>Class Declaration Syntax Node.</returns>
         ClassDeclarationSyntax GenerateClass(
             INamedTypeSymbol namedTypeSymbol,
@@ -34,6 +36,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
             bool makeClassesPublic,
             bool includeObsoleteItems,
             string? platformCommandType,
-            bool allowExperimentalProperties);
+            bool allowExperimentalProperties,
+            LoggingImplementationMode loggingImplementationMode);
     }
 }

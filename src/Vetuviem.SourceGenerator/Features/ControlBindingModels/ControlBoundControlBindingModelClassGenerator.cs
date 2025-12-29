@@ -87,13 +87,12 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             [SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword)];
 
         /// <inheritdoc />
-        protected override ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
-            INamedTypeSymbol namedTypeSymbol,
+        protected override ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
             string platformName,
-            string rootNamespace)
+            string rootNamespace, bool isDerivedType)
         {
             if (namedTypeSymbol == null)
             {

@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Vetuviem.SourceGenerator.Features.Configuration;
 using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
@@ -28,7 +29,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool makeClassesPublic,
             bool includeObsoleteItems,
             string? platformCommandType,
-            bool allowExperimentalProperties)
+            bool allowExperimentalProperties,
+            LoggingImplementationMode loggingImplementationMode)
         {
             var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
 
@@ -43,15 +45,17 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var classDeclaration = SyntaxFactory.ClassDeclaration(classNameIdentifier);
 
+            var isDerivedType = !controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase) && namedTypeSymbol.BaseType?.BaseType != null;
+
             classDeclaration = ApplyBaseClassDeclarationSyntax(
                 namedTypeSymbol,
                 baseUiElement,
                 controlClassFullName,
                 classDeclaration,
                 platformName,
-                rootNamespace);
-
-            var isDerivedType = !controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase) && namedTypeSymbol.BaseType?.BaseType != null;
+                rootNamespace,
+                isDerivedType,
+                loggingImplementationMode);
 
             var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, isDerivedType, makeClassesPublic, typeParameterList));
 
@@ -259,14 +263,17 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="classDeclaration">Existing class declaration to extend.</param>
         /// <param name="platformName">Friendly Name for the UI platform.</param>
         /// <param name="rootNamespace">The root namespace to place the code in.</param>
+        /// <param name="isDerivedType"></param>
+        /// <param name="loggingImplementationMode"></param>
         /// <returns>Modified Class Declaration Syntax.</returns>
-        protected abstract ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
-            INamedTypeSymbol namedTypeSymbol,
+        protected abstract ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
             string platformName,
-            string rootNamespace);
+            string rootNamespace,
+            bool isDerivedType,
+            LoggingImplementationMode loggingImplementationMode);
 
         /// <summary>
         /// Gets a collection of type constraint clauses.
