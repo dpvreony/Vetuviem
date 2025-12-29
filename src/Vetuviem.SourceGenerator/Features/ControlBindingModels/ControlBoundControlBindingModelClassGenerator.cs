@@ -8,6 +8,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Vetuviem.SourceGenerator.Features.Configuration;
 using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
@@ -92,7 +93,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
             string platformName,
-            string rootNamespace, bool isDerivedType)
+            string rootNamespace, bool isDerivedType, LoggingImplementationMode loggingImplementationMode)
         {
             if (namedTypeSymbol == null)
             {
