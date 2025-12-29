@@ -59,6 +59,11 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
                 allowExperimentalPropertiesAsString,
                 out var allowExperimentalProperties);
 
+            globalOptions.TryGetBuildPropertyValue(
+                "Vetuviem_Logging_Implementation_Mode",
+                out var loggingImplementationModeAsString);
+            var loggingImplementationMode = GetLoggingImplementationMode(loggingImplementationModeAsString);
+
             return new ConfigurationModel(
                 rootNamespace,
                 makeClassesPublic,
@@ -66,7 +71,25 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
                 assemblyMode,
                 baseType,
                 includeObsoleteItems,
-                allowExperimentalProperties);
+                allowExperimentalProperties,
+                loggingImplementationMode);
+        }
+
+        private static LoggingImplementationMode GetLoggingImplementationMode(string? loggingImplementationModeAsString)
+        {
+            if (string.IsNullOrWhiteSpace(loggingImplementationModeAsString))
+            {
+                return LoggingImplementationMode.Splat;
+            }
+
+            if (Enum.TryParse<LoggingImplementationMode>(
+                    loggingImplementationModeAsString,
+                    out var assemblyMode))
+            {
+                return assemblyMode;
+            }
+
+            throw new InvalidOperationException("Invalid logging implementation mode.");
         }
 
         private static AssemblyMode GetAssemblyMode(string? assemblyModeAsString)
