@@ -93,7 +93,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
             string platformName,
-            string rootNamespace, bool isDerivedType, LoggingImplementationMode loggingImplementationMode)
+            string rootNamespace,
+            bool isDerivedType,
+            LoggingImplementationMode loggingImplementationMode)
         {
             if (namedTypeSymbol == null)
             {
@@ -127,9 +129,19 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var baseTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
             baseTypesList = baseTypesList.Add(baseTypeNode);
+
+            if (!isDerivedType && loggingImplementationMode == LoggingImplementationMode.SplatViaServiceLocator)
+            {
+                var splatEnableLoggerInterface =
+                    SyntaxFactory.SimpleBaseType(
+                        SyntaxFactory.ParseTypeName("global::Splat.IEnableLogger"));
+                baseTypesList.Add(splatEnableLoggerInterface);
+            }
+
             var baseList = SyntaxFactory.BaseList(baseTypesList);
 
             classDeclaration = classDeclaration.WithBaseList(baseList);
+
 
             return classDeclaration;
         }
