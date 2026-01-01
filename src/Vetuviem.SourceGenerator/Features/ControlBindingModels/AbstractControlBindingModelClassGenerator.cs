@@ -69,7 +69,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 makeClassesPublic,
                 includeObsoleteItems,
                 platformCommandType,
-                allowExperimentalProperties);
+                allowExperimentalProperties,
+                loggingImplementationMode);
 
             return classDeclaration
                 .WithModifiers(modifiers)
@@ -212,9 +213,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
         /// <param name="platformCommandType">The platform-specific command type.</param>
         /// <param name="allowExperimentalProperties">Whether to include properties marked with ExperimentalAttribute. If true, warnings will be suppressed.</param>
+        /// <param name="loggingImplementationMode"></param>
         /// <returns>Modified Syntax List of Member declarations.</returns>
-        protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(
-            SyntaxList<MemberDeclarationSyntax> members,
+        protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(SyntaxList<MemberDeclarationSyntax> members,
             INamedTypeSymbol namedTypeSymbol,
             string? desiredCommandInterface,
             bool isDerivedType,
@@ -223,7 +224,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool makeClassesPublic,
             bool includeObsoleteItems,
             string? platformCommandType,
-            bool allowExperimentalProperties);
+            bool allowExperimentalProperties,
+            LoggingImplementationMode loggingImplementationMode);
 
         /// <summary>
         /// Gets the class name identifier from a named type symbol.

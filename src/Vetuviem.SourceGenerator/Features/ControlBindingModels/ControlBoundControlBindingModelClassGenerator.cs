@@ -25,8 +25,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         }
 
         /// <inheritdoc />
-        protected override SyntaxList<MemberDeclarationSyntax> ApplyMembers(
-            SyntaxList<MemberDeclarationSyntax> members,
+        protected override SyntaxList<MemberDeclarationSyntax> ApplyMembers(SyntaxList<MemberDeclarationSyntax> members,
             INamedTypeSymbol namedTypeSymbol,
             string? desiredCommandInterface,
             bool isDerivedType,
@@ -35,7 +34,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool makeClassesPublic,
             bool includeObsoleteItems,
             string? platformCommandType,
-            bool allowExperimentalProperties)
+            bool allowExperimentalProperties,
+            LoggingImplementationMode loggingImplementationMode)
         {
             return members;
         }
