@@ -84,9 +84,9 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
 
             if (Enum.TryParse<LoggingImplementationMode>(
                     loggingImplementationModeAsString,
-                    out var assemblyMode))
+                    out var loggingImplementationMode))
             {
-                return assemblyMode;
+                return loggingImplementationMode;
             }
 
             throw new InvalidOperationException("Invalid logging implementation mode.");
