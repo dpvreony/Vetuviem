@@ -44,6 +44,9 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Blazor
                 globalOptions.Add(
                     "build_property.Vetuviem_Assemblies",
                     "MudBlazor.dll");
+                globalOptions.Add(
+                    "build_property.Vetuviem_Assembly_Mode",
+                    "Extend");
 
                 return new InMemoryAnalyzerConfigOptionsProvider(globalOptions);
             }
