@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -395,8 +396,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 body.Add(SyntaxFactory.ExpressionStatement(RoslynGenerationHelpers.GetMethodOnVariableInvocationExpression("base", "ApplyBindings", baseInvokeArgs, false)));
             }
 
-            var controlFullName = namedTypeSymbol.GetFullName();
-
             var commandBindingStatements = new List<StatementSyntax>(properties.Length);
             var oneWayBindingStatements = new List<StatementSyntax>(properties.Length);
             var twoWayBindingStatements = new List<StatementSyntax>(properties.Length);
@@ -467,6 +466,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     twoWayBindingStatements);
             }
 
+            AddExpressionNameVariable(body);
+
             AddLogVariableInitialisation(body);
             AddLoggingDetailForStartOfBinding(body);
             AddLoggingDetailStartOfCommandBinding(body);
@@ -482,7 +483,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return body.ToArray();
         }
 
-        private static StatementSyntax[] GetApplyBindingCompositeDisposableMethodBody(INamedTypeSymbol namedTypeSymbol,
+        private static StatementSyntax[] GetApplyBindingCompositeDisposableMethodBody(
+            INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string? desiredCommandInterface,
             bool includeObsoleteItems,
@@ -562,6 +564,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     twoWayBindingStatements);
             }
 
+            AddExpressionNameVariable(body);
             AddLogVariableInitialisation(body);
             AddLoggingDetailForStartOfBinding(body);
 
@@ -585,6 +588,16 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             AddLoggingDetailForEndOfBinding(body);
             return body.ToArray();
+        }
+
+        private static void AddExpressionNameVariable(List<StatementSyntax> body)
+        {
+            body.Add(RoslynGenerationHelpers.GetVariableAssignmentFromVariableInvocationSyntax(
+                "controlBindingExpressionAsString",
+                "VetuviemControlBindingExpression",
+                "ToString",
+                [],
+                false));
         }
 
         private static void AddLogVariableInitialisation(List<StatementSyntax> body)
@@ -614,27 +627,27 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
         private static void AddLoggingDetailForEndOfBinding(List<StatementSyntax> body)
         {
-            LogSplatDebug(body, "() => \"Finished Binding\"");
+            LogSplatDebug(body, "() => $\"Finished Binding for: { controlBindingExpressionAsString }\"");
         }
 
         private static void AddLoggingDetailStartOfTwoWayBinding(List<StatementSyntax> body)
         {
-            LogSplatDebug(body, "() => \"Starting Two-Way Binding\"");
+            LogSplatDebug(body, "() => $\"Starting Two-Way Binding for: { controlBindingExpressionAsString }\"");
         }
 
         private static void AddLoggingDetailStartOfOneWayBinding(List<StatementSyntax> body)
         {
-            LogSplatDebug(body, "() => \"Starting One-Way Binding\"");
+            LogSplatDebug(body, "() => $\"Starting One-Way Binding for: { controlBindingExpressionAsString }\"");
         }
 
         private static void AddLoggingDetailStartOfCommandBinding(List<StatementSyntax> body)
         {
-            LogSplatDebug(body, "() => \"Starting Command Binding\"");
+            LogSplatDebug(body, "() => $\"Starting Command Binding for: { controlBindingExpressionAsString }\"");
         }
 
         private static void AddLoggingDetailForStartOfBinding(List<StatementSyntax> body)
         {
-            LogSplatDebug(body, "() => \"Starting Binding\"");
+            LogSplatDebug(body, "() => $\"Starting Binding for: { controlBindingExpressionAsString }\"");
         }
 
         private static StatementSyntax GetInvocationStatement(IPropertySymbol propertySymbol)
