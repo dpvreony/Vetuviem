@@ -133,8 +133,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var baseList = SyntaxFactory.BaseList(baseTypesList);
 
             classDeclaration = classDeclaration.WithBaseList(baseList);
-
-
             return classDeclaration;
         }
 
