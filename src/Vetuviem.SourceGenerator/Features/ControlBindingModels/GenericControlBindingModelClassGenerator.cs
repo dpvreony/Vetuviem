@@ -350,7 +350,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return declaration;
         }
 
-        private static StatementSyntax[] GetApplyBindingMethodBody(INamedTypeSymbol namedTypeSymbol,
+        private static StatementSyntax[] GetApplyBindingMethodBody(
+            INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string? desiredCommandInterface,
             bool includeObsoleteItems,
@@ -446,10 +447,18 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     twoWayBindingStatements);
             }
 
+            AddLogVariableInitialisation(body);
+            AddLoggingDetailForStartOfBinding(body);
+            AddLoggingDetailStartOfCommandBinding(body);
             body.AddRange(commandBindingStatements);
+
+            AddLoggingDetailStartOfOneWayBinding(body);
             body.AddRange(oneWayBindingStatements);
+
+            AddLoggingDetailStartOfTwoWayBinding(body);
             body.AddRange(twoWayBindingStatements);
 
+            AddLoggingDetailForEndOfBinding(body);
             return body.ToArray();
         }
 
@@ -533,11 +542,79 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     twoWayBindingStatements);
             }
 
-            body.AddRange(commandBindingStatements);
-            body.AddRange(oneWayBindingStatements);
-            body.AddRange(twoWayBindingStatements);
+            AddLogVariableInitialisation(body);
+            AddLoggingDetailForStartOfBinding(body);
 
+            if (commandBindingStatements.Count > 0)
+            {
+                AddLoggingDetailStartOfCommandBinding(body);
+                body.AddRange(commandBindingStatements);
+            }
+
+            if (oneWayBindingStatements.Count > 0)
+            {
+                AddLoggingDetailStartOfOneWayBinding(body);
+                body.AddRange(oneWayBindingStatements);
+            }
+
+            if (twoWayBindingStatements.Count > 0)
+            {
+                AddLoggingDetailStartOfTwoWayBinding(body);
+                body.AddRange(twoWayBindingStatements);
+            }
+
+            AddLoggingDetailForEndOfBinding(body);
             return body.ToArray();
+        }
+
+        private static void AddLogVariableInitialisation(List<StatementSyntax> body)
+        {
+            // this could be executed as an extension method, but the use of a using statement would get lost when skimming over the generated code.
+            // it's equivalent to:
+            // logger = this.Log();
+            var expression = RoslynGenerationHelpers.GetStaticMethodInvocationSyntax(
+                "Splat.LogHost",
+                "Log",
+                ["this"],
+                false);
+
+            body.Add(RoslynGenerationHelpers.GetVariableAssignmentFromStatementSyntax("logger", expression));
+        }
+
+        private static void LogSplatDebug(List<StatementSyntax> body, string message)
+        {
+            var expression = RoslynGenerationHelpers.GetStaticMethodInvocationSyntax(
+                "Splat.FullLoggerExtensions",
+                "Debug",
+                ["logger", message],
+                false);
+
+            body.Add(SyntaxFactory.ExpressionStatement(expression));
+        }
+
+        private static void AddLoggingDetailForEndOfBinding(List<StatementSyntax> body)
+        {
+            LogSplatDebug(body, "() => \"Finished Binding\"");
+        }
+
+        private static void AddLoggingDetailStartOfTwoWayBinding(List<StatementSyntax> body)
+        {
+            LogSplatDebug(body, "() => \"Starting Two-Way Binding\"");
+        }
+
+        private static void AddLoggingDetailStartOfOneWayBinding(List<StatementSyntax> body)
+        {
+            LogSplatDebug(body, "() => \"Starting One-Way Binding\"");
+        }
+
+        private static void AddLoggingDetailStartOfCommandBinding(List<StatementSyntax> body)
+        {
+            LogSplatDebug(body, "() => \"Starting Command Binding\"");
+        }
+
+        private static void AddLoggingDetailForStartOfBinding(List<StatementSyntax> body)
+        {
+            LogSplatDebug(body, "() => \"Starting Binding\"");
         }
 
         private static StatementSyntax GetInvocationStatement(IPropertySymbol propertySymbol)

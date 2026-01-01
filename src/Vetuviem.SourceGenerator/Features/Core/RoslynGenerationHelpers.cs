@@ -287,18 +287,41 @@ namespace Vetuviem.SourceGenerator.Features.Core
         }
 
         /// <summary>
+        /// Gets syntax to create and assign a variable from invoking another variable.
+        /// </summary>
+        /// <param name="variableToCreate">The name of the variable to create and assign to.</param>
+        /// <returns>Statement representing invoking a variable and assigning it to a newly created variable.</returns>
+        public static StatementSyntax GetVariableAssignmentFromStatementSyntax(string variableToCreate, ExpressionSyntax expressionSyntax)
+        {
+            var equalsValueClause = SyntaxFactory.EqualsValueClause(
+                SyntaxFactory.Token(SyntaxKind.EqualsToken),
+                expressionSyntax);
+
+            var variableSyntax = default(SeparatedSyntaxList<VariableDeclaratorSyntax>);
+            variableSyntax = variableSyntax.Add(SyntaxFactory.VariableDeclarator(variableToCreate).WithInitializer(equalsValueClause));
+
+            var variableDeclaration = SyntaxFactory.VariableDeclaration(
+                SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("var")),
+                variableSyntax);
+
+            return SyntaxFactory.LocalDeclarationStatement(variableDeclaration);
+        }
+
+        /// <summary>
         /// Gets syntax to create and assign a variable from invoking another a method on another variable.
         /// </summary>
         /// <param name="variableToCreate">The name of the variable to create and assign to.</param>
         /// <param name="variableToReference">The name of the variable to reference when invoking the member.</param>
         /// <param name="methodToInvoke">The name of the variable to invoke.</param>
         /// <param name="arguments">arguments to pass to the invoked method.</param>
+        /// <param name="isAsync">Whether the variable is an async method invocation.</param>
         /// <returns>Statement representing invoking a variable and assigning it to a newly created variable.</returns>
         public static StatementSyntax GetVariableAssignmentFromVariableInvocationSyntax(
             string variableToCreate,
             string variableToReference,
             string methodToInvoke,
-            string[] arguments)
+            string[] arguments,
+            bool isAsync)
         {
             var fieldMemberAccess = SyntaxFactory.MemberAccessExpression(
                 SyntaxKind.SimpleMemberAccessExpression,
@@ -318,7 +341,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
             ExpressionSyntax getCommandInvocation = SyntaxFactory.InvocationExpression(fieldMemberAccess, argListSyntax);
 
-            getCommandInvocation = GetAwaitedExpressionSyntax(true, getCommandInvocation);
+            getCommandInvocation = GetAwaitedExpressionSyntax(isAsync, getCommandInvocation);
 
             var equalsValueClause = SyntaxFactory.EqualsValueClause(
                 SyntaxFactory.Token(SyntaxKind.EqualsToken),
@@ -638,14 +661,16 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="propertyName">Name of the property on the variable to access.</param>
         /// <param name="methodName">The name of the method on the property to invoke.</param>
         /// <param name="args">Collection of args to pass to the method.</param>
+        /// <param name="propertyConditionalAccess">Whether the property should be checked for conditional (not null) access.</param>
         /// <returns>Invocation Statement.</returns>
         public static StatementSyntax GetMethodOnPropertyOfVariableInvocationSyntax(
             string variableName,
             string propertyName,
             string methodName,
-            string[] args)
+            string[] args,
+            bool propertyConditionalAccess = true)
         {
-            var variableAccess = SyntaxFactory.MemberAccessExpression(
+            ExpressionSyntax variableAccess = SyntaxFactory.MemberAccessExpression(
                   SyntaxKind.SimpleMemberAccessExpression,
                   SyntaxFactory.IdentifierName(variableName),
                   SyntaxFactory.IdentifierName(propertyName));
@@ -659,9 +684,16 @@ namespace Vetuviem.SourceGenerator.Features.Core
                 }
             }
 
-            var conditionalAccess = SyntaxFactory.ConditionalAccessExpression(variableAccess, SyntaxFactory.MemberBindingExpression(SyntaxFactory.IdentifierName(methodName)));
+            if (propertyConditionalAccess)
+            {
+                variableAccess = SyntaxFactory.ConditionalAccessExpression(variableAccess, SyntaxFactory.MemberBindingExpression(SyntaxFactory.IdentifierName(methodName)));
+            }
+            else
+            {
+                variableAccess = SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, variableAccess, SyntaxFactory.IdentifierName(methodName));
+            }
 
-            var getCommandInvocation = SyntaxFactory.InvocationExpression(conditionalAccess, SyntaxFactory.ArgumentList(argsList));
+            var getCommandInvocation = SyntaxFactory.InvocationExpression(variableAccess, SyntaxFactory.ArgumentList(argsList));
 
             return SyntaxFactory.ExpressionStatement(getCommandInvocation);
         }
