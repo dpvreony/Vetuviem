@@ -33,7 +33,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
         /// <param name="platformCommandType">The platform-specific command type.</param>
         /// <param name="allowExperimentalProperties">Whether to include properties marked with ExperimentalAttribute. If true, warnings will be suppressed.</param>
-        /// <param name="loggingImplementationMode">Whether to generate a logging implementation, and if so, which type of integration.</param>
+        /// <param name="loggingImplementationMode">The logging implementation mode to use for the generated code.</param>
         /// <returns>Namespace declaration containing generated code.</returns>
         public NamespaceDeclarationSyntax GenerateNamespaceDeclaration(NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference[] assembliesOfInterest,
