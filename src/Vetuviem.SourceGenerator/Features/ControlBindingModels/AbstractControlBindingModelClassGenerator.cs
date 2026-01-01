@@ -263,8 +263,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="classDeclaration">Existing class declaration to extend.</param>
         /// <param name="platformName">Friendly Name for the UI platform.</param>
         /// <param name="rootNamespace">The root namespace to place the code in.</param>
-        /// <param name="isDerivedType"></param>
-        /// <param name="loggingImplementationMode"></param>
+        /// <param name="isDerivedType">Indicates whether the target type is derived from another control type.</param>
+        /// <param name="loggingImplementationMode">The logging implementation mode to use for generated code.</param>
         /// <returns>Modified Class Declaration Syntax.</returns>
         protected abstract ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
