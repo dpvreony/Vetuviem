@@ -143,7 +143,17 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 var interfaceTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
                 interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.AbstractControlBindingModel<TView, TViewModel, TControl>")));
+
+                if (loggingImplementationMode == LoggingImplementationMode.SplatViaServiceLocator)
+                {
+                    var splatEnableLoggerInterface =
+                        SyntaxFactory.SimpleBaseType(
+                            SyntaxFactory.ParseTypeName("global::Splat.IEnableLogger"));
+                    interfaceTypesList = interfaceTypesList.Add(splatEnableLoggerInterface);
+                }
+
                 var interfaceList = SyntaxFactory.BaseList(interfaceTypesList);
+
                 classDeclaration = classDeclaration.WithBaseList(interfaceList);
 
                 return classDeclaration;
@@ -187,6 +197,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var baseTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
             baseTypesList = baseTypesList.Add(baseTypeNode);
+
             var baseList = SyntaxFactory.BaseList(baseTypesList);
 
             classDeclaration = classDeclaration.WithBaseList(baseList);

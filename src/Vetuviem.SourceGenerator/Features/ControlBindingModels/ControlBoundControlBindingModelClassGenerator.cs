@@ -130,14 +130,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 #pragma warning restore SA1129 // Do not use default value type constructor
             baseTypesList = baseTypesList.Add(baseTypeNode);
 
-            if (!isDerivedType && loggingImplementationMode == LoggingImplementationMode.SplatViaServiceLocator)
-            {
-                var splatEnableLoggerInterface =
-                    SyntaxFactory.SimpleBaseType(
-                        SyntaxFactory.ParseTypeName("global::Splat.IEnableLogger"));
-                baseTypesList.Add(splatEnableLoggerInterface);
-            }
-
             var baseList = SyntaxFactory.BaseList(baseTypesList);
 
             classDeclaration = classDeclaration.WithBaseList(baseList);
