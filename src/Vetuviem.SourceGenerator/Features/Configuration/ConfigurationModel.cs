@@ -15,6 +15,7 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
     /// </param>
     /// <param name="IncludeObsoleteItems">Whether to include obsolete items in the generation.</param>
     /// <param name="AllowExperimentalProperties">Whether to include properties marked with ExperimentalAttribute. If true, warnings will be suppressed.</param>
+    /// <param name="LoggingImplementationMode">The logging implementation mode to use for generated code.</param>
     public sealed record ConfigurationModel(
         string? RootNamespace,
         bool MakeClassesPublic,
@@ -22,5 +23,6 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
         AssemblyMode AssemblyMode,
         string? BaseType,
         bool IncludeObsoleteItems,
-        bool AllowExperimentalProperties);
+        bool AllowExperimentalProperties,
+        LoggingImplementationMode LoggingImplementationMode);
 }

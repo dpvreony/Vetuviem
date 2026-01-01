@@ -8,6 +8,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Vetuviem.SourceGenerator.Features.Configuration;
 
 namespace Vetuviem.SourceGenerator.Features.Core
 {
@@ -32,6 +33,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
         /// <param name="platformCommandType">The platform-specific command type.</param>
         /// <param name="allowExperimentalProperties">Whether to include properties marked with ExperimentalAttribute. If true, warnings will be suppressed.</param>
+        /// <param name="loggingImplementationMode">The logging implementation mode to use for the generated code.</param>
         /// <returns>Namespace declaration containing generated code.</returns>
         public NamespaceDeclarationSyntax GenerateNamespaceDeclaration(NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference[] assembliesOfInterest,
@@ -45,7 +47,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             bool makeClassesPublic,
             bool includeObsoleteItems,
             string? platformCommandType,
-            bool allowExperimentalProperties)
+            bool allowExperimentalProperties,
+            LoggingImplementationMode loggingImplementationMode)
         {
             if (namespaceDeclaration == null)
             {
@@ -95,7 +98,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     makeClassesPublic,
                     includeObsoleteItems,
                     platformCommandType,
-                    allowExperimentalProperties);
+                    allowExperimentalProperties,
+                    loggingImplementationMode);
             }
 
             return namespaceDeclaration;
@@ -120,7 +124,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             }
         }
 
-        private static void CheckTypeForUiType(INamedTypeSymbol namedTypeSymbol,
+        private static void CheckTypeForUiType(
+            INamedTypeSymbol namedTypeSymbol,
             Action<Diagnostic> reportDiagnosticAction,
             string baseUiElement,
             bool desiredBaseTypeIsInterface,
@@ -133,7 +138,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             bool makeClassesPublic,
             bool includeObsoleteItems,
             string? platformCommandType,
-            bool allowExperimentalProperties)
+            bool allowExperimentalProperties,
+            LoggingImplementationMode loggingImplementationMode)
         {
             var fullName = namedTypeSymbol.GetFullName();
 
@@ -189,13 +195,15 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     makeClassesPublic,
                     includeObsoleteItems,
                     platformCommandType,
-                    allowExperimentalProperties);
+                    allowExperimentalProperties,
+                    loggingImplementationMode);
 
                 memberDeclarationSyntaxes.Add(generatedClass);
             }
         }
 
-        private NamespaceDeclarationSyntax CheckAssemblyForUiTypes(NamespaceDeclarationSyntax namespaceDeclaration,
+        private NamespaceDeclarationSyntax CheckAssemblyForUiTypes(
+            NamespaceDeclarationSyntax namespaceDeclaration,
             MetadataReference metadataReference,
             Compilation compilation,
             Action<Diagnostic> reportDiagnosticAction,
@@ -208,7 +216,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             bool makeClassesPublic,
             bool includeObsoleteItems,
             string? platformCommandType,
-            bool allowExperimentalProperties)
+            bool allowExperimentalProperties,
+            LoggingImplementationMode loggingImplementationMode)
         {
             reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfAssembly(metadataReference));
 
@@ -245,7 +254,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     makeClassesPublic,
                     includeObsoleteItems,
                     platformCommandType,
-                    allowExperimentalProperties);
+                    allowExperimentalProperties,
+                    loggingImplementationMode);
 
                 if (nestedDeclarationSyntax != null)
                 {
@@ -280,7 +290,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
             bool makeClassesPublic,
             bool includeObsoleteItems,
             string? platformCommandType,
-            bool allowExperimentalProperties)
+            bool allowExperimentalProperties,
+            LoggingImplementationMode loggingImplementationMode)
         {
             reportDiagnosticAction(ReportDiagnosticFactory.StartingScanOfNamespace(namespaceSymbol));
 
@@ -304,7 +315,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     makeClassesPublic,
                     includeObsoleteItems,
                     platformCommandType,
-                    allowExperimentalProperties);
+                    allowExperimentalProperties,
+                    loggingImplementationMode);
             }
 
             var nestedSymbols = namespaceSymbol.GetNamespaceMembers();
@@ -324,7 +336,8 @@ namespace Vetuviem.SourceGenerator.Features.Core
                     makeClassesPublic,
                     includeObsoleteItems,
                     platformCommandType,
-                    allowExperimentalProperties);
+                    allowExperimentalProperties,
+                    loggingImplementationMode);
 
                 if (nestedNamespace != null)
                 {

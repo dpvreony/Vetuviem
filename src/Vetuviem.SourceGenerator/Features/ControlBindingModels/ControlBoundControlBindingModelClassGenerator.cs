@@ -8,6 +8,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Vetuviem.SourceGenerator.Features.Configuration;
 using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
@@ -24,8 +25,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         }
 
         /// <inheritdoc />
-        protected override SyntaxList<MemberDeclarationSyntax> ApplyMembers(
-            SyntaxList<MemberDeclarationSyntax> members,
+        protected override SyntaxList<MemberDeclarationSyntax> ApplyMembers(SyntaxList<MemberDeclarationSyntax> members,
             INamedTypeSymbol namedTypeSymbol,
             string? desiredCommandInterface,
             bool isDerivedType,
@@ -34,7 +34,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool makeClassesPublic,
             bool includeObsoleteItems,
             string? platformCommandType,
-            bool allowExperimentalProperties)
+            bool allowExperimentalProperties,
+            LoggingImplementationMode loggingImplementationMode)
         {
             return members;
         }
@@ -87,13 +88,14 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             [SyntaxFactory.Token(makeClassesPublic ? SyntaxKind.PublicKeyword : SyntaxKind.InternalKeyword)];
 
         /// <inheritdoc />
-        protected override ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
-            INamedTypeSymbol namedTypeSymbol,
+        protected override ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
             string platformName,
-            string rootNamespace)
+            string rootNamespace,
+            bool isDerivedType,
+            LoggingImplementationMode loggingImplementationMode)
         {
             if (namedTypeSymbol == null)
             {
@@ -127,10 +129,10 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var baseTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
             baseTypesList = baseTypesList.Add(baseTypeNode);
+
             var baseList = SyntaxFactory.BaseList(baseTypesList);
 
             classDeclaration = classDeclaration.WithBaseList(baseList);
-
             return classDeclaration;
         }
 

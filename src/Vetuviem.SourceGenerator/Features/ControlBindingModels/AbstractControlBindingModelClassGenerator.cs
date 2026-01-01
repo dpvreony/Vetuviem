@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Vetuviem.SourceGenerator.Features.Configuration;
 using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
@@ -28,7 +29,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool makeClassesPublic,
             bool includeObsoleteItems,
             string? platformCommandType,
-            bool allowExperimentalProperties)
+            bool allowExperimentalProperties,
+            LoggingImplementationMode loggingImplementationMode)
         {
             var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
 
@@ -43,15 +45,17 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var classDeclaration = SyntaxFactory.ClassDeclaration(classNameIdentifier);
 
+            var isDerivedType = !controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase) && namedTypeSymbol.BaseType?.BaseType != null;
+
             classDeclaration = ApplyBaseClassDeclarationSyntax(
                 namedTypeSymbol,
                 baseUiElement,
                 controlClassFullName,
                 classDeclaration,
                 platformName,
-                rootNamespace);
-
-            var isDerivedType = !controlClassFullName.Equals(baseUiElement, StringComparison.OrdinalIgnoreCase) && namedTypeSymbol.BaseType?.BaseType != null;
+                rootNamespace,
+                isDerivedType,
+                loggingImplementationMode);
 
             var members = new SyntaxList<MemberDeclarationSyntax>(GetConstructorMethod(namedTypeSymbol, isDerivedType, makeClassesPublic, typeParameterList));
 
@@ -65,7 +69,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 makeClassesPublic,
                 includeObsoleteItems,
                 platformCommandType,
-                allowExperimentalProperties);
+                allowExperimentalProperties,
+                loggingImplementationMode);
 
             return classDeclaration
                 .WithModifiers(modifiers)
@@ -208,9 +213,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="includeObsoleteItems">Whether to include obsolete items in the generated code.</param>
         /// <param name="platformCommandType">The platform-specific command type.</param>
         /// <param name="allowExperimentalProperties">Whether to include properties marked with ExperimentalAttribute. If true, warnings will be suppressed.</param>
+        /// <param name="loggingImplementationMode"></param>
         /// <returns>Modified Syntax List of Member declarations.</returns>
-        protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(
-            SyntaxList<MemberDeclarationSyntax> members,
+        protected abstract SyntaxList<MemberDeclarationSyntax> ApplyMembers(SyntaxList<MemberDeclarationSyntax> members,
             INamedTypeSymbol namedTypeSymbol,
             string? desiredCommandInterface,
             bool isDerivedType,
@@ -219,7 +224,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool makeClassesPublic,
             bool includeObsoleteItems,
             string? platformCommandType,
-            bool allowExperimentalProperties);
+            bool allowExperimentalProperties,
+            LoggingImplementationMode loggingImplementationMode);
 
         /// <summary>
         /// Gets the class name identifier from a named type symbol.
@@ -259,14 +265,17 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <param name="classDeclaration">Existing class declaration to extend.</param>
         /// <param name="platformName">Friendly Name for the UI platform.</param>
         /// <param name="rootNamespace">The root namespace to place the code in.</param>
+        /// <param name="isDerivedType">Indicates whether the target type is derived from another control type.</param>
+        /// <param name="loggingImplementationMode">The logging implementation mode to use for generated code.</param>
         /// <returns>Modified Class Declaration Syntax.</returns>
-        protected abstract ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
-            INamedTypeSymbol namedTypeSymbol,
+        protected abstract ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
             string platformName,
-            string rootNamespace);
+            string rootNamespace,
+            bool isDerivedType,
+            LoggingImplementationMode loggingImplementationMode);
 
         /// <summary>
         /// Gets a collection of type constraint clauses.

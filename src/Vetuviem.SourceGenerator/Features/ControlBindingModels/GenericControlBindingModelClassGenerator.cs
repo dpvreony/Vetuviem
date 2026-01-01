@@ -5,9 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Vetuviem.SourceGenerator.Features.Configuration;
 using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
@@ -36,7 +38,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool makeClassesPublic,
             bool includeObsoleteItems,
             string? platformCommandType,
-            bool allowExperimentalProperties)
+            bool allowExperimentalProperties,
+            LoggingImplementationMode loggingImplementationMode)
         {
             members = members.AddRange(ControlBindingModelPropertyGenerator.GetProperties(
                 namedTypeSymbol,
@@ -51,14 +54,16 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 isDerivedType,
                 desiredCommandInterface,
                 includeObsoleteItems,
-                platformCommandType));
+                platformCommandType,
+                loggingImplementationMode));
 
             members = members.Add(GetApplyBindingsWithCompositeDisposableMethod(
                 namedTypeSymbol,
                 isDerivedType,
                 desiredCommandInterface,
                 includeObsoleteItems,
-                platformCommandType));
+                platformCommandType,
+                loggingImplementationMode));
 
             return members;
         }
@@ -113,13 +118,12 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             [SyntaxFactory.Token(SyntaxKind.ProtectedKeyword)];
 
         /// <inheritdoc />
-        protected override ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(
-            INamedTypeSymbol namedTypeSymbol,
+        protected override ClassDeclarationSyntax ApplyBaseClassDeclarationSyntax(INamedTypeSymbol namedTypeSymbol,
             string baseUiElement,
             string controlClassFullName,
             ClassDeclarationSyntax classDeclaration,
             string platformName,
-            string rootNamespace)
+            string rootNamespace, bool isDerivedType, LoggingImplementationMode loggingImplementationMode)
         {
             if (namedTypeSymbol == null)
             {
@@ -143,7 +147,17 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 var interfaceTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
                 interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.AbstractControlBindingModel<TView, TViewModel, TControl>")));
+
+                if (loggingImplementationMode == LoggingImplementationMode.SplatViaServiceLocator)
+                {
+                    var splatEnableLoggerInterface =
+                        SyntaxFactory.SimpleBaseType(
+                            SyntaxFactory.ParseTypeName("global::Splat.IEnableLogger"));
+                    interfaceTypesList = interfaceTypesList.Add(splatEnableLoggerInterface);
+                }
+
                 var interfaceList = SyntaxFactory.BaseList(interfaceTypesList);
+
                 classDeclaration = classDeclaration.WithBaseList(interfaceList);
 
                 return classDeclaration;
@@ -159,6 +173,15 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 var interfaceTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
                 interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.AbstractControlBindingModel<TView, TViewModel, TControl>")));
+
+                if (loggingImplementationMode == LoggingImplementationMode.SplatViaServiceLocator)
+                {
+                    var splatEnableLoggerInterface =
+                        SyntaxFactory.SimpleBaseType(
+                            SyntaxFactory.ParseTypeName("global::Splat.IEnableLogger"));
+                    interfaceTypesList = interfaceTypesList.Add(splatEnableLoggerInterface);
+                }
+
                 var interfaceList = SyntaxFactory.BaseList(interfaceTypesList);
                 classDeclaration = classDeclaration.WithBaseList(interfaceList);
 
@@ -187,6 +210,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var baseTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
             baseTypesList = baseTypesList.Add(baseTypeNode);
+
             var baseList = SyntaxFactory.BaseList(baseTypesList);
 
             classDeclaration = classDeclaration.WithBaseList(baseList);
@@ -285,7 +309,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool isDerivedType,
             string? desiredCommandInterface,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            LoggingImplementationMode loggingImplementationMode)
         {
             const string methodName = "ApplyBindings";
             var returnType = SyntaxFactory.ParseTypeName("void");
@@ -295,7 +320,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 isDerivedType,
                 desiredCommandInterface,
                 includeObsoleteItems,
-                platformCommandType);
+                platformCommandType,
+                loggingImplementationMode);
 
             var parameters = RoslynGenerationHelpers.GetParams(new[]
             {
@@ -320,7 +346,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool isDerivedType,
             string? desiredCommandInterface,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            LoggingImplementationMode loggingImplementationMode)
         {
             const string methodName = "ApplyBindings";
             var returnType = SyntaxFactory.ParseTypeName("void");
@@ -330,7 +357,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 isDerivedType,
                 desiredCommandInterface,
                 includeObsoleteItems,
-                platformCommandType);
+                platformCommandType,
+                loggingImplementationMode);
 
             var parameters = RoslynGenerationHelpers.GetParams(new[]
             {
@@ -350,11 +378,13 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return declaration;
         }
 
-        private static StatementSyntax[] GetApplyBindingMethodBody(INamedTypeSymbol namedTypeSymbol,
+        private static StatementSyntax[] GetApplyBindingMethodBody(
+            INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string? desiredCommandInterface,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            LoggingImplementationMode loggingImplementationMode)
         {
             var body = new List<StatementSyntax>();
 
@@ -373,8 +403,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 };
                 body.Add(SyntaxFactory.ExpressionStatement(RoslynGenerationHelpers.GetMethodOnVariableInvocationExpression("base", "ApplyBindings", baseInvokeArgs, false)));
             }
-
-            var controlFullName = namedTypeSymbol.GetFullName();
 
             var commandBindingStatements = new List<StatementSyntax>(properties.Length);
             var oneWayBindingStatements = new List<StatementSyntax>(properties.Length);
@@ -446,18 +474,30 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     twoWayBindingStatements);
             }
 
+            AddExpressionNameVariable(body);
+
+            AddLogVariableInitialisation(body, loggingImplementationMode);
+            AddLoggingDetailForStartOfBinding(body, loggingImplementationMode);
+            AddLoggingDetailStartOfCommandBinding(body, loggingImplementationMode);
             body.AddRange(commandBindingStatements);
+
+            AddLoggingDetailStartOfOneWayBinding(body, loggingImplementationMode);
             body.AddRange(oneWayBindingStatements);
+
+            AddLoggingDetailStartOfTwoWayBinding(body, loggingImplementationMode);
             body.AddRange(twoWayBindingStatements);
 
+            AddLoggingDetailForEndOfBinding(body, loggingImplementationMode);
             return body.ToArray();
         }
 
-        private static StatementSyntax[] GetApplyBindingCompositeDisposableMethodBody(INamedTypeSymbol namedTypeSymbol,
+        private static StatementSyntax[] GetApplyBindingCompositeDisposableMethodBody(
+            INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string? desiredCommandInterface,
             bool includeObsoleteItems,
-            string? platformCommandType)
+            string? platformCommandType,
+            LoggingImplementationMode loggingImplementationMode)
         {
             var body = new List<StatementSyntax>();
 
@@ -533,11 +573,154 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     twoWayBindingStatements);
             }
 
-            body.AddRange(commandBindingStatements);
-            body.AddRange(oneWayBindingStatements);
-            body.AddRange(twoWayBindingStatements);
+            AddExpressionNameVariable(body);
+            AddLogVariableInitialisation(body, loggingImplementationMode);
+            AddLoggingDetailForStartOfBinding(body, loggingImplementationMode);
 
+            if (commandBindingStatements.Count > 0)
+            {
+                AddLoggingDetailStartOfCommandBinding(body, loggingImplementationMode);
+                body.AddRange(commandBindingStatements);
+            }
+
+            if (oneWayBindingStatements.Count > 0)
+            {
+                AddLoggingDetailStartOfOneWayBinding(body, loggingImplementationMode);
+                body.AddRange(oneWayBindingStatements);
+            }
+
+            if (twoWayBindingStatements.Count > 0)
+            {
+                AddLoggingDetailStartOfTwoWayBinding(body, loggingImplementationMode);
+                body.AddRange(twoWayBindingStatements);
+            }
+
+            AddLoggingDetailForEndOfBinding(body, loggingImplementationMode);
             return body.ToArray();
+        }
+
+        private static void AddExpressionNameVariable(List<StatementSyntax> body)
+        {
+            body.Add(RoslynGenerationHelpers.GetVariableAssignmentFromVariableInvocationSyntax(
+                "controlBindingExpressionAsString",
+                "VetuviemControlBindingExpression",
+                "ToString",
+                [],
+                false));
+        }
+
+        private static void AddLogVariableInitialisation(List<StatementSyntax> body,
+            LoggingImplementationMode loggingImplementationMode)
+        {
+            switch (loggingImplementationMode)
+            {
+                case LoggingImplementationMode.None:
+                    return;
+                case LoggingImplementationMode.SplatViaServiceLocator:
+                {
+                    // this could be executed as an extension method, but the use of a using statement would get lost when skimming over the generated code.
+                    // it's equivalent to:
+                    // logger = this.Log();
+                    var expression = RoslynGenerationHelpers.GetStaticMethodInvocationSyntax(
+                        "Splat.LogHost",
+                        "Log",
+                        ["this"],
+                        false);
+
+                    body.Add(RoslynGenerationHelpers.GetVariableAssignmentFromStatementSyntax("logger", expression));
+                }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(loggingImplementationMode), loggingImplementationMode, null);
+            }
+        }
+
+        private static void LogSplatDebug(List<StatementSyntax> body, string message)
+        {
+            var expression = RoslynGenerationHelpers.GetStaticMethodInvocationSyntax(
+                "Splat.FullLoggerExtensions",
+                "Debug",
+                ["logger", message],
+                false);
+
+            body.Add(SyntaxFactory.ExpressionStatement(expression));
+        }
+
+        private static void AddLoggingDetailForEndOfBinding(
+            List<StatementSyntax> body,
+            LoggingImplementationMode loggingImplementationMode)
+        {
+            switch (loggingImplementationMode)
+            {
+                case LoggingImplementationMode.None:
+                    return;
+                case LoggingImplementationMode.SplatViaServiceLocator:
+                    LogSplatDebug(body, "() => $\"Finished Binding for: { controlBindingExpressionAsString }\"");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(loggingImplementationMode), loggingImplementationMode, null);
+            }
+
+        }
+
+        private static void AddLoggingDetailStartOfTwoWayBinding(List<StatementSyntax> body,
+            LoggingImplementationMode loggingImplementationMode)
+        {
+            switch (loggingImplementationMode)
+            {
+                case LoggingImplementationMode.None:
+                    return;
+                case LoggingImplementationMode.SplatViaServiceLocator:
+                    LogSplatDebug(body, "() => $\"Starting Two-Way Binding for: { controlBindingExpressionAsString }\"");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(loggingImplementationMode), loggingImplementationMode, null);
+            }
+        }
+
+        private static void AddLoggingDetailStartOfOneWayBinding(List<StatementSyntax> body,
+            LoggingImplementationMode loggingImplementationMode)
+        {
+            switch (loggingImplementationMode)
+            {
+                case LoggingImplementationMode.None:
+                    return;
+                case LoggingImplementationMode.SplatViaServiceLocator:
+                    LogSplatDebug(body, "() => $\"Starting One-Way Binding for: { controlBindingExpressionAsString }\"");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(loggingImplementationMode), loggingImplementationMode, null);
+            }
+        }
+
+        private static void AddLoggingDetailStartOfCommandBinding(List<StatementSyntax> body,
+            LoggingImplementationMode loggingImplementationMode)
+        {
+            switch (loggingImplementationMode)
+            {
+                case LoggingImplementationMode.None:
+                    return;
+                case LoggingImplementationMode.SplatViaServiceLocator:
+                    LogSplatDebug(body, "() => $\"Starting Command Binding for: { controlBindingExpressionAsString }\"");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(loggingImplementationMode), loggingImplementationMode, null);
+            }
+        }
+
+        private static void AddLoggingDetailForStartOfBinding(List<StatementSyntax> body,
+            LoggingImplementationMode loggingImplementationMode)
+        {
+            switch (loggingImplementationMode)
+            {
+                case LoggingImplementationMode.None:
+                    return;
+                case LoggingImplementationMode.SplatViaServiceLocator:
+                    LogSplatDebug(body, "() => $\"Starting Binding for: { controlBindingExpressionAsString }\"");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(loggingImplementationMode), loggingImplementationMode, null);
+            }
         }
 
         private static StatementSyntax GetInvocationStatement(IPropertySymbol propertySymbol)

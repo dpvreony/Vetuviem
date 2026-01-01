@@ -141,12 +141,6 @@ namespace Vetuviem.SourceGenerator
         /// <returns>Fully qualified root namespace.</returns>
         protected abstract string GetNamespace(string? rootNamespace);
 
-        /// <summary>
-        /// Create the syntax tree representing the expansion of some member to which this attribute is applied.
-        /// </summary>
-        /// <param name="context">The transformation context being generated for.</param>
-        /// <param name="cancellationToken">A cancellation token.</param>
-        /// <returns>The generated member syntax to be added to the project.</returns>
         private MemberDeclarationSyntax? GenerateAsync(
             SourceProductionContext context,
             ConfigurationModel configurationModel,
@@ -236,7 +230,8 @@ namespace Vetuviem.SourceGenerator
                 configurationModel.MakeClassesPublic,
                 configurationModel.IncludeObsoleteItems,
                 platformResolver.GetCommandInterface(),
-                configurationModel.AllowExperimentalProperties);
+                configurationModel.AllowExperimentalProperties,
+                configurationModel.LoggingImplementationMode);
 
             return result;
         }
