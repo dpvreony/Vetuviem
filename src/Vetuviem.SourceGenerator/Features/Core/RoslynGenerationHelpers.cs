@@ -290,6 +290,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// Gets syntax to create and assign a variable from invoking another variable.
         /// </summary>
         /// <param name="variableToCreate">The name of the variable to create and assign to.</param>
+        /// <param name="expressionSyntax">The expression syntax to assign to the variable.</param>
         /// <returns>Statement representing invoking a variable and assigning it to a newly created variable.</returns>
         public static StatementSyntax GetVariableAssignmentFromStatementSyntax(string variableToCreate, ExpressionSyntax expressionSyntax)
         {
