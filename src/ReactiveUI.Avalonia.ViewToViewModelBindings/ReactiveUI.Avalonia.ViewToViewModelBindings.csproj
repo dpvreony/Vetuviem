@@ -15,6 +15,7 @@
     <IsPackable>False</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Splat" Version="19.1.1" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.9" />
   </ItemGroup>
 
