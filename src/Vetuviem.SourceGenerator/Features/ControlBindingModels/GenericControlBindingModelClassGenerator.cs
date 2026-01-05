@@ -637,13 +637,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
         private static void LogSplatDebug(List<StatementSyntax> body, string message)
         {
-            var expression = RoslynGenerationHelpers.GetStaticMethodInvocationSyntax(
-                "Splat.FullLoggerExtensions",
-                "Debug",
-                ["logger", message],
-                false);
-
-            body.Add(SyntaxFactory.ExpressionStatement(expression));
+            body.Add(RoslynGenerationHelpers.GetMethodOnVariableInvocationSyntax("logger", "Debug", [message], false));
         }
 
         private static void AddLoggingDetailForEndOfBinding(
