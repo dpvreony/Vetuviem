@@ -67,9 +67,143 @@ public sealed class QuestionnaireViewBindingModels : AbstractEnableViewToViewMod
 }
 ```
 
-## Sponsorship
+## Configuration
 
-If you find Vetuviem useful, please consider sponsoring the project to help with ongoing development and maintenance. You can sponsor through [GitHub Sponsors](https://github.com/sponsors/dpvreony).
+Vetuviem source generators can be configured through MSBuild properties in your project file (`.csproj`). Add these properties to a `<PropertyGroup>` section to customize code generation behavior.
+
+### Available Properties
+
+| Property | Description | Default Value |
+|----------|-------------|---------------|
+| `Vetuviem_Root_Namespace` | Override the root namespace for generated code | (Project's root namespace) |
+| `Vetuviem_Make_Classes_Public` | Make generated classes public instead of internal | `false` |
+| `Vetuviem_Assemblies` | Comma-separated list of assemblies to scan for controls | (Platform-specific defaults) |
+| `Vetuviem_Assembly_Mode` | How to use custom assemblies: `Replace` or `Extend` | `Replace` |
+| `Vetuviem_Base_Namespace` | Base namespace when using custom assemblies | (none) |
+| `Vetuviem_Include_Obsolete_Items` | Include properties marked with `ObsoleteAttribute` | `false` |
+| `Vetuviem_Allow_Experimental_Properties` | Include properties marked with `ExperimentalAttribute` | `false` |
+| `Vetuviem_Logging_Implementation_Mode` | Logging implementation: `None` or `SplatViaServiceLocator` | `SplatViaServiceLocator` |
+
+### Property Details
+
+#### Vetuviem_Root_Namespace
+
+Override the default root namespace for generated code. This is useful when you want generated binding models to reside in a specific namespace.
+
+**Example:**
+```xml
+<PropertyGroup>
+  <Vetuviem_Root_Namespace>MyApp.Generated</Vetuviem_Root_Namespace>
+</PropertyGroup>
+```
+
+#### Vetuviem_Make_Classes_Public
+
+Controls the visibility of generated binding model classes. By default, classes are generated as `internal`. Set this to `true` to make them `public`.
+
+**Example:**
+```xml
+<PropertyGroup>
+  <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
+</PropertyGroup>
+```
+
+#### Vetuviem_Assemblies
+
+Specify a comma-separated list of assemblies to scan for control types. Use in conjunction with `Vetuviem_Assembly_Mode` to either replace or extend the default platform assemblies.
+
+**Example:**
+```xml
+<PropertyGroup>
+  <Vetuviem_Assemblies>CustomControls.dll,ThirdPartyControls.dll</Vetuviem_Assemblies>
+</PropertyGroup>
+```
+
+#### Vetuviem_Assembly_Mode
+
+Determines how the assemblies specified in `Vetuviem_Assemblies` are used:
+- **`Replace`** (default): Replace platform defaults with your custom assemblies
+- **`Extend`**: Add custom assemblies in addition to platform defaults
+
+**Example:**
+```xml
+<PropertyGroup>
+  <Vetuviem_Assembly_Mode>Extend</Vetuviem_Assembly_Mode>
+</PropertyGroup>
+```
+
+#### Vetuviem_Base_Namespace
+
+Used with custom assemblies to specify a base namespace. This allows third parties to use the generator and produce custom namespaces that inherit from the root or use a custom namespace.
+
+**Example:**
+```xml
+<PropertyGroup>
+  <Vetuviem_Base_Namespace>MyCompany.Controls</Vetuviem_Base_Namespace>
+</PropertyGroup>
+```
+
+#### Vetuviem_Include_Obsolete_Items
+
+Controls whether properties marked with `ObsoleteAttribute` are included in code generation. By default, obsolete items are excluded.
+
+**Example:**
+```xml
+<PropertyGroup>
+  <Vetuviem_Include_Obsolete_Items>true</Vetuviem_Include_Obsolete_Items>
+</PropertyGroup>
+```
+
+#### Vetuviem_Allow_Experimental_Properties
+
+Starting with .NET 10, properties can be marked with `ExperimentalAttribute` to indicate they are experimental APIs. This property controls how these are handled:
+
+**When `false` or not set (default):**
+- Properties marked with `ExperimentalAttribute` are **excluded** from code generation
+- No warnings are generated
+- Experimental properties are silently skipped
+- Ensures backward compatibility
+
+**When `true`:**
+- Properties marked with `ExperimentalAttribute` are **included** in code generation
+- A `SuppressMessage` attribute is automatically added to suppress experimental warnings
+- The diagnostic ID from the `ExperimentalAttribute` is extracted and used in the suppression
+
+**Example:**
+```xml
+<PropertyGroup>
+  <Vetuviem_Allow_Experimental_Properties>true</Vetuviem_Allow_Experimental_Properties>
+</PropertyGroup>
+```
+
+**Example Control Property:**
+```csharp
+[Experimental("WFDEV001")]
+public ThemeMode ThemeMode { get; set; }
+```
+
+**Generated Binding Property (when enabled):**
+```csharp
+[SuppressMessage("Usage", "WFDEV001")]
+public IOneOrTwoWayBind<TViewModel, ThemeMode>? ThemeMode { get; init; }
+```
+
+**Notes:**
+- The diagnostic ID is read from the first constructor argument of `ExperimentalAttribute`
+- Only properties with `public` accessibility are considered for generation (standard behavior)
+
+#### Vetuviem_Logging_Implementation_Mode
+
+Controls the logging implementation generated in binding code:
+- **`None`**: No logging implementation
+- **`SplatViaServiceLocator`** (default): Uses Splat logging via service locator
+
+**Example:**
+```xml
+<PropertyGroup>
+  <Vetuviem_Logging_Implementation_Mode>None</Vetuviem_Logging_Implementation_Mode>
+</PropertyGroup>
+```
 
 ## Support
 
@@ -87,8 +221,6 @@ Contributions are welcome! Please:
 * Write tests for your changes
 * Ensure all tests pass and code follows the existing style
 * Submit a Pull Request with a clear description of your changes
-
-For more information on experimental properties support, see [EXPERIMENTAL_PROPERTIES.md](EXPERIMENTAL_PROPERTIES.md).
 
 ## License
 
