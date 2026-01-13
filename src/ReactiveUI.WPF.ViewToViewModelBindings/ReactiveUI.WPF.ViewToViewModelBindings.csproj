@@ -18,6 +18,7 @@
     <NoWarn>WPF0001</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Splat" Version="19.1.1" />
     <PackageReference Include="ReactiveUI.WPF" Version="22.3.1" />
   </ItemGroup>
 
