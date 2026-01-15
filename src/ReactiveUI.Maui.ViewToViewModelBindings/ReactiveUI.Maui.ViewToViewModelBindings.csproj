@@ -4,6 +4,7 @@
     <LangVersion>9</LangVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>True</DebugSymbols>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <!--
     If you're seeing CS8032 warnings, it can be because the upstream source generator dll has been rebuilt or you've changed the
     target frameworks in this project. Visual Studio seems to have a cache that invalidates. Reloading Visual Studio can
