@@ -89,6 +89,7 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
 
             if (Enum.TryParse<UiFramework>(
                     uiFrameworkAsString,
+                    true,
                     out var uiFramework))
             {
                 return uiFramework;
