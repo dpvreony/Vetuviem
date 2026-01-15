@@ -30,7 +30,7 @@ namespace Vetuviem.Testing
         /// </summary>
         /// <typeparam name="TGenerator">The type for the source generator.</typeparam>
         public abstract class BaseExecuteMethod<TGenerator> : TestWithLoggingBase
-            where TGenerator : IIncrementalGenerator
+            where TGenerator : IIncrementalGenerator, new()
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="BaseExecuteMethod{TGenerator}"/> class.
@@ -47,9 +47,7 @@ namespace Vetuviem.Testing
             [Fact]
             public void GeneratesCode()
             {
-                var factory = GetFactory();
-
-                var instance = factory();
+                var instance = new TGenerator();
 
                 var references = new List<MetadataReference>
                 {
@@ -104,12 +102,6 @@ namespace Vetuviem.Testing
             /// </summary>
             /// <param name="metadataReferences">List of metadata references.</param>
             protected abstract void AddReferenceAssemblies(IList<MetadataReference> metadataReferences);
-
-            /// <summary>
-            /// Gets the factory method for creating a source generator.
-            /// </summary>
-            /// <returns>Function for creating a source generator.</returns>
-            protected abstract Func<TGenerator> GetFactory();
 
             private static Compilation CreateCompilation(string source, IEnumerable<MetadataReference> reference) => CSharpCompilation.Create(
                 assemblyName: "compilation",

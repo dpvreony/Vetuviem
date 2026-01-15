@@ -72,12 +72,6 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Blazor
                 }
             }
 
-            /// <inheritdoc />
-            protected override Func<VetuviemEntryAssemblySourceGenerator> GetFactory()
-            {
-                return () => new VetuviemEntryAssemblySourceGenerator();
-            }
-
             private static string[]? GetPlatformAssemblyPaths()
             {
                 if (AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES") is string trustedPlatformAssemblies)

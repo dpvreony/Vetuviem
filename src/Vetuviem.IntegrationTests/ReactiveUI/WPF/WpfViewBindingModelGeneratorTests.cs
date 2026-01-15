@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Vetuviem.SourceGenerator.Features.ControlBindingModels;
+using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Wpf;
 using Vetuviem.Testing;
 using Xunit;
@@ -20,7 +20,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
     public static class WpfViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<WpfControlBindingModelSourceGenerator, ControlBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<VetuviemEntryAssemblySourceGenerator>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
@@ -63,12 +63,6 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
                     }
                     metadataReferences.Add(metadataReference);
                 }
-            }
-
-            /// <inheritdoc />
-            protected override Func<WpfControlBindingModelSourceGenerator> GetFactory()
-            {
-                return () => new WpfControlBindingModelSourceGenerator();
             }
 
             private static string[]? GetPlatformAssemblyPaths()

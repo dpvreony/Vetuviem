@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using NetTestRegimentation;
-using Vetuviem.Blazor.SourceGenerator;
+using Vetuviem.SourceGenerator.Features.Blazor;
 using Xunit;
 
 namespace Vetuviem.UnitTests.Blazor.SourceGenerator
