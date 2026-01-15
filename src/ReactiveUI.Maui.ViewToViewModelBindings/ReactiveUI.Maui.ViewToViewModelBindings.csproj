@@ -4,6 +4,7 @@
     <LangVersion>9</LangVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>True</DebugSymbols>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <!--
     If you're seeing CS8032 warnings, it can be because the upstream source generator dll has been rebuilt or you've changed the
     target frameworks in this project. Visual Studio seems to have a cache that invalidates. Reloading Visual Studio can
@@ -19,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vetuviem.Maui.SourceGenerator\Vetuviem.Maui.SourceGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
 
@@ -27,5 +27,6 @@
   <PropertyGroup>
     <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
     <Vetuviem_Include_Obsolete_Items>true</Vetuviem_Include_Obsolete_Items>
+    <Vetuviem_UI_Framework>Maui</Vetuviem_UI_Framework>
   </PropertyGroup>
 </Project>
