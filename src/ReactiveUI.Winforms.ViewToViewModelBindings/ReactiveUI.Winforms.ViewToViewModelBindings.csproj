@@ -24,5 +24,6 @@
   <Import Project="..\Vetuviem.SourceGenerator\Vetuviem-SourceGenerator.props" />
   <PropertyGroup>
     <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
+    <Vetuviem_UI_Framework>Winforms</Vetuviem_UI_Framework>
   </PropertyGroup>
 </Project>

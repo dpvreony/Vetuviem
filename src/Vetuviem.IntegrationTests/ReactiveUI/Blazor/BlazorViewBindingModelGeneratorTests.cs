@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Vetuviem.Blazor.SourceGenerator;
+using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.Testing;
 using Xunit;
@@ -20,7 +20,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Blazor
     public static class MudBlazorViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<BlazorControlBindingModelSourceGenerator, ControlBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<VetuviemEntryAssemblySourceGenerator>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
@@ -47,6 +47,9 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Blazor
                 globalOptions.Add(
                     "build_property.Vetuviem_Assembly_Mode",
                     "Extend");
+                globalOptions.Add(
+                    "build_property.Vetuviem_Ui_Framework",
+                    "Blazor");
 
                 return new InMemoryAnalyzerConfigOptionsProvider(globalOptions);
             }
@@ -70,9 +73,9 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Blazor
             }
 
             /// <inheritdoc />
-            protected override Func<BlazorControlBindingModelSourceGenerator> GetFactory()
+            protected override Func<VetuviemEntryAssemblySourceGenerator> GetFactory()
             {
-                return () => new BlazorControlBindingModelSourceGenerator();
+                return () => new VetuviemEntryAssemblySourceGenerator();
             }
 
             private static string[]? GetPlatformAssemblyPaths()

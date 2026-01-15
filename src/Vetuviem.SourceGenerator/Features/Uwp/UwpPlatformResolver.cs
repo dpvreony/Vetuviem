@@ -2,6 +2,7 @@
 // DPVreony and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if TBC
 using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator.Features.Uwp
@@ -33,3 +34,4 @@ namespace Vetuviem.SourceGenerator.Features.Uwp
         }
     }
 }
+#endif

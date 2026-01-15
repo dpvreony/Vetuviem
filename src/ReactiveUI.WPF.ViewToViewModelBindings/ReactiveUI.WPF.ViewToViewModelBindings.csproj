@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vetuviem.SourceGenerator\Vetuviem.SourceGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
 
@@ -29,5 +30,6 @@
   <PropertyGroup>
     <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
     <Vetuviem_Allow_Experimental_Properties>true</Vetuviem_Allow_Experimental_Properties>
+    <Vetuviem_UI_Framework>Wpf</Vetuviem_UI_Framework>
   </PropertyGroup>
 </Project>

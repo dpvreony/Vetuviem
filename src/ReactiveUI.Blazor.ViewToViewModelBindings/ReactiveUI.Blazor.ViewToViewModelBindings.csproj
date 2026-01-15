@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vetuviem.Blazor.SourceGenerator\Vetuviem.Blazor.SourceGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Vetuviem.SourceGenerator\Vetuviem.SourceGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
 
@@ -31,5 +31,6 @@
     <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
     <Vetuviem_Assemblies>MudBlazor.dll</Vetuviem_Assemblies>
     <Vetuviem_Assembly_Mode>Extend</Vetuviem_Assembly_Mode>
+    <Vetuviem_UI_Framework>Blazor</Vetuviem_UI_Framework>
   </PropertyGroup>
 </Project>

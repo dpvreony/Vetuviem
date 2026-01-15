@@ -29,13 +29,11 @@ namespace Vetuviem.Testing
         /// Unit Tests for the Execute Method.
         /// </summary>
         /// <typeparam name="TGenerator">The type for the source generator.</typeparam>
-        /// <typeparam name="TGeneratorProcessor">The type for the source generator processor.</typeparam>
-        public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor> : TestWithLoggingBase
-            where TGenerator : AbstractBaseSourceGenerator<TGeneratorProcessor>
-            where TGeneratorProcessor : AbstractGeneratorProcessor, new()
+        public abstract class BaseExecuteMethod<TGenerator> : TestWithLoggingBase
+            where TGenerator : IIncrementalGenerator
         {
             /// <summary>
-            /// Initializes a new instance of the <see cref="BaseExecuteMethod{TGenerator, TGeneratorProcessor}"/> class.
+            /// Initializes a new instance of the <see cref="BaseExecuteMethod{TGenerator}"/> class.
             /// </summary>
             /// <param name="output">Test Output Helper.</param>
             protected BaseExecuteMethod(ITestOutputHelper output)
