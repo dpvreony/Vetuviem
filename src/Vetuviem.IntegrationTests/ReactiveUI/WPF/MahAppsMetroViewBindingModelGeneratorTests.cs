@@ -53,6 +53,9 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.WPF
                 globalOptions.Add(
                     "build_property.Vetuviem_Assemblies",
                     "ControlzEx.dll,MahApps.Metro.dll,MahApps.Metro.SimpleChildWindow.dll");
+                globalOptions.Add(
+                    "build_property.Vetuviem_UI_Framework",
+                    "Wpf");
 
                 return new InMemoryAnalyzerConfigOptionsProvider(globalOptions);
             }

@@ -41,7 +41,12 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Avalonia
             /// <inheritdoc />
             protected override AnalyzerConfigOptionsProvider? GetAnalyzerConfigOptionsProvider()
             {
-                return null;
+                var globalOptions = new InMemoryAnalyzerConfigOptions();
+                globalOptions.Add(
+                    "build_property.Vetuviem_UI_Framework",
+                    "Avalonia");
+
+                return new InMemoryAnalyzerConfigOptionsProvider(globalOptions);
             }
 
             /// <inheritdoc />
