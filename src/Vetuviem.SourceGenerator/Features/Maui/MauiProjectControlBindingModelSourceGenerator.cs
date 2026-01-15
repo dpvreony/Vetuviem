@@ -10,7 +10,6 @@ namespace Vetuviem.SourceGenerator.Features.Maui
     /// <summary>
     /// Project level Control Binding Model Source Generator for WPF.
     /// </summary>
-    [Generator]
     public sealed class MauiProjectControlBindingModelSourceGenerator : AbstractProjectControlBindingModelSourceGenerator
     {
         /// <inheritdoc />

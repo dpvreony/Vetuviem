@@ -10,7 +10,6 @@ namespace Vetuviem.SourceGenerator.Features.Winforms
     /// <summary>
     /// Project level Control Binding Model Source Generator for WPF.
     /// </summary>
-    [Generator]
     public sealed class WinformsProjectControlBindingModelSourceGenerator : AbstractProjectControlBindingModelSourceGenerator
     {
         /// <inheritdoc />

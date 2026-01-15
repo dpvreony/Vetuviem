@@ -12,36 +12,25 @@ using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator
 {
-    public abstract class AbstractProjectControlBindingModelSourceGenerator : IIncrementalGenerator
+    public abstract class AbstractProjectControlBindingModelSourceGenerator
     {
-        public void Initialize(IncrementalGeneratorInitializationContext context)
+        public void DoSourceGenerationForClass(
+            SourceProductionContext productionContext,
+            GeneratorSyntaxContext syntaxContext,
+            ConfigurationModel configurationModel,
+            ParseOptions parseOptions)
         {
-            var classDeclarations = context.SyntaxProvider
-                .CreateSyntaxProvider(
-                    static (s, _) => s is ClassDeclarationSyntax,
-                    static (ctx, _) => ctx);
-
-            // TODO: the combine syntax is horrid, pull the bunch of helpers from nucleotide that do this cleaner.
-            var trigger = classDeclarations.Combine(context.AnalyzerConfigOptionsProvider)
-                .Combine(context.ParseOptionsProvider)
-                .Select(
-                    (tuple1, _) => (
-                        SyntaxProvider: tuple1.Left.Left,
-                        AnalyzerConfigOptions: tuple1.Left.Right,
-                        ParseOptions: tuple1.Right));
 
             var platformResolver = GetPlatformResolver();
             var platformName = GetPlatformName();
 
-            context.RegisterSourceOutput(
-                trigger,
-                (productionContext, tuple) => DoSourceGenerationForClass(
-                    productionContext,
-                    tuple.SyntaxProvider,
-                    tuple.AnalyzerConfigOptions,
-                    tuple.ParseOptions,
-                    platformResolver,
-                    platformName));
+            DoSourceGenerationForClass(
+                productionContext,
+                syntaxContext,
+                configurationModel,
+                parseOptions,
+                platformResolver,
+                platformName);
         }
 
         protected abstract string GetPlatformName();
@@ -51,13 +40,11 @@ namespace Vetuviem.SourceGenerator
         private static void DoSourceGenerationForClass(
             SourceProductionContext productionContext,
             GeneratorSyntaxContext syntaxContext,
-            AnalyzerConfigOptionsProvider analyzerConfigOptionsProvider,
+            ConfigurationModel configurationModel,
             ParseOptions parseOptions,
             IPlatformResolver platformResolver,
             string platformName)
         {
-            var configurationModel = ConfigurationFactory.Create(analyzerConfigOptionsProvider);
-
             // it would be nice to cache some of this such as the platform resolver, but need to get it working first.
             if (syntaxContext.SemanticModel.GetDeclaredSymbol(syntaxContext.Node) is not INamedTypeSymbol namedTypeSymbol)
             {
@@ -132,7 +119,6 @@ namespace Vetuviem.SourceGenerator
             productionContext.AddSource(
                 hintName,
                 sourceText);
-
         }
 
         private static string GetSafeFileName(INamedTypeSymbol symbol)
