@@ -8,5 +8,6 @@
     <CompilerVisibleProperty Include="Vetuviem_Include_Obsolete_Items" />
     <CompilerVisibleProperty Include="Vetuviem_Allow_Experimental_Properties" />
     <CompilerVisibleProperty Include="Vetuviem_Logging_Implementation_Mode" />
+    <CompilerVisibleProperty Include="Vetuviem_UI_Framework" />
   </ItemGroup>
 </Project>

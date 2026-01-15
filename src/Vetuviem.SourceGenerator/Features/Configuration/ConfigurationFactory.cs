@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Vetuviem.SourceGenerator.Features.Core;
 
@@ -64,6 +61,13 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
                 out var loggingImplementationModeAsString);
             var loggingImplementationMode = GetLoggingImplementationMode(loggingImplementationModeAsString);
 
+            globalOptions.TryGetBuildPropertyValue(
+                "Vetuviem_UI_Framework",
+                out var uiFrameworkAsString);
+
+            var uiFramework = GetUiFramework(uiFrameworkAsString);
+
+
             return new ConfigurationModel(
                 rootNamespace,
                 makeClassesPublic,
@@ -72,7 +76,25 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
                 baseType,
                 includeObsoleteItems,
                 allowExperimentalProperties,
-                loggingImplementationMode);
+                loggingImplementationMode,
+                uiFramework);
+        }
+
+        private static UiFramework GetUiFramework(string? uiFrameworkAsString)
+        {
+            if (string.IsNullOrWhiteSpace(uiFrameworkAsString))
+            {
+                return UiFramework.None;
+            }
+
+            if (Enum.TryParse<UiFramework>(
+                    uiFrameworkAsString,
+                    out var uiFramework))
+            {
+                return uiFramework;
+            }
+
+            throw new InvalidOperationException($"Invalid UI Framework: {uiFrameworkAsString}");
         }
 
         private static LoggingImplementationMode GetLoggingImplementationMode(string? loggingImplementationModeAsString)
@@ -89,7 +111,7 @@ namespace Vetuviem.SourceGenerator.Features.Configuration
                 return loggingImplementationMode;
             }
 
-            throw new InvalidOperationException("Invalid logging implementation mode.");
+            throw new InvalidOperationException($"Invalid logging implementation mode: {loggingImplementationModeAsString}");
         }
 
         private static AssemblyMode GetAssemblyMode(string? assemblyModeAsString)
