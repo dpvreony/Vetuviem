@@ -23,49 +23,10 @@ namespace Vetuviem.SourceGenerator
     /// Base logic for a source generator.
     /// </summary>
     /// <typeparam name="TGeneratorProcessor">The type for the generator processor.</typeparam>
-    public abstract class AbstractBaseSourceGenerator<TGeneratorProcessor> : IIncrementalGenerator
+    public abstract class AbstractBaseSourceGenerator<TGeneratorProcessor>
         where TGeneratorProcessor : AbstractGeneratorProcessor, new()
     {
-        public void Initialize(IncrementalGeneratorInitializationContext context)
-        {
-            var trigger = context.AnalyzerConfigOptionsProvider
-                .Combine(context.ParseOptionsProvider)
-                .Combine(context.MetadataReferencesProvider.Collect())
-                .Combine(context.CompilationProvider)
-                .Select((tuple, _) => 
-                {
-                    (
-                        (
-                            (
-                            AnalyzerConfigOptionsProvider analyzerConfigOptionsProvider,
-                            ParseOptions parseOptionsProvider),
-                        ImmutableArray<MetadataReference> metadataReferencesProvider),
-                    Compilation compilationProvider) = tuple;
-
-                    return (analyzerConfigOptionsProvider, parseOptionsProvider, metadataReferencesProvider, compilationProvider);
-                });
-
-            context.RegisterImplementationSourceOutput(
-                trigger, (productionContext, tuple) => Execute(
-                    productionContext,
-                    tuple.analyzerConfigOptionsProvider,
-                    tuple.parseOptionsProvider,
-                    tuple.metadataReferencesProvider,
-                    tuple.compilationProvider));
-        }
-
-        private void Execute(
-            SourceProductionContext context,
-            AnalyzerConfigOptionsProvider analyzerConfigOptionsProvider,
-            ParseOptions parseOptions,
-            ImmutableArray<MetadataReference> metadataReferencesProvider,
-            Compilation compilation)
-        {
-            var configurationModel = ConfigurationFactory.Create(analyzerConfigOptionsProvider);
-            GenerateFromAssemblies(context, configurationModel, parseOptions, metadataReferencesProvider, compilation);
-        }
-
-        private void GenerateFromAssemblies(
+        public void GenerateFromAssemblies(
             SourceProductionContext context,
             ConfigurationModel configurationModel,
             ParseOptions parseOptions,
