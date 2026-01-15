@@ -18,13 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vetuviem.Avalonia.SourceGenerator\Vetuviem.Avalonia.SourceGenerator.csproj" />
     <ProjectReference Include="..\Vetuviem.Blazor.SourceGenerator\Vetuviem.Blazor.SourceGenerator.csproj" />
-    <ProjectReference Include="..\Vetuviem.Maui.SourceGenerator\Vetuviem.Maui.SourceGenerator.csproj" />
     <ProjectReference Include="..\Vetuviem.Testing\Vetuviem.Testing.csproj" />
-    <ProjectReference Include="..\Vetuviem.Winforms.SourceGenerator\Vetuviem.Winforms.SourceGenerator.csproj" />
-    <ProjectReference Include="..\Vetuviem.WinUi.SourceGenerator\Vetuviem.WinUi.SourceGenerator.csproj" />
-    <ProjectReference Include="..\Vetuviem.WPF.SourceGenerator\Vetuviem.WPF.SourceGenerator.csproj" />
   </ItemGroup>
 
 </Project>
