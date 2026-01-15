@@ -27,6 +27,40 @@ This is currently a proof of concept alpha. For understanding of the design reas
 | Visual Studio Integration | [Vetuviem.SourceGenerator][VetuviemSourceGeneratorNuGet] | [![VetuviemSourceGeneratorBadge]][VetuviemSourceGeneratorNuGet] |
 | Core Functionality | [Vetuviem.Core][VetuviemCoreNuget] | [![VetuviemCoreBadge]][VetuviemCoreNuget] |
 
+## Getting started
+
+### Install the desired package
+
+TODO
+
+### Add workaround for Windows based builds
+
+On CI runners you can occasionally find that the Source generators fail to load with soemthing along the lines of `ErrorCode: ReferencesNewerCompiler, ReferencedCompilerVersion: 5.0.0.0`.
+NOTE: different .NET SDK or MSBuild versions are inconsistent with the error message, you may sometimes see it prefixed with ADR0001 or CS9057, other times it has no prefix.
+
+This is currently (as of 2026-01) an issue with Github Actions where Visual Studio 2022 is on the Agent. This forces MSBuild to use the desired version rather than the one built into Visual Studio and MSBuild.
+
+Place the following in a Dir.Build.Props file or the relevant C# project file(s).
+
+```xml
+  <!--
+  This roslyn override is here because on the Windows agent the Visual Studio MSBuild gets invoked
+  so Vetuviem has been failing to generate because it needs a newer Roslyn compiler than the one installed in VS.
+  -->
+  <PropertyGroup>
+    <!-- Force use of .NET SDK Roslyn compiler on Windows when VS MSBuild is invoked -->
+    <UseSharedCompilation>false</UseSharedCompilation>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <!-- Explicitly reference Roslyn 5.0+ compiler toolset -->
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="5.0.0" Condition="'$(MSBuildRuntimeType)' != 'Core'">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+```
+
 ## An example
 
 Currently to write binding logic in the codebehind you have to write something similar to this for a single control
