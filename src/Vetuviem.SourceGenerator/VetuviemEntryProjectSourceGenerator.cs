@@ -57,8 +57,8 @@ namespace Vetuviem.SourceGenerator
                 UiFramework.Avalonia => new Features.Avalonia.AvaloniaProjectControlBindingModelSourceGenerator(),
                 UiFramework.Blazor => new Features.Blazor.BlazorProjectControlBindingModelSourceGenerator(),
                 UiFramework.Maui => new Features.Maui.MauiProjectControlBindingModelSourceGenerator(),
-                UiFramework.Winforms => new Features.Wpf.WpfProjectControlBindingModelSourceGenerator(),
-                UiFramework.WinUi => new Features.Wpf.WpfProjectControlBindingModelSourceGenerator(),
+                UiFramework.Winforms => new Features.Winforms.WinformsProjectControlBindingModelSourceGenerator(),
+                UiFramework.WinUi => new Features.WinUi.WinUI3ProjectControlBindingModelSourceGenerator(),
                 UiFramework.Wpf => new Features.Wpf.WpfProjectControlBindingModelSourceGenerator(),
                 _ => throw new NotSupportedException($"The UI framework '{uiFramework}' is not supported."),
             };
