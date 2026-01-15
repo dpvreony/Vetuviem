@@ -3,10 +3,9 @@
 // See the LICENSE file in the project root for full license information.
 
 using Microsoft.CodeAnalysis;
-using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Veutviem.UWP.SourceGenerator
+namespace Vetuviem.SourceGenerator.Features.Uwp
 {
     /// <summary>
     /// Source Generator for UWP View Binding Models.

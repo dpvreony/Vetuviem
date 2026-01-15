@@ -8,8 +8,8 @@ using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Vetuviem.SourceGenerator.Features.ControlBindingModels;
+using Vetuviem.SourceGenerator.Features.Wpf;
 using Vetuviem.Testing;
-using Vetuviem.WPF.SourceGenerator;
 using Xunit;
 
 namespace Vetuviem.IntegrationTests.ReactiveUI.WPF

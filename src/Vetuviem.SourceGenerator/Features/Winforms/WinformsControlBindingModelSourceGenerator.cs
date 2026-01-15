@@ -3,10 +3,9 @@
 // See the LICENSE file in the project root for full license information.
 
 using Microsoft.CodeAnalysis;
-using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.Winforms.SourceGenerator
+namespace Vetuviem.SourceGenerator.Features.Winforms
 {
     /// <summary>
     /// Source Generator for Control Binding Models for the Winforms platform.

@@ -3,10 +3,9 @@
 // See the LICENSE file in the project root for full license information.
 
 using Microsoft.CodeAnalysis;
-using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.WinUi.SourceGenerator
+namespace Vetuviem.SourceGenerator.Features.WinUi
 {
     /// <summary>
     /// Source Generator for Control Binding Models for the WinUI3 platform.

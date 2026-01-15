@@ -4,7 +4,7 @@
 
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.Avalonia.SourceGenerator
+namespace Vetuviem.SourceGenerator.Features.Avalonia
 {
     /// <summary>
     /// UI Platform resolver for Blazor.

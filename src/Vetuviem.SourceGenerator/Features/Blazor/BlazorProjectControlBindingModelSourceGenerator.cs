@@ -3,10 +3,9 @@
 // See the LICENSE file in the project root for full license information.
 
 using Microsoft.CodeAnalysis;
-using Vetuviem.SourceGenerator;
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.Blazor.SourceGenerator
+namespace Vetuviem.SourceGenerator.Features.Blazor
 {
     /// <summary>
     /// Project level Control Binding Model Source Generator for WPF.

@@ -4,7 +4,7 @@
 
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.Maui.SourceGenerator
+namespace Vetuviem.SourceGenerator.Features.Maui
 {
     public sealed class MauiPlatformResolver : IPlatformResolver
     {

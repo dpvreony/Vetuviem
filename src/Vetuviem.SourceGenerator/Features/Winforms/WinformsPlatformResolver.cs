@@ -4,7 +4,7 @@
 
 using Vetuviem.SourceGenerator.Features.Core;
 
-namespace Vetuviem.Winforms.SourceGenerator
+namespace Vetuviem.SourceGenerator.Features.Winforms
 {
     /// <summary>
     /// UI Platform resolver for Windows Forms.
