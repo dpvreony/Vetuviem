@@ -7,6 +7,7 @@
     <UseWPF>true</UseWPF>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <Nullable>enable</Nullable>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <!--
     If you're seeing CS8032 warnings, it can be because the upstream source generator dll has been rebuilt or you've changed the
     target frameworks in this project. Visual Studio seems to have a cache that invalidates. Reloading Visual Studio can
@@ -23,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vetuviem.WPF.SourceGenerator\Vetuviem.WPF.SourceGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Vetuviem.SourceGenerator\Vetuviem.SourceGenerator.csproj" OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Vetuviem.Core\Vetuviem.Core.csproj" />
   </ItemGroup>
 
@@ -31,5 +32,6 @@
   <PropertyGroup>
     <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
     <Vetuviem_Allow_Experimental_Properties>true</Vetuviem_Allow_Experimental_Properties>
+    <Vetuviem_UI_Framework>Wpf</Vetuviem_UI_Framework>
   </PropertyGroup>
 </Project>

@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vetuviem.Blazor.SourceGenerator\Vetuviem.Blazor.SourceGenerator.csproj" />
     <ProjectReference Include="..\Vetuviem.Testing\Vetuviem.Testing.csproj" />
   </ItemGroup>
 

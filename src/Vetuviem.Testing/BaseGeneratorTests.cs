@@ -29,13 +29,11 @@ namespace Vetuviem.Testing
         /// Unit Tests for the Execute Method.
         /// </summary>
         /// <typeparam name="TGenerator">The type for the source generator.</typeparam>
-        /// <typeparam name="TGeneratorProcessor">The type for the source generator processor.</typeparam>
-        public abstract class BaseExecuteMethod<TGenerator, TGeneratorProcessor> : TestWithLoggingBase
-            where TGenerator : AbstractBaseSourceGenerator<TGeneratorProcessor>
-            where TGeneratorProcessor : AbstractGeneratorProcessor, new()
+        public abstract class BaseExecuteMethod<TGenerator> : TestWithLoggingBase
+            where TGenerator : IIncrementalGenerator, new()
         {
             /// <summary>
-            /// Initializes a new instance of the <see cref="BaseExecuteMethod{TGenerator, TGeneratorProcessor}"/> class.
+            /// Initializes a new instance of the <see cref="BaseExecuteMethod{TGenerator}"/> class.
             /// </summary>
             /// <param name="output">Test Output Helper.</param>
             protected BaseExecuteMethod(ITestOutputHelper output)
@@ -49,9 +47,7 @@ namespace Vetuviem.Testing
             [Fact]
             public void GeneratesCode()
             {
-                var factory = GetFactory();
-
-                var instance = factory();
+                var instance = new TGenerator();
 
                 var references = new List<MetadataReference>
                 {
@@ -106,12 +102,6 @@ namespace Vetuviem.Testing
             /// </summary>
             /// <param name="metadataReferences">List of metadata references.</param>
             protected abstract void AddReferenceAssemblies(IList<MetadataReference> metadataReferences);
-
-            /// <summary>
-            /// Gets the factory method for creating a source generator.
-            /// </summary>
-            /// <returns>Function for creating a source generator.</returns>
-            protected abstract Func<TGenerator> GetFactory();
 
             private static Compilation CreateCompilation(string source, IEnumerable<MetadataReference> reference) => CSharpCompilation.Create(
                 assemblyName: "compilation",

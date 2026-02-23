@@ -12,19 +12,13 @@
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.9" />
     <PackageReference Include="MahApps.Metro" Version="2.4.11" />
     <PackageReference Include="MahApps.Metro.SimpleChildWindow" Version="2.2.1" />
-    <PackageReference Include="MudBlazor" Version="8.15.0" />
+    <PackageReference Include="MudBlazor" Version="9.0.0" />
     <PackageReference Include="ReactiveUI.Blazor" Version="22.3.1" />
     <PackageReference Include="ReactiveUI.WPF" Version="22.3.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vetuviem.Avalonia.SourceGenerator\Vetuviem.Avalonia.SourceGenerator.csproj" />
-    <ProjectReference Include="..\Vetuviem.Blazor.SourceGenerator\Vetuviem.Blazor.SourceGenerator.csproj" />
-    <ProjectReference Include="..\Vetuviem.Maui.SourceGenerator\Vetuviem.Maui.SourceGenerator.csproj" />
     <ProjectReference Include="..\Vetuviem.Testing\Vetuviem.Testing.csproj" />
-    <ProjectReference Include="..\Vetuviem.Winforms.SourceGenerator\Vetuviem.Winforms.SourceGenerator.csproj" />
-    <ProjectReference Include="..\Vetuviem.WinUi.SourceGenerator\Vetuviem.WinUi.SourceGenerator.csproj" />
-    <ProjectReference Include="..\Vetuviem.WPF.SourceGenerator\Vetuviem.WPF.SourceGenerator.csproj" />
   </ItemGroup>
 
 </Project>

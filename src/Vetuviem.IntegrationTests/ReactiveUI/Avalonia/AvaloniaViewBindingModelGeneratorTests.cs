@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Vetuviem.Avalonia.SourceGenerator;
+using Vetuviem.SourceGenerator;
+using Vetuviem.SourceGenerator.Features.Avalonia;
 using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.Testing;
 using Xunit;
@@ -20,7 +21,7 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Avalonia
     public static class AvaloniaViewBindingModelGeneratorTests
     {
         /// <inheritdoc />
-        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<AvaloniaControlBindingModelSourceGenerator, ControlBindingModelGeneratorProcessor>
+        public sealed class ExecuteMethod : BaseGeneratorTests.BaseExecuteMethod<VetuviemEntryAssemblySourceGenerator>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ExecuteMethod"/> class.
@@ -40,7 +41,12 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Avalonia
             /// <inheritdoc />
             protected override AnalyzerConfigOptionsProvider? GetAnalyzerConfigOptionsProvider()
             {
-                return null;
+                var globalOptions = new InMemoryAnalyzerConfigOptions();
+                globalOptions.Add(
+                    "build_property.Vetuviem_UI_Framework",
+                    "Avalonia");
+
+                return new InMemoryAnalyzerConfigOptionsProvider(globalOptions);
             }
 
             /// <inheritdoc />
@@ -59,12 +65,6 @@ namespace Vetuviem.IntegrationTests.ReactiveUI.Avalonia
                     var metadataReference = MetadataReference.CreateFromFile(trustedAssembliesPath);
                     metadataReferences.Add(metadataReference);
                 }
-            }
-
-            /// <inheritdoc />
-            protected override Func<AvaloniaControlBindingModelSourceGenerator> GetFactory()
-            {
-                return () => new AvaloniaControlBindingModelSourceGenerator();
             }
 
             private static string[]? GetPlatformAssemblyPaths()

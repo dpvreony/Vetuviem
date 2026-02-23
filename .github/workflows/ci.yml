@@ -21,11 +21,12 @@ jobs:
       pull-requests: write
       packages: read
       security-events: write
-    uses: dpvreony/github-action-workflows/.github/workflows/dotnet-ci.yml@1.4.15
+    uses: dpvreony/github-action-workflows/.github/workflows/dotnet-ci.yml@1.7.3
     with:
       buildOs: "windows"
       solutionName: "Vetuviem"
       runIntTestsOnPrimaryOsOnly: true
+      apiDocumentation: "None"
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

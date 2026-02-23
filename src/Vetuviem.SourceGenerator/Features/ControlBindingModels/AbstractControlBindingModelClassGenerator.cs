@@ -130,10 +130,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     }
                 }
 
-
 #if TODO
                 var constraintNullableAnnotations = typeParameterSymbol.ConstraintNullableAnnotations;
-                var hasConstructorConstraint = typeParameterSymbol.HasConstructorConstraint;
                 var hasUnmanagedTypeConstraint = typeParameterSymbol.HasUnmanagedTypeConstraint;
                 var hasValueTypeConstraint = typeParameterSymbol.HasValueTypeConstraint;
                 var referenceTypeConstraintNullableAnnotation = typeParameterSymbol.ReferenceTypeConstraintNullableAnnotation;
@@ -146,6 +144,14 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                         SyntaxFactory.ParseTypeName(constraintType.ToDisplayString(
                             SymbolDisplayFormat.FullyQualifiedFormat)));
                     typeParameterConstraintSyntaxList.Add(constraintToAdd);
+                }
+
+                // new() constraint must be last, so we add it after processing the others.
+                var hasConstructorConstraint = typeParameterSymbol.HasConstructorConstraint;
+                if (hasConstructorConstraint)
+                {
+                    var constructorConstraint = SyntaxFactory.ConstructorConstraint();
+                    typeParameterConstraintSyntaxList.Add(constructorConstraint);
                 }
 
                 if (typeParameterConstraintSyntaxList.Count < 1)

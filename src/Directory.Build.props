@@ -45,14 +45,14 @@
   <ItemGroup Condition="$(IsTestProject)">
     <PackageReference Include="GitHubActionsTestLogger" Version="3.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.1.0" />
-    <PackageReference Include="Microsoft.Testing.Platform" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.4.1" />
+    <PackageReference Include="Microsoft.Testing.Platform" Version="2.1.0" />
     <PackageReference Include="NetTestRegimentation" Version="2.0.8" />
     <PackageReference Include="NetTestRegimentation.Xunit" Version="2.0.8" />
     <PackageReference Include="Rocks" Version="10.0.0" PrivateAssets="all" />
     <PackageReference Include="TestableIO.System.IO.Abstractions.TestingHelpers" Version="22.1.0" />
-    <PackageReference Include="xunit.v3.mtp-v2" Version="3.2.1" />
-    <PackageReference Include="xunit.analyzers" Version="1.26.0" />
+    <PackageReference Include="xunit.v3.mtp-v2" Version="3.2.2" />
+    <PackageReference Include="xunit.analyzers" Version="1.27.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
     <PackageReference Include="Xunit.StaFact" Version="3.0.13" />
     <!--<PackageReference Include="PublicApiGenerator" Version="8.1.0" />-->
@@ -68,7 +68,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(IsTestProject)' != 'true' and '$(SourceLinkEnabled)' != 'false'">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.103" PrivateAssets="All" />
   </ItemGroup>
   
   <ItemGroup>	
@@ -93,4 +93,21 @@
   <PropertyGroup>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
   </PropertyGroup>
+
+  <!--
+  This roslyn override is here because on the Windows agent the Visual Studio MSBuild gets invoked
+  so Vetuviem has been failing to generate because it needs a newer Roslyn compiler than the one installed in VS.
+  -->
+  <PropertyGroup>
+    <!-- Force use of .NET SDK Roslyn compiler on Windows when VS MSBuild is invoked -->
+    <UseSharedCompilation>false</UseSharedCompilation>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <!-- Explicitly reference Roslyn 5.0+ compiler toolset -->
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="5.0.0" Condition="'$(MSBuildRuntimeType)' != 'Core'">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>  
 </Project>
