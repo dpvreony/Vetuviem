@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="MudBlazor" Version="9.0.0" />
-    <PackageReference Include="ReactiveUI.Blazor" Version="22.3.1" ReferenceOutputAssembly="true" />
+    <PackageReference Include="ReactiveUI.Blazor" Version="23.1.1" ReferenceOutputAssembly="true" />
   </ItemGroup>
 
   <ItemGroup>
