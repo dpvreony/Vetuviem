@@ -10,9 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="ReactiveUI.WPF" Version="23.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ReactiveUI.WPF.ViewToViewModelBindings\ReactiveUI.WPF.ViewToViewModelBindings.csproj" />
   </ItemGroup>
 
