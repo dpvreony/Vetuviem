@@ -26,6 +26,11 @@ namespace Vetuviem.Core
             string propertyName)
         {
             var member = typeof(TProp).GetProperty(propertyName);
+            if (member == null)
+            {
+                throw new ArgumentException($"Property '{propertyName}' does not exist on type '{typeof(TProp).FullName}'.");
+            }
+
             var memberAccess = Expression.MakeMemberAccess(
                 viewPropExpression.Body,
                 member);

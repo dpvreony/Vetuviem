@@ -30,7 +30,8 @@ namespace Vetuviem.Core
             TView view,
             TViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
-            where TView : class, IViewFor<TViewModel>;
+            where TView : class, IViewFor<TViewModel>
+            where TViewProp : class;
 
         /// <summary>
         /// Applies a View to View Model Binding.
@@ -46,6 +47,7 @@ namespace Vetuviem.Core
             TView view,
             TViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
-            where TView : class, IViewFor<TViewModel>;
+            where TView : class, IViewFor<TViewModel>
+            where TViewProp : class;
     }
 }
