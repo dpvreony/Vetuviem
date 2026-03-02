@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ReactiveUI" Version="23.1.1" />
+    <PackageReference Include="ReactiveUI" Version="23.1.8" />
   </ItemGroup>
 
 </Project>
