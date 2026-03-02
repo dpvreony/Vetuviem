@@ -27,6 +27,7 @@ jobs:
       solutionName: "Vetuviem"
       runIntTestsOnPrimaryOsOnly: true
       apiDocumentation: "None"
+      workloads : "android,ios,tvos,macos,maui"
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

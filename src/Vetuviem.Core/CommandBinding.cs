@@ -41,6 +41,7 @@ namespace Vetuviem.Core
             TViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
             where TView : class, IViewFor<TViewModel>
+            where TViewProp : class
         {
             if (disposeAction == null)
             {
@@ -76,6 +77,7 @@ namespace Vetuviem.Core
             TViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
             where TView : class, IViewFor<TViewModel>
+            where TViewProp : class
         {
             if (compositeDisposable == null)
             {

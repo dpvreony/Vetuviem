@@ -20,10 +20,10 @@ namespace ReactiveUI.WPF.SampleApp
         {
             base.OnStartup(e);
 
-            var appInstance = RxAppBuilder.CreateReactiveUIBuilder()
+            var rxuiInstance = RxAppBuilder.CreateReactiveUIBuilder()
                 .WithWpf()
                 .RegisterView<QuestionnaireView, QuestionnaireViewModel>()
-                .Build();
+                .BuildApp();
 
             var view = new QuestionnaireView
             {
