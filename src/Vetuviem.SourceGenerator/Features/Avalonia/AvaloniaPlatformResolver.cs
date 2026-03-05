@@ -18,7 +18,7 @@ namespace Vetuviem.SourceGenerator.Features.Avalonia
             {
                 "Avalonia.Base.dll",
                 "Avalonia.Controls.dll",
-                "Avalonia.ReactiveUI.dll"
+                "ReactiveUI.Avalonia.dll"
             };
         }
 
