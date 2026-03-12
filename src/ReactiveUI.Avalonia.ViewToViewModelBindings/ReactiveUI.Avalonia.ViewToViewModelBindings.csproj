@@ -16,7 +16,7 @@
     <IsPackable>False</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ReactiveUI.Avalonia" Version="11.4.7" />
+    <PackageReference Include="ReactiveUI.Avalonia" Version="11.4.12" />
   </ItemGroup>
 
   <ItemGroup>
