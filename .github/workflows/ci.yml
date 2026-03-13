@@ -25,7 +25,6 @@ jobs:
     with:
       primary-build-mode: "windows-only"
       solutionName: "Vetuviem"
-      runIntTestsOnPrimaryOsOnly: true
       apiDocumentation: "None"
       workloads : "android,ios,tvos,macos,maui"
     secrets:
