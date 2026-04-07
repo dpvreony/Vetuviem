@@ -239,6 +239,68 @@ Controls the logging implementation generated in binding code:
 </PropertyGroup>
 ```
 
+## Third-Party Library Support
+
+Vetuviem supports generating binding models for controls from third-party libraries. There are two main approaches depending on your requirements.
+
+### Approach 1: Standalone Third-Party Bindings (Replace Mode)
+
+Use this approach when your project only needs bindings for a specific third-party library and does not need the platform-default control bindings alongside it.
+
+Set `Vetuviem_Assemblies` to point to your third-party assembly and `Vetuviem_Assembly_Mode` to `Replace`:
+
+```xml
+<PropertyGroup>
+  <Vetuviem_Assemblies>YourThirdPartyLibrary.dll</Vetuviem_Assemblies>
+  <Vetuviem_Assembly_Mode>Replace</Vetuviem_Assembly_Mode>
+  <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
+  <Vetuviem_Root_Namespace>YourCompany</Vetuviem_Root_Namespace>
+</PropertyGroup>
+```
+
+`Replace` mode instructs the generator to scan only the assemblies listed in `Vetuviem_Assemblies`, replacing the platform-default assemblies entirely. This is the recommended mode when generating bindings for a single third-party library in isolation.
+
+### Approach 2: Inheritance-Based Setup (Upstream + Downstream Projects)
+
+Use this approach when you want to keep the platform-default bindings in one library and extend them with third-party control bindings in a separate downstream library. This is the cleaner approach for shared or reusable binding libraries.
+
+**Step 1 – Upstream project** generates platform-default bindings (e.g. WPF controls) with a shared root namespace and public visibility:
+
+```xml
+<!-- e.g. YourCompany.Wpf.csproj -->
+<PropertyGroup>
+  <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
+  <Vetuviem_Root_Namespace>YourCompany</Vetuviem_Root_Namespace>
+  <Vetuviem_UI_Framework>Wpf</Vetuviem_UI_Framework>
+</PropertyGroup>
+```
+
+**Step 2 – Downstream project** references the upstream project and generates bindings only for the third-party library using `Replace` mode:
+
+```xml
+<!-- e.g. YourCompany.Wpf.SomeThirdPartyLibrary.csproj -->
+<ItemGroup>
+  <ProjectReference Include="..\YourCompany.Wpf\YourCompany.Wpf.csproj" />
+</ItemGroup>
+
+<PropertyGroup>
+  <Vetuviem_Make_Classes_Public>true</Vetuviem_Make_Classes_Public>
+  <Vetuviem_Root_Namespace>YourCompany</Vetuviem_Root_Namespace>
+  <Vetuviem_Assemblies>SomeThirdPartyLibrary.dll</Vetuviem_Assemblies>
+  <Vetuviem_Assembly_Mode>Replace</Vetuviem_Assembly_Mode>
+  <Vetuviem_UI_Framework>Wpf</Vetuviem_UI_Framework>
+</PropertyGroup>
+```
+
+`Replace` is the default value for `Vetuviem_Assembly_Mode`, so the property can be omitted, but it is shown here explicitly for clarity. Only the third-party library controls are generated in the downstream project; the platform bindings remain in the upstream project and are available via the project reference. This separation allows platform bindings to be shared across multiple downstream projects without regenerating them each time.
+
+### Real-World Examples
+
+The [Whipstaff](https://github.com/dpvreony/whipstaff) project demonstrates the inheritance-based approach:
+
+- [Whipstaff.Wpf](https://github.com/dpvreony/whipstaff/blob/main/src/Whipstaff.Wpf/Whipstaff.Wpf.csproj) – upstream project generating WPF platform bindings under the `Whipstaff` namespace
+- [Whipstaff.Wpf.CefSharp](https://github.com/dpvreony/whipstaff/blob/main/src/Whipstaff.Wpf.CefSharp/Whipstaff.Wpf.CefSharp.csproj) – downstream project referencing `Whipstaff.Wpf` and generating bindings only for `CefSharp.Wpf.dll`
+
 ## Support
 
 For support, please:
