@@ -25,10 +25,8 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         protected override IEnumerable<IControlBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
         {
             // launch interaction
-            var launchInteractionCommandBinding = ForViewModelCommand(vm => vm.LaunchInteraction)
-                .GetCommandBinding();
             yield return ForViewProperty(vw => vw.LaunchInteraction)
-                .GetDefaultBindingControlModel(launchInteractionCommandBinding);
+                .GetDefaultBindingControlModel(GetCommandBinding(vm => vm.LaunchInteraction));
 
             // Forename
             yield return ForViewProperty(vw => vw.Forename)
