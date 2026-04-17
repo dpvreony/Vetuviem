@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reactive.Disposables;
+using System.Windows.Input;
 using ReactiveUI;
 
 namespace Vetuviem.Core
@@ -64,6 +65,21 @@ namespace Vetuviem.Core
         /// <typeparam name="TViewProp">The type for the property on the view.</typeparam>
         /// <param name="expression">The expression representing the view property.</param>
         /// <returns>The expression for the view property.</returns>
-        protected Expression<Func<TView, TViewProp>> ForViewProperty<TViewProp>(Expression<Func<TView, TViewProp>> expression) => expression;
+        protected static Expression<Func<TView, TViewProp>> ForViewProperty<TViewProp>(Expression<Func<TView, TViewProp>> expression) => expression;
+
+        /// <summary>
+        /// Gets an expression for a view model command. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view model commands to bind to.
+        /// </summary>
+        /// <param name="expression">The expression representing the view model property.</param>
+        /// <returns>The expression for the view model command.</returns>
+        protected static Expression<Func<TViewModel, ICommand?>> ForViewModelCommand(Expression<Func<TViewModel, ICommand?>> expression) => expression;
+
+        /// <summary>
+        /// Gets an expression for a view model property. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view model properties to bind to.
+        /// </summary>
+        /// <typeparam name="TViewModelProp">The type for the property on the view model.</typeparam>
+        /// <param name="expression">The expression representing the view model property.</param>
+        /// <returns>The expression for the view model property.</returns>
+        protected static Expression<Func<TViewModel, TViewModelProp>> ForViewModelProperty<TViewModelProp>(Expression<Func<TViewModel, TViewModelProp>> expression) => expression;
     }
 }

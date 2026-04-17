@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 using ReactiveUI.WPF.SampleApp.ViewModels;
 using ReactiveUI.WPF.SampleApp.Views;
@@ -27,6 +28,13 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
             };
         }
 
+        public static ICommandBinding<TViewModel> GetCommandBinding<TViewModel>(this Expression<Func<TViewModel, ICommand?>> viewModelBinding)
+            where TViewModel : class, IReactiveObject
+        {
+            return new CommandBinding<TViewModel>(viewModelBinding);
+        }
+
+#if TBC
         public static ButtonBaseControlBindingModel<TView, TViewModel> GetDefaultBindingControlModel<TView, TViewModel>(
             this Expression<Func<TView, ButtonBase>> expression,
             ICommandBinding<TViewModel>? bindCommand)
@@ -38,6 +46,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
                 BindCommand = bindCommand
             };
         }
+#endif
 
         public static LabelControlBindingModel<QuestionnaireView, QuestionnaireViewModel> GetStandardLengthRemainingLabelViewBindingModel(
             this Expression<Func<QuestionnaireView, Label>> controlExpression,

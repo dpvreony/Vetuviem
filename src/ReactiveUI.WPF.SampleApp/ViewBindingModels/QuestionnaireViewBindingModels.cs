@@ -12,6 +12,7 @@ using ReactiveUI.WPF.SampleApp.ViewModels;
 using ReactiveUI.WPF.SampleApp.Views;
 using VetuviemGenerated.Wpf.ViewToViewModelBindings.System.Windows.Controls;
 using Vetuviem.Core;
+using System.Reactive;
 
 namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 {
@@ -24,67 +25,69 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         protected override IEnumerable<IControlBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
         {
             // launch interaction
-            yield return this.ForViewProperty(vw => vw.LaunchInteraction)
-                .GetDefaultBindingControlModel(new CommandBinding<QuestionnaireViewModel>(vm => vm.LaunchInteraction));
+            var launchInteractionCommandBinding = ForViewModelCommand(vm => vm.LaunchInteraction)
+                .GetCommandBinding();
+            yield return ForViewProperty(vw => vw.LaunchInteraction)
+                .GetDefaultBindingControlModel(launchInteractionCommandBinding);
 
             // Forename
-            yield return this.ForViewProperty(vw => vw.Forename)
+            yield return ForViewProperty(vw => vw.Forename)
                 .GetStandardTextBoxViewModel(vm => vm.Forename);
 
-            yield return this.ForViewProperty(vw => vw.ForenameLengthRemaining)
+            yield return ForViewProperty(vw => vw.ForenameLengthRemaining)
                 .GetStandardLengthRemainingLabelViewBindingModel(
                     vm => vm.ForenameLengthRemaining,
                     vm => vm.ForenameLengthRemaining);
 
             // Surname
-            yield return this.ForViewProperty(vw => vw.Surname)
+            yield return ForViewProperty(vw => vw.Surname)
                 .GetStandardTextBoxViewModel(vm => vm.Surname);
 
-            yield return this.ForViewProperty(vw => vw.SurnameLengthRemaining)
+            yield return ForViewProperty(vw => vw.SurnameLengthRemaining)
                 .GetStandardLengthRemainingLabelViewBindingModel(
                     vm => vm.SurnameLengthRemaining,
                     vm => vm.SurnameLengthRemaining);
 
             // answer one
-            yield return this.ForViewProperty(vw => vw.AnswerOne)
+            yield return ForViewProperty(vw => vw.AnswerOne)
                 .GetStandardTextBoxViewModel(vm => vm.AnswerOne);
 
-            yield return this.ForViewProperty(vw => vw.AnswerOneLengthRemaining)
+            yield return ForViewProperty(vw => vw.AnswerOneLengthRemaining)
                 .GetStandardLengthRemainingLabelViewBindingModel(
                     vm => vm.AnswerOneLengthRemaining,
                     vm => vm.AnswerOneLengthRemaining);
 
             // answer two
-            yield return this.ForViewProperty(vw => vw.AnswerTwo)
+            yield return ForViewProperty(vw => vw.AnswerTwo)
                 .GetStandardTextBoxViewModel(vm => vm.AnswerTwo);
 
-            yield return this.ForViewProperty(vw => vw.AnswerTwoLengthRemaining)
+            yield return ForViewProperty(vw => vw.AnswerTwoLengthRemaining)
                 .GetStandardLengthRemainingLabelViewBindingModel(
                     vm => vm.AnswerTwoLengthRemaining,
                     vm => vm.AnswerTwoLengthRemaining);
 
             // answer three
-            yield return this.ForViewProperty(vw => vw.AnswerThree)
+            yield return ForViewProperty(vw => vw.AnswerThree)
                 .GetStandardTextBoxViewModel(vm => vm.AnswerThree);
-            yield return this.ForViewProperty(vw => vw.AnswerThreeLengthRemaining)
+            yield return ForViewProperty(vw => vw.AnswerThreeLengthRemaining)
                 .GetStandardLengthRemainingLabelViewBindingModel(
                     vm => vm.AnswerThreeLengthRemaining,
                     vm => vm.AnswerThreeLengthRemaining);
 
             // answer four
-            yield return this.ForViewProperty(vw => vw.AnswerFour)
+            yield return ForViewProperty(vw => vw.AnswerFour)
                 .GetStandardTextBoxViewModel(vm => vm.AnswerFour);
 
-            yield return this.ForViewProperty(vw => vw.AnswerFourLengthRemaining)
+            yield return ForViewProperty(vw => vw.AnswerFourLengthRemaining)
                 .GetStandardLengthRemainingLabelViewBindingModel(
                     vm => vm.AnswerFourLengthRemaining,
                     vm => vm.AnswerFourLengthRemaining);
 
             // answer five
-            yield return this.ForViewProperty(vw => vw.AnswerFive)
+            yield return ForViewProperty(vw => vw.AnswerFive)
                 .GetStandardTextBoxViewModel(vm => vm.AnswerFive);
 
-            yield return this.ForViewProperty(vw => vw.AnswerFiveLengthRemaining)
+            yield return ForViewProperty(vw => vw.AnswerFiveLengthRemaining)
                 .GetStandardLengthRemainingLabelViewBindingModel(
                     vm => vm.AnswerFiveLengthRemaining,
                     vm => vm.AnswerFiveLengthRemaining);
