@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reactive.Disposables;
 using ReactiveUI;
 
@@ -56,5 +57,13 @@ namespace Vetuviem.Core
         /// </summary>
         /// <returns>Collection of control to viewmodel bindings.</returns>
         protected abstract IEnumerable<IControlBindingModel<TView, TViewModel>> GetBindings();
+
+        /// <summary>
+        /// Gets an expression for a view property. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view properties to bind to.
+        /// </summary>
+        /// <typeparam name="TViewProp">The type for the property on the view.</typeparam>
+        /// <param name="expression">The expression representing the view property.</param>
+        /// <returns>The expression for the view property.</returns>
+        protected Expression<Func<TView, TViewProp>> ForViewProperty<TViewProp>(Expression<Func<TView, TViewProp>> expression) => expression;
     }
 }
