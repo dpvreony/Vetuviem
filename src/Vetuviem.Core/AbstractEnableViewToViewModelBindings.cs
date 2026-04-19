@@ -4,7 +4,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reactive.Disposables;
+using System.Windows.Input;
 using ReactiveUI;
 
 namespace Vetuviem.Core
@@ -56,5 +58,38 @@ namespace Vetuviem.Core
         /// </summary>
         /// <returns>Collection of control to viewmodel bindings.</returns>
         protected abstract IEnumerable<IControlBindingModel<TView, TViewModel>> GetBindings();
+
+        /// <summary>
+        /// Gets an expression for a view property. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view properties to bind to.
+        /// </summary>
+        /// <typeparam name="TViewProp">The type for the property on the view.</typeparam>
+        /// <param name="viewProperty">The expression representing the view property.</param>
+        /// <returns>The expression for the view property.</returns>
+        protected static Expression<Func<TView, TViewProp>> ForViewProperty<TViewProp>(Expression<Func<TView, TViewProp>> viewProperty) => viewProperty;
+
+        /// <summary>
+        /// Gets an expression for a view model command. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view model commands to bind to.
+        /// </summary>
+        /// <param name="viewModelCommand">The expression representing the view model property.</param>
+        /// <returns>The expression for the view model command.</returns>
+        protected static Expression<Func<TViewModel, ICommand?>> ForViewModelCommand(Expression<Func<TViewModel, ICommand?>> viewModelCommand) => viewModelCommand;
+
+        /// <summary>
+        /// Gets an expression for a view model property. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view model properties to bind to.
+        /// </summary>
+        /// <typeparam name="TViewModelProp">The type for the property on the view model.</typeparam>
+        /// <param name="viewModelProperty">The expression representing the view model property.</param>
+        /// <returns>The expression for the view model property.</returns>
+        protected static Expression<Func<TViewModel, TViewModelProp>> ForViewModelProperty<TViewModelProp>(Expression<Func<TViewModel, TViewModelProp>> viewModelProperty) => viewModelProperty;
+
+        /// <summary>
+        /// Gets a command binding for a view model command. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view model commands to bind to.
+        /// </summary>
+        /// <param name="viewModelBinding">The expression representing the view model property.</param>
+        /// <returns>The command binding for the view model command.</returns>
+        protected static ICommandBinding<TViewModel> GetCommandBinding(Expression<Func<TViewModel, ICommand?>> viewModelBinding)
+        {
+            return new CommandBinding<TViewModel>(viewModelBinding);
+        }
     }
 }
