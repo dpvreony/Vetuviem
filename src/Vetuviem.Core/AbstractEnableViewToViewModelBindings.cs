@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Windows.Input;
 using ReactiveUI;
@@ -25,7 +26,8 @@ namespace Vetuviem.Core
         public void ApplyBindings(
             Action<IDisposable> disposeWithAction,
             TView view,
-            TViewModel viewModel)
+            TViewModel viewModel,
+            IScheduler? scheduler = null)
         {
             if (disposeWithAction == null)
             {
@@ -51,7 +53,11 @@ namespace Vetuviem.Core
                     disposeWithAction);
             }
 
-            var subscriptions = GetSubscriptions(view, viewModel);
+            var subscriptions = GetSubscriptions(
+                view,
+                viewModel,
+                scheduler);
+
             foreach (var subscription in subscriptions)
             {
                 disposeWithAction(subscription);
@@ -62,7 +68,8 @@ namespace Vetuviem.Core
         public void ApplyBindings(
             CompositeDisposable compositeDisposable,
             TView view,
-            TViewModel viewModel)
+            TViewModel viewModel,
+            IScheduler? scheduler = null)
         {
             if (compositeDisposable == null)
             {
@@ -88,7 +95,11 @@ namespace Vetuviem.Core
                     compositeDisposable);
             }
 
-            var subscriptions = GetSubscriptions(view, viewModel);
+            var subscriptions = GetSubscriptions(
+                view,
+                viewModel,
+                scheduler);
+
             foreach (var subscription in subscriptions)
             {
                 compositeDisposable.Add(subscription);
@@ -106,7 +117,7 @@ namespace Vetuviem.Core
         /// </summary>
         /// <remarks>You do not need to wire up disposal logic, this is handled internally.</remarks>
         /// <returns>Collection of subscriptions.</returns>
-        protected abstract IEnumerable<IDisposable> GetSubscriptions(TView view, TViewModel viewModel);
+        protected abstract IEnumerable<IDisposable> GetSubscriptions(TView view, TViewModel viewModel, IScheduler? scheduler);
 
         /// <summary>
         /// Gets an expression for a view property. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view properties to bind to.

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using ReactiveUI;
 
@@ -23,10 +24,12 @@ namespace Vetuviem.Core
         /// <param name="disposeWithAction">The ReactiveUI Disposal Tracker. Used to discard binding registrations when the view is finished with them.</param>
         /// <param name="view">Instance of the view.</param>
         /// <param name="viewModel">Instance of the viewmodel.</param>
+        /// <param name="scheduler">Scheduler for subscriptions.</param>
         void ApplyBindings(
             Action<IDisposable> disposeWithAction,
             TView view,
-            TViewModel viewModel);
+            TViewModel viewModel,
+            IScheduler? scheduler = null);
 
         /// <summary>
         /// Apply control bindings between a View and ViewModel.
@@ -34,9 +37,11 @@ namespace Vetuviem.Core
         /// <param name="compositeDisposable">The Composite Disposable Tracker. Used to discard binding registrations when the view is finished with them.</param>
         /// <param name="view">Instance of the view.</param>
         /// <param name="viewModel">Instance of the viewmodel.</param>
+        /// <param name="scheduler">Scheduler for subscriptions.</param>
         void ApplyBindings(
             CompositeDisposable compositeDisposable,
             TView view,
-            TViewModel viewModel);
+            TViewModel viewModel,
+            IScheduler? scheduler = null);
     }
 }

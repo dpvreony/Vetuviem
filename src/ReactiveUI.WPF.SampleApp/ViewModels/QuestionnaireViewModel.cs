@@ -24,20 +24,6 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         private readonly ObservableAsPropertyHelper<int> _answerFourLengthRemaining;
         private readonly ObservableAsPropertyHelper<int> _answerFiveLengthRemaining;
 
-        private string? _forename;
-
-        private string? _surname;
-
-        private string? _answerOne;
-
-        private string? _answerTwo;
-
-        private string? _answerThree;
-
-        private string? _answerFour;
-
-        private string? _answerFive;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="QuestionnaireViewModel"/> class.
         /// </summary>
@@ -79,8 +65,8 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         /// </summary>
         public string? Forename
         {
-            get => _forename;
-            set => this.RaiseAndSetIfChanged(ref _forename, value);
+            get;
+            set => this.RaiseAndSetIfChanged(ref field, value);
         }
 
         /// <summary>
@@ -98,8 +84,8 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         /// </summary>
         public string? Surname
         {
-            get => _surname;
-            set => this.RaiseAndSetIfChanged(ref _surname, value);
+            get;
+            set => this.RaiseAndSetIfChanged(ref field, value);
         }
 
         /// <summary>
@@ -112,8 +98,8 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         /// </summary>
         public string? AnswerOne
         {
-            get => _answerOne;
-            set => this.RaiseAndSetIfChanged(ref _answerOne, value);
+            get;
+            set => this.RaiseAndSetIfChanged(ref field, value);
         }
 
         /// <summary>
@@ -126,8 +112,8 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         /// </summary>
         public string? AnswerTwo
         {
-            get => _answerTwo;
-            set => this.RaiseAndSetIfChanged(ref _answerTwo, value);
+            get;
+            set => this.RaiseAndSetIfChanged(ref field, value);
         }
 
         /// <summary>
@@ -140,8 +126,8 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         /// </summary>
         public string? AnswerThree
         {
-            get => _answerThree;
-            set => this.RaiseAndSetIfChanged(ref _answerThree, value);
+            get;
+            set => this.RaiseAndSetIfChanged(ref field, value);
         }
 
         /// <summary>
@@ -154,8 +140,8 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         /// </summary>
         public string? AnswerFour
         {
-            get => _answerFour;
-            set => this.RaiseAndSetIfChanged(ref _answerFour, value);
+            get;
+            set => this.RaiseAndSetIfChanged(ref field, value);
         }
 
         /// <summary>
@@ -168,8 +154,8 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         /// </summary>
         public string? AnswerFive
         {
-            get => _answerFive;
-            set => this.RaiseAndSetIfChanged(ref _answerFive, value);
+            get;
+            set => this.RaiseAndSetIfChanged(ref field, value);
         }
 
         /// <summary>

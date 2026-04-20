@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 using System.Windows;
 using MahApps.Metro.SimpleChildWindow;
@@ -13,7 +14,7 @@ namespace ReactiveUI.WPF.SampleApp.Views
     /// <summary>
     /// Interaction logic for Questionnaire View.
     /// </summary>
-    public partial class QuestionnaireView
+    public sealed partial class QuestionnaireView
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="QuestionnaireView"/> class.
