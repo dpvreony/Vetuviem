@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Windows.Input;
 using ReactiveUI;
@@ -25,8 +26,24 @@ namespace Vetuviem.Core
         public void ApplyBindings(
             Action<IDisposable> disposeWithAction,
             TView view,
-            TViewModel viewModel)
+            TViewModel viewModel,
+            IScheduler? scheduler = null)
         {
+            if (disposeWithAction == null)
+            {
+                throw new ArgumentNullException(nameof(disposeWithAction));
+            }
+
+            if (view == null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
+
+            if (viewModel == null)
+            {
+                throw new ArgumentNullException(nameof(viewModel));
+            }
+
             var bindings = GetBindings();
             foreach (var viewBindingModel in bindings)
             {
@@ -35,14 +52,40 @@ namespace Vetuviem.Core
                     viewModel,
                     disposeWithAction);
             }
+
+            var subscriptions = GetSubscriptions(
+                view,
+                viewModel,
+                scheduler);
+
+            foreach (var subscription in subscriptions)
+            {
+                disposeWithAction(subscription);
+            }
         }
 
         /// <inheritdoc />
         public void ApplyBindings(
             CompositeDisposable compositeDisposable,
             TView view,
-            TViewModel viewModel)
+            TViewModel viewModel,
+            IScheduler? scheduler = null)
         {
+            if (compositeDisposable == null)
+            {
+                throw new ArgumentNullException(nameof(compositeDisposable));
+            }
+
+            if (view == null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
+
+            if (viewModel == null)
+            {
+                throw new ArgumentNullException(nameof(viewModel));
+            }
+
             var bindings = GetBindings();
             foreach (var viewBindingModel in bindings)
             {
@@ -51,6 +94,16 @@ namespace Vetuviem.Core
                     viewModel,
                     compositeDisposable);
             }
+
+            var subscriptions = GetSubscriptions(
+                view,
+                viewModel,
+                scheduler);
+
+            foreach (var subscription in subscriptions)
+            {
+                compositeDisposable.Add(subscription);
+            }
         }
 
         /// <summary>
@@ -58,6 +111,13 @@ namespace Vetuviem.Core
         /// </summary>
         /// <returns>Collection of control to viewmodel bindings.</returns>
         protected abstract IEnumerable<IControlBindingModel<TView, TViewModel>> GetBindings();
+
+        /// <summary>
+        /// Gets the subscriptions to be bound between the View and the ViewModel. Can be used to subscribe the View to ViewModel Commands or Interactions. This is separate from the control bindings as it allows for more complex bindings that may not be easily represented by a control binding model. For example Command subscriptions can be used to execute methods in the View.
+        /// </summary>
+        /// <remarks>You do not need to wire up disposal logic, this is handled internally.</remarks>
+        /// <returns>Collection of subscriptions.</returns>
+        protected abstract IEnumerable<IDisposable> GetSubscriptions(TView view, TViewModel viewModel, IScheduler? scheduler);
 
         /// <summary>
         /// Gets an expression for a view property. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view properties to bind to.

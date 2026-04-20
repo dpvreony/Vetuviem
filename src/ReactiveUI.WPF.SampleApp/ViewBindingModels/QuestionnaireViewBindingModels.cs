@@ -4,15 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using ReactiveUI.WPF.SampleApp.ViewModels;
 using ReactiveUI.WPF.SampleApp.Views;
-using VetuviemGenerated.Wpf.ViewToViewModelBindings.System.Windows.Controls;
 using Vetuviem.Core;
-using System.Reactive;
 
 namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
 {
@@ -89,6 +85,15 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
                 .GetStandardLengthRemainingLabelViewBindingModel(
                     vm => vm.AnswerFiveLengthRemaining,
                     vm => vm.AnswerFiveLengthRemaining);
+        }
+
+        /// <inheritdoc/>
+        protected override IEnumerable<IDisposable> GetSubscriptions(
+            QuestionnaireView view,
+            QuestionnaireViewModel viewModel,
+            IScheduler? scheduler)
+        {
+            yield return viewModel.LaunchInteraction.Subscribe(async _ => await view.ShowChildWindowInteractionAsync());
         }
     }
 }

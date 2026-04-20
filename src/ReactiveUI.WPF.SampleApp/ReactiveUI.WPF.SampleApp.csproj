@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MahApps.Metro.SimpleChildWindow" Version="2.2.1" />
     <PackageReference Include="ReactiveUI.WPF" Version="23.2.1" />
     <ProjectReference Include="..\ReactiveUI.WPF.ViewToViewModelBindings\ReactiveUI.WPF.ViewToViewModelBindings.csproj" />
   </ItemGroup>
