@@ -3,6 +3,9 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using System.Threading.Tasks;
+using System.Windows;
+using MahApps.Metro.SimpleChildWindow;
 using ReactiveUI.WPF.SampleApp.ViewBindingModels;
 
 namespace ReactiveUI.WPF.SampleApp.Views
@@ -29,6 +32,12 @@ namespace ReactiveUI.WPF.SampleApp.Views
                 disposeWithAction,
                 this,
                 ViewModel!);
+        }
+
+        internal async Task ShowChildWindowInteractionAsync()
+        {
+            var childWindowView = new ChildWindow();
+            await this.ShowChildWindowAsync(childWindowView);
         }
     }
 }
