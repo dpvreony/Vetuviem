@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Metadata;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -56,10 +57,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             // TODO: add other arguments as needed to determine which properties to set on the binding model instance.
             // TODO: add the method body that creates and returns an instance of the binding model, using the expression argument to determine which properties to set on the binding model instance.
-            var parameters = RoslynGenerationHelpers.GetParams(
-            [
-                $"this global::System.Linq.Expressions.Expression<global::System.Func<TView, {namedTypeSymbol.GetFullName()}>> viewExpression",
-            ]);
+            var parameters = GetParameters(namedTypeSymbol);
 
             StatementSyntax[] methodBody = [
                 SyntaxFactory.ParseStatement($"var bindingModel = new {returnType}(viewExpression);"),
@@ -93,6 +91,101 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     summaryParameters,
                     $"Instance of a {controlClassFullName} Binding Model."));
             return defaultFactoryMethodDeclaration;
+        }
+
+        private static ParameterListSyntax GetParameters(INamedTypeSymbol namedTypeSymbol)
+        {
+            var parameters = RoslynGenerationHelpers.GetParams(
+            [
+                $"this global::System.Linq.Expressions.Expression<global::System.Func<TView, {namedTypeSymbol.GetFullName()}>> viewExpression",
+            ]);
+
+            parameters = GetParametersFromProperties(parameters, namedTypeSymbol);
+
+            return parameters;
+        }
+
+        private static ParameterListSyntax GetParametersFromProperties(
+            ParameterListSyntax parameters,
+            INamedTypeSymbol namedTypeSymbol)
+        {
+            var properties = namedTypeSymbol
+                .GetMembers()
+                .Where(x => x.Kind == SymbolKind.Property)
+                .ToArray();
+            var fullName = namedTypeSymbol.GetFullName();
+
+            var nodes = new List<MemberDeclarationSyntax>(properties.Length);
+
+            if (ShouldGenerateCommandBindingProperty(namedTypeSymbol, desiredCommandInterface, platformCommandType))
+            {
+                var typeSyntax = TypeSyntaxHelpers.GetCommandBindingTypeSyntax();
+                parameters = parameters.AddParameters(SyntaxFactory.Parameter(SyntaxFactory.Identifier("bindCommand")).WithType(typeSyntax));
+            }
+
+            foreach (var prop in properties)
+            {
+                if (prop is not IPropertySymbol propertySymbol
+                    || propertySymbol.IsIndexer
+                    || propertySymbol.IsOverride
+                    || propertySymbol.DeclaredAccessibility != Accessibility.Public
+                    || propertySymbol.ExplicitInterfaceImplementations.Any())
+                {
+                    continue;
+                }
+
+                // check for obsolete attribute
+                var attributes = propertySymbol.GetAttributes();
+                if (!includeObsoleteItems && attributes.Any(a => a.AttributeClass?.GetFullName().Equals(
+                        "global::System.ObsoleteAttribute",
+                        StringComparison.Ordinal) == true))
+                {
+                    continue;
+                }
+
+                // check for experimental attribute
+                var experimentalAttribute = attributes.FirstOrDefault(a => a.AttributeClass?.GetFullName().Equals(
+                    "global::System.Diagnostics.CodeAnalysis.ExperimentalAttribute",
+                    StringComparison.Ordinal) == true);
+
+                if (experimentalAttribute != null && !allowExperimentalProperties)
+                {
+                    // Skip experimental properties if not allowed
+                    continue;
+                }
+
+                // Extract diagnostic ID if experimental and allowed
+                string? experimentalDiagnosticId = null;
+                if (experimentalAttribute != null && allowExperimentalProperties && experimentalAttribute.ConstructorArguments.Length > 0)
+                {
+                    var diagnosticIdArg = experimentalAttribute.ConstructorArguments[0];
+                    if (diagnosticIdArg.Value is string diagId)
+                    {
+                        experimentalDiagnosticId = diagId;
+                    }
+                }
+
+                var treatAsNewImplementation = ReplacesBaseProperty(propertySymbol, namedTypeSymbol);
+
+                var accessorList = GetAccessorDeclarationSyntaxes();
+
+                var summary = XmlSyntaxFactory.GenerateSummarySeeAlsoComment(
+                    "Gets or sets the binding logic for {0}",
+                    $"{fullName}.@{prop.Name}");
+
+                var propSyntax = GetPropertyDeclaration(
+                    propertySymbol,
+                    accessorList,
+                    summary,
+                    desiredCommandInterface,
+                    makeClassesPublic,
+                    treatAsNewImplementation,
+                    experimentalDiagnosticId);
+
+                nodes.Add(propSyntax);
+            }
+
+            return parameters;
         }
 
         private SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(
