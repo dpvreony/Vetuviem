@@ -19,6 +19,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             {
                 () => new GenericControlBindingModelClassGenerator(),
                 () => new ControlBoundControlBindingModelClassGenerator(),
+                () => new BindingHelperExtensionClassGenerator(),
             };
         }
     }
