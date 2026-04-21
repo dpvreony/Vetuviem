@@ -32,7 +32,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             bool allowExperimentalProperties,
             LoggingImplementationMode loggingImplementationMode)
         {
-            var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
+            var typeParameterList = NamedTypeSymbolHelpers.GetTypeParameterListSyntax(
+                namedTypeSymbol,
+                this.GetTypeParameterSyntaxes);
 
             var controlClassFullName = namedTypeSymbol.GetFullName();
 
@@ -170,36 +172,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         }
 
         /// <summary>
-        /// Gets the Type Arguments based on the type symbol of a base class.
-        /// </summary>
-        /// <param name="baseClass">Base class to check.</param>
-        /// <returns>Collection of Tye Arguments.</returns>
-        protected static IEnumerable<TypeSyntax> GetTypeArgumentsFromTypeParameters(INamedTypeSymbol baseClass)
-        {
-            foreach (var typeParameterSymbol in baseClass.TypeArguments)
-            {
-                if (typeParameterSymbol.Name.Equals("TViewModel", StringComparison.Ordinal))
-                {
-                    // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
-                    // in theory they should be the same type anyway, but not guaranteed.
-                    continue;
-                }
-
-                // this deals with nullable hiding the type we're prefixing.
-                var typeToCheckForGlobalPrefix =
-                    typeParameterSymbol is INamedTypeSymbol namedTypeSymbol &&
-                    typeParameterSymbol.Name.Equals("Nullable")
-                        ? namedTypeSymbol.TypeArguments.First()
-                        : typeParameterSymbol;
-
-                string typeName = (typeToCheckForGlobalPrefix.TypeKind != TypeKind.TypeParameter && typeToCheckForGlobalPrefix.SpecialType == SpecialType.None ? "global::" : string.Empty)
-                              + typeParameterSymbol.ToDisplayString();
-
-                yield return SyntaxFactory.ParseTypeName(typeName);
-            }
-        }
-
-        /// <summary>
         /// Fluent API to get a Syntax Token List of modifiers to apply to the generated class.
         /// </summary>
         /// <param name="modifiers">List of modifiers to extend.</param>
@@ -299,21 +271,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// <returns>Type Parameter Syntax.</returns>
         protected abstract SeparatedSyntaxList<TypeParameterSyntax> GetTypeParameterSyntaxes();
 
-        private static IEnumerable<TypeParameterSyntax> GetTypeParameterSeparatedSyntaxList(INamedTypeSymbol namedTypeSymbol)
-        {
-            foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
-            {
-                if (typeParameterSymbol.Name.Equals("TViewModel", StringComparison.Ordinal))
-                {
-                    // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
-                    // in theory they should be the same type anyway, but not guaranteed.
-                    continue;
-                }
-
-                yield return SyntaxFactory.TypeParameter(typeParameterSymbol.Name);
-            }
-        }
-
         private MemberDeclarationSyntax GetConstructorMethod(
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
@@ -399,19 +356,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 current = current.BaseType;
             }
             return false;
-        }
-
-        private TypeParameterListSyntax GetTypeParameterListSyntax(INamedTypeSymbol namedTypeSymbol)
-        {
-            var sep = GetTypeParameterSyntaxes();
-
-            if (namedTypeSymbol.IsGenericType)
-            {
-                sep = sep.AddRange(GetTypeParameterSeparatedSyntaxList(namedTypeSymbol));
-            }
-
-            var typeParameterList = SyntaxFactory.TypeParameterList(sep);
-            return typeParameterList;
         }
     }
 }

@@ -69,7 +69,9 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var controlClassFullName = namedTypeSymbol.GetFullName();
             var constraintClauses = GetTypeParameterConstraintClauseSyntaxes(controlClassFullName, namedTypeSymbol);
 
-            var typeParameterList = GetTypeParameterListSyntax(namedTypeSymbol);
+            var typeParameterList = NamedTypeSymbolHelpers.GetTypeParameterListSyntax(
+                namedTypeSymbol,
+                () => this.GetTypeParameterSyntaxes(namedTypeSymbol));
 
             var summaryParameters = new (string paramName, string paramText)[]
             {
@@ -253,7 +255,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return SyntaxFactory.ParseTypeName($"{namedTypeSymbol.Name}ControlBindingModel<TView, TViewModel>");
         }
 
-        private SeparatedSyntaxList<TypeParameterSyntax> GetTypeParameterSyntaxes()
+        private SeparatedSyntaxList<TypeParameterSyntax> GetTypeParameterSyntaxes(INamedTypeSymbol namedTypeSymbol)
         {
             var viewForParameter = SyntaxFactory.TypeParameter("TView");
             var viewModelParameter = SyntaxFactory.TypeParameter("TViewModel");
@@ -262,35 +264,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var sep = new SeparatedSyntaxList<TypeParameterSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
             sep = sep.AddRange([viewForParameter, viewModelParameter]);
+
             return sep;
-        }
-
-        private static IEnumerable<TypeParameterSyntax> GetTypeParameterSeparatedSyntaxList(INamedTypeSymbol namedTypeSymbol)
-        {
-            foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
-            {
-                if (typeParameterSymbol.Name.Equals("TViewModel", StringComparison.Ordinal))
-                {
-                    // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
-                    // in theory they should be the same type anyway, but not guaranteed.
-                    continue;
-                }
-
-                yield return SyntaxFactory.TypeParameter(typeParameterSymbol.Name);
-            }
-        }
-
-        private TypeParameterListSyntax GetTypeParameterListSyntax(INamedTypeSymbol namedTypeSymbol)
-        {
-            var sep = GetTypeParameterSyntaxes();
-
-            if (namedTypeSymbol.IsGenericType)
-            {
-                sep = sep.AddRange(GetTypeParameterSeparatedSyntaxList(namedTypeSymbol));
-            }
-
-            var typeParameterList = SyntaxFactory.TypeParameterList(sep);
-            return typeParameterList;
         }
     }
 }

@@ -298,7 +298,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             if (baseClass is { IsGenericType: true })
             {
-                sep = sep.AddRange(GetTypeArgumentsFromTypeParameters(baseClass));
+                sep = sep.AddRange(NamedTypeSymbolHelpers.GetTypeArgumentsFromTypeParameters(baseClass));
             }
 
             return sep;

@@ -107,7 +107,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 throw new ArgumentNullException(nameof(classDeclaration));
             }
 
-            var typeParameters = GetTypeArgumentListSyntax(namedTypeSymbol);
+            var typeParameters = NamedTypeSymbolHelpers.GetTypeArgumentListSyntax(namedTypeSymbol);
 
             // we don't use the full name of the type symbol as if the class is generic you end up with the type args in it.
             var subNameSpace =
@@ -179,35 +179,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var constraintClauses =
                 new SyntaxList<TypeParameterConstraintClauseSyntax>(typeParameterConstraintClauseSyntaxList);
             return constraintClauses;
-        }
-
-        private static TypeArgumentListSyntax GetTypeArgumentListSyntax(INamedTypeSymbol namedTypeSymbol)
-        {
-#pragma warning disable SA1129 // Do not use default value type constructor
-            var sep = GetTypeArgumentSeparatedSyntaxList(namedTypeSymbol);
-#pragma warning restore SA1129 // Do not use default value type constructor
-            var typeArgumentList = SyntaxFactory.TypeArgumentList(sep);
-
-            return typeArgumentList;
-        }
-
-        private static SeparatedSyntaxList<TypeSyntax> GetTypeArgumentSeparatedSyntaxList(
-            INamedTypeSymbol namedTypeSymbol)
-        {
-            var viewForParameter = SyntaxFactory.ParseTypeName("TView");
-            var viewModelParameter = SyntaxFactory.ParseTypeName("TViewModel");
-            var controlParameter = SyntaxFactory.ParseTypeName(namedTypeSymbol.GetFullName());
-#pragma warning disable SA1129 // Do not use default value type constructor
-            var sep = new SeparatedSyntaxList<TypeSyntax>();
-#pragma warning restore SA1129 // Do not use default value type constructor
-            sep = sep.AddRange(new[] { viewForParameter, viewModelParameter, controlParameter });
-
-            if (namedTypeSymbol is { IsGenericType: true })
-            {
-                sep = sep.AddRange(GetTypeArgumentsFromTypeParameters(namedTypeSymbol));
-            }
-
-            return sep;
         }
     }
 }
