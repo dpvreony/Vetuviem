@@ -45,11 +45,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             // TODO: add the method body that creates and returns an instance of the binding model, using the expression argument to determine which properties to set on the binding model instance.
             var parameters = RoslynGenerationHelpers.GetParams(
                 [
-                    $"this global::System.Linq.Expressions.Expression<global::System.Func<TView, {namedTypeSymbol.GetFullName()}>> controlExpression",
+                    $"this global::System.Linq.Expressions.Expression<global::System.Func<TView, {namedTypeSymbol.GetFullName()}>> viewExpression",
                 ]);
 
             StatementSyntax[] methodBody = [
-                SyntaxFactory.ParseStatement($"var bindingModel = new {returnType}(controlExpression);"),
+                SyntaxFactory.ParseStatement($"var bindingModel = new {returnType}(viewExpression);"),
                 SyntaxFactory.ParseStatement("return bindingModel;")
             ];
 
