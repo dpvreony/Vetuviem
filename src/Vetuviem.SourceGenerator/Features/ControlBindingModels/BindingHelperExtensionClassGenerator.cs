@@ -38,15 +38,28 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 SyntaxFactory.Token(SyntaxKind.StaticKeyword),
                 SyntaxFactory.Token(SyntaxKind.PartialKeyword));
 
+            var defaultFactoryMethodDeclaration = GetDefaultFactoryMethodDeclaration(namedTypeSymbol);
+
+            var members = new SyntaxList<MemberDeclarationSyntax>(defaultFactoryMethodDeclaration);
+
+            var classDeclaration = SyntaxFactory.ClassDeclaration(classNameIdentifier)
+                .WithModifiers(modifiers)
+                .WithMembers(members)
+                .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummaryComment($"Extension Methods for <see cref=\"global::System.Linq.Expressions.Expression{{global::System.Func{{TView, {namedTypeSymbol.GetFullName()}}}}}\"/>."));
+
+            return classDeclaration;
+        }
+
+        private MethodDeclarationSyntax GetDefaultFactoryMethodDeclaration(INamedTypeSymbol namedTypeSymbol)
+        {
             var returnType = GetReturnType(namedTypeSymbol);
 
-            // TODO: add the expression argument
             // TODO: add other arguments as needed to determine which properties to set on the binding model instance.
             // TODO: add the method body that creates and returns an instance of the binding model, using the expression argument to determine which properties to set on the binding model instance.
             var parameters = RoslynGenerationHelpers.GetParams(
-                [
-                    $"this global::System.Linq.Expressions.Expression<global::System.Func<TView, {namedTypeSymbol.GetFullName()}>> viewExpression",
-                ]);
+            [
+                $"this global::System.Linq.Expressions.Expression<global::System.Func<TView, {namedTypeSymbol.GetFullName()}>> viewExpression",
+            ]);
 
             StatementSyntax[] methodBody = [
                 SyntaxFactory.ParseStatement($"var bindingModel = new {returnType}(viewExpression);"),
@@ -64,8 +77,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             };
 
             var defaultFactoryMethodDeclaration = SyntaxFactory.MethodDeclaration(
-                returnType,
-                "GetDefaultBindingModel")
+                    returnType,
+                    "GetDefaultBindingModel")
                 .WithTypeParameterList(typeParameterList)
                 .WithConstraintClauses(constraintClauses)
                 .AddModifiers(
@@ -77,15 +90,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     $"Creates a binding model for {controlClassFullName}.",
                     summaryParameters,
                     $"Instance of a {controlClassFullName} Binding Model."));
-
-            var members = new SyntaxList<MemberDeclarationSyntax>(defaultFactoryMethodDeclaration);
-
-            var classDeclaration = SyntaxFactory.ClassDeclaration(classNameIdentifier)
-                .WithModifiers(modifiers)
-                .WithMembers(members)
-                .WithLeadingTrivia(XmlSyntaxFactory.GenerateSummaryComment($"Extension Methods for <see cref=\"global::System.Linq.Expressions.Expression{{global::System.Func{{TView, {namedTypeSymbol.GetFullName()}}}}}\"/>."));
-
-            return classDeclaration;
+            return defaultFactoryMethodDeclaration;
         }
 
         private SyntaxList<TypeParameterConstraintClauseSyntax> GetTypeParameterConstraintClauseSyntaxes(
