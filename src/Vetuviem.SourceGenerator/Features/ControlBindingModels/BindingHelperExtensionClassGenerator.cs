@@ -252,7 +252,39 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 throw new ArgumentNullException(nameof(namedTypeSymbol));
             }
 
-            return SyntaxFactory.ParseTypeName($"{namedTypeSymbol.Name}ControlBindingModel<TView, TViewModel>");
+            var typeArgumentList = GetReturnTypeArgumentListSyntax(namedTypeSymbol);
+
+            return SyntaxFactory.GenericName(
+                SyntaxFactory.Identifier($"{namedTypeSymbol.Name}ControlBindingModel"),
+                typeArgumentList);
+        }
+
+        private static TypeArgumentListSyntax GetReturnTypeArgumentListSyntax(INamedTypeSymbol namedTypeSymbol)
+        {
+#pragma warning disable SA1129 // Do not use default value type constructor
+            var sep = GetTypeArgumentSeparatedSyntaxList(namedTypeSymbol);
+#pragma warning restore SA1129 // Do not use default value type constructor
+            var typeArgumentList = SyntaxFactory.TypeArgumentList(sep);
+
+            return typeArgumentList;
+        }
+
+        public static SeparatedSyntaxList<TypeSyntax> GetTypeArgumentSeparatedSyntaxList(
+            INamedTypeSymbol namedTypeSymbol)
+        {
+            var viewForParameter = SyntaxFactory.ParseTypeName("TView");
+            var viewModelParameter = SyntaxFactory.ParseTypeName("TViewModel");
+#pragma warning disable SA1129 // Do not use default value type constructor
+            var sep = new SeparatedSyntaxList<TypeSyntax>();
+#pragma warning restore SA1129 // Do not use default value type constructor
+            sep = sep.AddRange(new[] { viewForParameter, viewModelParameter });
+
+            if (namedTypeSymbol is { IsGenericType: true })
+            {
+                sep = sep.AddRange(NamedTypeSymbolHelpers.GetTypeArgumentsFromTypeParameters(namedTypeSymbol));
+            }
+
+            return sep;
         }
 
         private SeparatedSyntaxList<TypeParameterSyntax> GetTypeParameterSyntaxes(INamedTypeSymbol namedTypeSymbol)

@@ -76,6 +76,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
 
             return sep;
         }
+
         /// <summary>
         /// Gets the Type Arguments based on the type symbol of a base class.
         /// </summary>
