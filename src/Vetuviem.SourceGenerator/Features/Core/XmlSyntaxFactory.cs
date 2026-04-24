@@ -2,7 +2,6 @@
 // DPVreony and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -61,13 +60,13 @@ namespace Vetuviem.SourceGenerator.Features.Core
         {
             var text = string.Format(CultureInfo.InvariantCulture, summaryText, "<see cref=\"" + seeAlsoText.Replace("<", "{").Replace(">", "}") + "\" />");
             var sb = new StringBuilder("/// <summary>")
-                .AppendLine()
-                .Append("/// ").AppendLine(text)
-                .AppendLine("/// </summary>");
+                .Append("\n")
+                .Append("/// ").Append(text).Append("\n")
+                .Append("/// </summary>").Append("\n");
 
             foreach (var parameter in parameters)
             {
-                sb.Append("/// <param name=\"").Append(parameter.ParamName).Append("\">").Append(parameter.ParamText).AppendLine("</param>");
+                sb.Append("/// <param name=\"").Append(parameter.ParamName).Append("\">").Append(parameter.ParamText).Append("</param>").Append("\n");
             }
 
             return SyntaxFactory.ParseLeadingTrivia(sb.ToString());
@@ -112,13 +111,13 @@ namespace Vetuviem.SourceGenerator.Features.Core
         public static SyntaxTriviaList GenerateSummaryComment(string summaryText, IEnumerable<(string paramName, string paramText)> parameters)
         {
             var sb = new StringBuilder("/// <summary>")
-                .AppendLine()
-                .Append("/// ").AppendLine(summaryText)
-                .AppendLine("/// </summary>");
+                .Append("\n")
+                .Append("/// ").Append(summaryText).Append("\n")
+                .Append("/// </summary>").Append("\n");
 
             foreach (var parameter in parameters)
             {
-                sb.Append("/// <param name=\"").Append(parameter.paramName).Append("\">").Append(parameter.paramText).AppendLine("</param>");
+                sb.Append("/// <param name=\"").Append(parameter.paramName).Append("\">").Append(parameter.paramText).Append("</param>").Append("\n");
             }
 
             return SyntaxFactory.ParseLeadingTrivia(sb.ToString());
@@ -134,16 +133,16 @@ namespace Vetuviem.SourceGenerator.Features.Core
         public static SyntaxTriviaList GenerateSummaryComment(string summaryText, IEnumerable<(string paramName, string paramText)> parameters, string returnValueText)
         {
             var sb = new StringBuilder("/// <summary>")
-                .AppendLine()
-                .Append("/// ").AppendLine(summaryText)
-                .AppendLine("/// </summary>");
+                .Append("\n")
+                .Append("/// ").Append(summaryText).Append("\n")
+                .Append("/// </summary>").Append("\n");
 
             foreach (var parameter in parameters)
             {
-                sb.Append("/// <param name=\"").Append(parameter.paramName).Append("\">").Append(parameter.paramText).AppendLine("</param>");
+                sb.Append("/// <param name=\"").Append(parameter.paramName).Append("\">").Append(parameter.paramText).Append("</param>").Append("\n");
             }
 
-            sb.Append("/// <returns>").Append(returnValueText).AppendLine("</returns>");
+            sb.Append("/// <returns>").Append(returnValueText).Append("</returns>").Append("\n");
             return SyntaxFactory.ParseLeadingTrivia(sb.ToString());
         }
     }
