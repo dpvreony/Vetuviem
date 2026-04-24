@@ -23,7 +23,7 @@ namespace Vetuviem.SourceGenerator.Features.Core
         static XmlSyntaxFactory()
         {
             // Make sure the newline is included. Otherwise the comment and the method will be on the same line.
-            InheritdocSyntax = SyntaxFactory.ParseLeadingTrivia(@"/// <inheritdoc />" + Environment.NewLine);
+            InheritdocSyntax = SyntaxFactory.ParseLeadingTrivia("/// <inheritdoc />\n");
         }
 
         /// <summary>
@@ -41,9 +41,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
         public static SyntaxTriviaList GenerateSummarySeeAlsoComment(string summaryText, string seeAlsoText)
         {
             var text = string.Format(CultureInfo.InvariantCulture, summaryText, "<see cref=\"" + seeAlsoText.Replace("<", "{").Replace(">", "}") + "\" />");
-            var template = "/// <summary>" + Environment.NewLine +
-                           $"/// {text}" + Environment.NewLine +
-                           "/// </summary>" + Environment.NewLine;
+            var template = "/// <summary>\n" +
+                           $"/// {text}\n" +
+                           "/// </summary>\n";
 
             return SyntaxFactory.ParseLeadingTrivia(template);
         }
@@ -80,9 +80,9 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <returns>The syntax trivia of the comment.</returns>
         public static SyntaxTriviaList GenerateSummaryComment(string summaryText)
         {
-            var template = "/// <summary>" + Environment.NewLine +
-                           $"/// {summaryText}" + Environment.NewLine +
-                           "/// </summary>" + Environment.NewLine;
+            var template = "/// <summary>\n" +
+                           $"/// {summaryText}\n" +
+                           "/// </summary>\n";
 
             return SyntaxFactory.ParseLeadingTrivia(template);
         }
@@ -95,10 +95,10 @@ namespace Vetuviem.SourceGenerator.Features.Core
         /// <returns>The syntax trivia of the comment.</returns>
         public static SyntaxTriviaList GenerateSummaryComment(string summaryText, string returnValueText)
         {
-            var template = "/// <summary>" + Environment.NewLine +
-                           $"/// {summaryText}" + Environment.NewLine +
-                           "/// </summary>" + Environment.NewLine +
-                           $"/// <returns>{returnValueText}///<returns>" + Environment.NewLine;
+            var template = "/// <summary>\n" +
+                           $"/// {summaryText}\n" +
+                           "/// </summary>\n" +
+                           $"/// <returns>{returnValueText}</returns>\n";
 
             return SyntaxFactory.ParseLeadingTrivia(template);
         }
