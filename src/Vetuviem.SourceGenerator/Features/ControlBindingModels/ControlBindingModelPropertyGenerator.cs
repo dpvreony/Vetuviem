@@ -273,7 +273,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
         private static TypeSyntax GetCommandBindingTypeSyntax(string platformCommandType)
         {
-            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.ICommandBinding<TViewModel>?");
+            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.ICommandBinding<TVetuviemTargetViewModel>?");
             return type;
         }
 
@@ -286,7 +286,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 desiredCommandInterface);
 
             var returnType = prop.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.{bindingName}<TViewModel, {returnType}>?");
+            var type = SyntaxFactory.ParseTypeName($"global::Vetuviem.Core.{bindingName}<TVetuviemTargetViewModel, {returnType}>?");
             return type;
         }
 

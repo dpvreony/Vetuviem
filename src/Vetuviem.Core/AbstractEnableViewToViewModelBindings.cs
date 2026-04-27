@@ -17,16 +17,16 @@ namespace Vetuviem.Core
     /// It's intended as a single point for invoking the binding to be applied on a view.
     /// </summary>
     /// <typeparam name="TView">The type for the view.</typeparam>
-    /// <typeparam name="TViewModel">The type for the viewmodel.</typeparam>
-    public abstract class AbstractEnableViewToViewModelBindings<TView, TViewModel> : IEnableViewToViewModelBindings<TView, TViewModel>
-        where TView : class, IViewFor<TViewModel>
-        where TViewModel : class, IReactiveObject
+    /// <typeparam name="TVetuviemTargetViewModel">The type for the target viewmodel that Vetuviem will bind to.</typeparam>
+    public abstract class AbstractEnableViewToViewModelBindings<TView, TVetuviemTargetViewModel> : IEnableViewToViewModelBindings<TView, TVetuviemTargetViewModel>
+        where TView : class, IViewFor<TVetuviemTargetViewModel>
+        where TVetuviemTargetViewModel : class, IReactiveObject
     {
         /// <inheritdoc />
         public void ApplyBindings(
             Action<IDisposable> disposeWithAction,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             IScheduler? scheduler = null)
         {
             if (disposeWithAction == null)
@@ -68,7 +68,7 @@ namespace Vetuviem.Core
         public void ApplyBindings(
             CompositeDisposable compositeDisposable,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             IScheduler? scheduler = null)
         {
             if (compositeDisposable == null)
@@ -110,14 +110,14 @@ namespace Vetuviem.Core
         /// Gets the controls to be bound on the view.
         /// </summary>
         /// <returns>Collection of control to viewmodel bindings.</returns>
-        protected abstract IEnumerable<IControlBindingModel<TView, TViewModel>> GetBindings();
+        protected abstract IEnumerable<IControlBindingModel<TView, TVetuviemTargetViewModel>> GetBindings();
 
         /// <summary>
         /// Gets the subscriptions to be bound between the View and the ViewModel. Can be used to subscribe the View to ViewModel Commands or Interactions. This is separate from the control bindings as it allows for more complex bindings that may not be easily represented by a control binding model. For example Command subscriptions can be used to execute methods in the View.
         /// </summary>
         /// <remarks>You do not need to wire up disposal logic, this is handled internally.</remarks>
         /// <returns>Collection of subscriptions.</returns>
-        protected abstract IEnumerable<IDisposable> GetSubscriptions(TView view, TViewModel viewModel, IScheduler? scheduler);
+        protected abstract IEnumerable<IDisposable> GetSubscriptions(TView view, TVetuviemTargetViewModel viewModel, IScheduler? scheduler);
 
         /// <summary>
         /// Gets an expression for a view property. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view properties to bind to.
@@ -132,7 +132,7 @@ namespace Vetuviem.Core
         /// </summary>
         /// <param name="viewModelCommand">The expression representing the view model property.</param>
         /// <returns>The expression for the view model command.</returns>
-        protected static Expression<Func<TViewModel, ICommand?>> ForViewModelCommand(Expression<Func<TViewModel, ICommand?>> viewModelCommand) => viewModelCommand;
+        protected static Expression<Func<TVetuviemTargetViewModel, ICommand?>> ForViewModelCommand(Expression<Func<TVetuviemTargetViewModel, ICommand?>> viewModelCommand) => viewModelCommand;
 
         /// <summary>
         /// Gets an expression for a view model property. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view model properties to bind to.
@@ -140,16 +140,16 @@ namespace Vetuviem.Core
         /// <typeparam name="TViewModelProp">The type for the property on the view model.</typeparam>
         /// <param name="viewModelProperty">The expression representing the view model property.</param>
         /// <returns>The expression for the view model property.</returns>
-        protected static Expression<Func<TViewModel, TViewModelProp>> ForViewModelProperty<TViewModelProp>(Expression<Func<TViewModel, TViewModelProp>> viewModelProperty) => viewModelProperty;
+        protected static Expression<Func<TVetuviemTargetViewModel, TViewModelProp>> ForViewModelProperty<TViewModelProp>(Expression<Func<TVetuviemTargetViewModel, TViewModelProp>> viewModelProperty) => viewModelProperty;
 
         /// <summary>
         /// Gets a command binding for a view model command. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view model commands to bind to.
         /// </summary>
         /// <param name="viewModelBinding">The expression representing the view model property.</param>
         /// <returns>The command binding for the view model command.</returns>
-        protected static ICommandBinding<TViewModel> GetCommandBinding(Expression<Func<TViewModel, ICommand?>> viewModelBinding)
+        protected static ICommandBinding<TVetuviemTargetViewModel> GetCommandBinding(Expression<Func<TVetuviemTargetViewModel, ICommand?>> viewModelBinding)
         {
-            return new CommandBinding<TViewModel>(viewModelBinding);
+            return new CommandBinding<TVetuviemTargetViewModel>(viewModelBinding);
         }
     }
 }
