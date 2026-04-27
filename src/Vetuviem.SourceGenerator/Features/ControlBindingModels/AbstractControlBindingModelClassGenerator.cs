@@ -303,13 +303,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         {
             foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
             {
-                if (typeParameterSymbol.Name.Equals("TViewModel", StringComparison.Ordinal))
-                {
-                    // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
-                    // in theory they should be the same type anyway, but not guaranteed.
-                    continue;
-                }
-
                 yield return SyntaxFactory.TypeParameter(typeParameterSymbol.Name);
             }
         }
