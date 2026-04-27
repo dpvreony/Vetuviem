@@ -13,10 +13,10 @@ namespace Vetuviem.Core
     /// Represents a View to View Model Binding.
     /// </summary>
     /// <typeparam name="TView">The type for the view.</typeparam>
-    /// <typeparam name="TViewModel">The type for the viewmodel.</typeparam>
-    public interface IEnableViewToViewModelBindings<in TView, in TViewModel>
-        where TView : class, IViewFor<TViewModel>
-        where TViewModel : class, IReactiveObject
+    /// <typeparam name="TVetuviemTargetViewModel">The type for the target viewmodel that Vetuviem will bind to.</typeparam>
+    public interface IEnableViewToViewModelBindings<in TView, in TVetuviemTargetViewModel>
+        where TView : class, IViewFor<TVetuviemTargetViewModel>
+        where TVetuviemTargetViewModel : class, IReactiveObject
     {
         /// <summary>
         /// Apply control bindings between a View and ViewModel.
@@ -28,7 +28,7 @@ namespace Vetuviem.Core
         void ApplyBindings(
             Action<IDisposable> disposeWithAction,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             IScheduler? scheduler = null);
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Vetuviem.Core
         void ApplyBindings(
             CompositeDisposable compositeDisposable,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             IScheduler? scheduler = null);
     }
 }

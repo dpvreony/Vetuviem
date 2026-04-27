@@ -12,9 +12,9 @@ namespace Vetuviem.Core
     /// <summary>
     /// Represents a View to View Model Binding for Commands.
     /// </summary>
-    /// <typeparam name="TViewModel">The type for the ViewModel.</typeparam>
-    public interface ICommandBinding<TViewModel>
-        where TViewModel : class
+    /// <typeparam name="TVetuviemTargetViewModel">The type for the target ViewModel that Vetuviem will bind to.</typeparam>
+    public interface ICommandBinding<TVetuviemTargetViewModel>
+        where TVetuviemTargetViewModel : class
     {
         /// <summary>
         /// Applies a View to View Model Binding.
@@ -28,9 +28,9 @@ namespace Vetuviem.Core
         void ApplyBinding<TView, TViewProp>(
             Action<IDisposable> d,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
-            where TView : class, IViewFor<TViewModel>
+            where TView : class, IViewFor<TVetuviemTargetViewModel>
             where TViewProp : class;
 
         /// <summary>
@@ -45,9 +45,9 @@ namespace Vetuviem.Core
         void ApplyBinding<TView, TViewProp>(
             CompositeDisposable compositeDisposable,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
-            where TView : class, IViewFor<TViewModel>
+            where TView : class, IViewFor<TVetuviemTargetViewModel>
             where TViewProp : class;
     }
 }

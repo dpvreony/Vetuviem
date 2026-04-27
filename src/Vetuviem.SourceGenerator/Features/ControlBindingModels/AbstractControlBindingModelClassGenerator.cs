@@ -98,13 +98,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
             {
-                if (typeParameterSymbol.Name.Equals("TViewModel", StringComparison.Ordinal))
-                {
-                    // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
-                    // in theory they should be the same type anyway, but not guaranteed.
-                    continue;
-                }
-
                 var typeParameterConstraintSyntaxList = new List<TypeParameterConstraintSyntax>();
 
                 var hasReferenceTypeConstraint = typeParameterSymbol.HasReferenceTypeConstraint;
@@ -178,13 +171,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         {
             foreach (var typeParameterSymbol in baseClass.TypeArguments)
             {
-                if (typeParameterSymbol.Name.Equals("TViewModel", StringComparison.Ordinal))
-                {
-                    // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
-                    // in theory they should be the same type anyway, but not guaranteed.
-                    continue;
-                }
-
                 // this deals with nullable hiding the type we're prefixing.
                 var typeToCheckForGlobalPrefix =
                     typeParameterSymbol is INamedTypeSymbol namedTypeSymbol &&

@@ -11,12 +11,12 @@ namespace Vetuviem.Core
     /// Abstraction of a Control Binding Model.
     /// </summary>
     /// <typeparam name="TView">The type for the view.</typeparam>
-    /// <typeparam name="TViewModel">The type for the viewmodel.</typeparam>
+    /// <typeparam name="TVetuviemTargetViewModel">The type for the target viewmodel that Vetuviem will bind to.</typeparam>
     /// <typeparam name="TControl">The type for the control.</typeparam>
-    public abstract class AbstractControlBindingModel<TView, TViewModel, TControl>
-        : IControlBindingModel<TView, TViewModel>
-        where TView : class, ReactiveUI.IViewFor<TViewModel>
-        where TViewModel : class, ReactiveUI.IReactiveObject
+    public abstract class AbstractControlBindingModel<TView, TVetuviemTargetViewModel, TControl>
+        : IControlBindingModel<TView, TVetuviemTargetViewModel>
+        where TView : class, ReactiveUI.IViewFor<TVetuviemTargetViewModel>
+        where TVetuviemTargetViewModel : class, ReactiveUI.IReactiveObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractControlBindingModel{TView, TViewModel, TControl}"/> class.
@@ -35,13 +35,13 @@ namespace Vetuviem.Core
         /// <inheritdoc/>
         public abstract void ApplyBindings(
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             Action<IDisposable> disposeAction);
 
         /// <inheritdoc/>
         public abstract void ApplyBindings(
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             CompositeDisposable disposeAction);
     }
 }

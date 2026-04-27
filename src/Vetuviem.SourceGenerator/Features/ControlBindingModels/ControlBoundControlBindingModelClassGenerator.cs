@@ -74,7 +74,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         protected override SeparatedSyntaxList<TypeParameterSyntax> GetTypeParameterSyntaxes()
         {
             var viewForParameter = SyntaxFactory.TypeParameter("TView");
-            var viewModelParameter = SyntaxFactory.TypeParameter("TViewModel");
+            var viewModelParameter = SyntaxFactory.TypeParameter("TVetuviemTargetViewModel");
 
 #pragma warning disable SA1129 // Do not use default value type constructor
             var sep = new SeparatedSyntaxList<TypeParameterSyntax>();
@@ -144,7 +144,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var viewConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
             var viewForConstraint =
-                SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("global::ReactiveUI.IViewFor<TViewModel>"));
+                SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("global::ReactiveUI.IViewFor<TVetuviemTargetViewModel>"));
 
             viewConstraints = viewConstraints
                 .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint))
@@ -163,7 +163,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint))
                     .Add(reactiveObjectInterfaceConstraint);
             var viewModelConstraintClause = SyntaxFactory.TypeParameterConstraintClause(
-                SyntaxFactory.IdentifierName("TViewModel"),
+                SyntaxFactory.IdentifierName("TVetuviemTargetViewModel"),
                 viewModelConstraints);
 
             var typeParameterConstraintClauseSyntaxList =
@@ -195,7 +195,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             INamedTypeSymbol namedTypeSymbol)
         {
             var viewForParameter = SyntaxFactory.ParseTypeName("TView");
-            var viewModelParameter = SyntaxFactory.ParseTypeName("TViewModel");
+            var viewModelParameter = SyntaxFactory.ParseTypeName("TVetuviemTargetViewModel");
             var controlParameter = SyntaxFactory.ParseTypeName(namedTypeSymbol.GetFullName());
 #pragma warning disable SA1129 // Do not use default value type constructor
             var sep = new SeparatedSyntaxList<TypeSyntax>();
