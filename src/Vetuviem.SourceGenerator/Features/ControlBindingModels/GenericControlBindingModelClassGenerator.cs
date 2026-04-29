@@ -103,7 +103,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         protected override SeparatedSyntaxList<TypeParameterSyntax> GetTypeParameterSyntaxes()
         {
             var viewForParameter = SyntaxFactory.TypeParameter("TView");
-            var viewModelParameter = SyntaxFactory.TypeParameter("TViewModel");
+            var viewModelParameter = SyntaxFactory.TypeParameter("TVetuviemTargetViewModel");
             var controlParameter = SyntaxFactory.TypeParameter("TControl");
 
 #pragma warning disable SA1129 // Do not use default value type constructor
@@ -146,7 +146,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 #pragma warning disable SA1129 // Do not use default value type constructor
                 var interfaceTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
-                interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.AbstractControlBindingModel<TView, TViewModel, TControl>")));
+                interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.AbstractControlBindingModel<TView, TVetuviemTargetViewModel, TControl>")));
 
                 if (loggingImplementationMode == LoggingImplementationMode.SplatViaServiceLocator)
                 {
@@ -172,7 +172,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 #pragma warning disable SA1129 // Do not use default value type constructor
                 var interfaceTypesList = new SeparatedSyntaxList<BaseTypeSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
-                interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.AbstractControlBindingModel<TView, TViewModel, TControl>")));
+                interfaceTypesList = interfaceTypesList.Add(SyntaxFactory.SimpleBaseType(SyntaxFactory.ParseTypeName("global::Vetuviem.Core.AbstractControlBindingModel<TView, TVetuviemTargetViewModel, TControl>")));
 
                 if (loggingImplementationMode == LoggingImplementationMode.SplatViaServiceLocator)
                 {
@@ -226,7 +226,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var viewConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
             var viewForConstraint =
-                SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("global::ReactiveUI.IViewFor<TViewModel>"));
+                SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("global::ReactiveUI.IViewFor<TVetuviemTargetViewModel>"));
 
             viewConstraints = viewConstraints
                 .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint))
@@ -245,7 +245,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint))
                     .Add(reactiveObjectInterfaceConstraint);
             var viewModelConstraintClause = SyntaxFactory.TypeParameterConstraintClause(
-                SyntaxFactory.IdentifierName("TViewModel"),
+                SyntaxFactory.IdentifierName("TVetuviemTargetViewModel"),
                 viewModelConstraints);
 
             var baseControlConstraint =
@@ -289,7 +289,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         private static SeparatedSyntaxList<TypeSyntax> GetTypeArgumentSeparatedSyntaxList(INamedTypeSymbol baseClass)
         {
             var viewForParameter = SyntaxFactory.ParseTypeName("TView");
-            var viewModelParameter = SyntaxFactory.ParseTypeName("TViewModel");
+            var viewModelParameter = SyntaxFactory.ParseTypeName("TVetuviemTargetViewModel");
             var controlParameter = SyntaxFactory.ParseTypeName("TControl");
 #pragma warning disable SA1129 // Do not use default value type constructor
             var sep = new SeparatedSyntaxList<TypeSyntax>();
@@ -326,7 +326,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var parameters = RoslynGenerationHelpers.GetParams(new[]
             {
                 "TView view",
-                "TViewModel viewModel",
+                "TVetuviemTargetViewModel viewModel",
                 "global::System.Action<global::System.IDisposable> registerForDisposalAction",
             });
 
@@ -363,7 +363,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var parameters = RoslynGenerationHelpers.GetParams(new[]
             {
                 "TView view",
-                "TViewModel viewModel",
+                "TVetuviemTargetViewModel viewModel",
                 "global::System.Reactive.Disposables.CompositeDisposable compositeDisposable",
             });
 

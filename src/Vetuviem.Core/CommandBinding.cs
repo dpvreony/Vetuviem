@@ -14,11 +14,11 @@ namespace Vetuviem.Core
     /// <summary>
     /// Represents a command binding between a control and a viewmodel.
     /// </summary>
-    /// <typeparam name="TViewModel">The type for the viewmodel.</typeparam>
-    public sealed class CommandBinding<TViewModel> : ICommandBinding<TViewModel>
-        where TViewModel : class
+    /// <typeparam name="TVetuviemTargetViewModel">The type for the target viewmodel that Vetuviem will bind to.</typeparam>
+    public sealed class CommandBinding<TVetuviemTargetViewModel> : ICommandBinding<TVetuviemTargetViewModel>
+        where TVetuviemTargetViewModel : class
     {
-        private readonly Expression<Func<TViewModel, ICommand?>> _viewModelBinding;
+        private readonly Expression<Func<TVetuviemTargetViewModel, ICommand?>> _viewModelBinding;
         private readonly string? _toEvent;
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Vetuviem.Core
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
         /// <param name="toEvent">If specified, bind to the specific event instead of the default.</param>
         public CommandBinding(
-            Expression<Func<TViewModel, ICommand?>> viewModelBinding,
+            Expression<Func<TVetuviemTargetViewModel, ICommand?>> viewModelBinding,
             string? toEvent = null)
         {
             _viewModelBinding = viewModelBinding;
@@ -38,9 +38,9 @@ namespace Vetuviem.Core
         public void ApplyBinding<TView, TViewProp>(
             Action<IDisposable> disposeAction,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
-            where TView : class, IViewFor<TViewModel>
+            where TView : class, IViewFor<TVetuviemTargetViewModel>
             where TViewProp : class
         {
             if (disposeAction == null)
@@ -74,9 +74,9 @@ namespace Vetuviem.Core
         public void ApplyBinding<TView, TViewProp>(
             CompositeDisposable compositeDisposable,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
-            where TView : class, IViewFor<TViewModel>
+            where TView : class, IViewFor<TVetuviemTargetViewModel>
             where TViewProp : class
         {
             if (compositeDisposable == null)

@@ -12,15 +12,15 @@ namespace Vetuviem.Core
     /// <summary>
     /// Represents a one way View and ViewModel binding.
     /// </summary>
-    /// <typeparam name="TViewModel">The type for the ViewModel.</typeparam>
+    /// <typeparam name="TVetuviemTargetViewModel">The type for the target ViewModel that Vetuviem will bind to.</typeparam>
     /// <typeparam name="TViewProp">The type for the View.</typeparam>
-    public interface IOneWayBind<TViewModel, TViewProp>
-        where TViewModel : class
+    public interface IOneWayBind<TVetuviemTargetViewModel, TViewProp>
+        where TVetuviemTargetViewModel : class
     {
         /// <summary>
         /// Gets the binding to apply between the ViewModel and the View.
         /// </summary>
-        Expression<Func<TViewModel, TViewProp?>> ViewModelBinding { get; }
+        Expression<Func<TVetuviemTargetViewModel, TViewProp?>> ViewModelBinding { get; }
 
         /// <summary>
         /// Applies a View to View Model Binding.
@@ -33,9 +33,9 @@ namespace Vetuviem.Core
         void ApplyBinding<TView>(
             Action<IDisposable> d,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
-            where TView : class, IViewFor<TViewModel>;
+            where TView : class, IViewFor<TVetuviemTargetViewModel>;
 
         /// <summary>
         /// Applies a View to View Model Binding.
@@ -48,8 +48,8 @@ namespace Vetuviem.Core
         void ApplyBinding<TView>(
             CompositeDisposable compositeDisposable,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
-            where TView : class, IViewFor<TViewModel>;
+            where TView : class, IViewFor<TVetuviemTargetViewModel>;
     }
 }

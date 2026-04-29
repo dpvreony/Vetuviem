@@ -44,7 +44,7 @@
 
   <ItemGroup Condition="$(IsTestProject)">
     <PackageReference Include="GitHubActionsTestLogger" Version="3.0.3" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
     <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.6.2" />
     <PackageReference Include="Microsoft.Testing.Platform" Version="2.2.1" />
     <PackageReference Include="NetTestRegimentation" Version="2.0.8" />
@@ -68,7 +68,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(IsTestProject)' != 'true' and '$(SourceLinkEnabled)' != 'false'">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.202" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.203" PrivateAssets="All" />
   </ItemGroup>
   
   <ItemGroup>	

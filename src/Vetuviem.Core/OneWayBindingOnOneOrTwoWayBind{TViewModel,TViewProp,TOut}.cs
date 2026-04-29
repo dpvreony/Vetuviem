@@ -13,13 +13,13 @@ namespace Vetuviem.Core
     /// <summary>
     /// Represents a one way View and ViewModel binding on a View Property that supports one or two way binding.
     /// </summary>
-    /// <typeparam name="TViewModel">The type for the ViewModel.</typeparam>
+    /// <typeparam name="TVetuviemTargetViewModel">The type for the target ViewModel that Vetuviem will bind to.</typeparam>
     /// <typeparam name="TViewProp">The type for the View.</typeparam>
     /// <typeparam name="TOut">The type for the conversion.</typeparam>
-    public class OneWayBindingOnOneOrTwoWayBind<TViewModel, TViewProp, TOut> : IOneOrTwoWayBind<TViewModel, TOut>
-        where TViewModel : class
+    public class OneWayBindingOnOneOrTwoWayBind<TVetuviemTargetViewModel, TViewProp, TOut> : IOneOrTwoWayBind<TVetuviemTargetViewModel, TOut>
+        where TVetuviemTargetViewModel : class
     {
-        private readonly Expression<Func<TViewModel, TViewProp?>> _viewModelBinding;
+        private readonly Expression<Func<TVetuviemTargetViewModel, TViewProp?>> _viewModelBinding;
 
         private readonly Expression<Func<TViewProp, TOut>> _converterBinding;
 
@@ -29,7 +29,7 @@ namespace Vetuviem.Core
         /// <param name="viewModelBinding">View to ViewModel binding expression.</param>
         /// <param name="converterBinding">View Property Conversion binding expression.</param>
         public OneWayBindingOnOneOrTwoWayBind(
-            Expression<Func<TViewModel, TViewProp?>> viewModelBinding,
+            Expression<Func<TVetuviemTargetViewModel, TViewProp?>> viewModelBinding,
             Expression<Func<TViewProp, TOut>> converterBinding)
         {
             _viewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
@@ -40,9 +40,9 @@ namespace Vetuviem.Core
         public void ApplyBinding<TView>(
             Action<IDisposable> d,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             Expression<Func<TView, TOut>> viewBinding)
-            where TView : class, IViewFor<TViewModel>
+            where TView : class, IViewFor<TVetuviemTargetViewModel>
         {
             if (d == null)
             {
@@ -60,9 +60,9 @@ namespace Vetuviem.Core
         public void ApplyBinding<TView>(
             CompositeDisposable compositeDisposable,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             Expression<Func<TView, TOut>> viewBinding)
-            where TView : class, IViewFor<TViewModel>
+            where TView : class, IViewFor<TVetuviemTargetViewModel>
         {
             if (compositeDisposable == null)
             {

@@ -100,13 +100,6 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
             {
-                if (typeParameterSymbol.Name.Equals("TViewModel", StringComparison.Ordinal))
-                {
-                    // quick hack for rxui already using TViewModel, will change vetuviem to use TBinding...
-                    // in theory they should be the same type anyway, but not guaranteed.
-                    continue;
-                }
-
                 var typeParameterConstraintSyntaxList = new List<TypeParameterConstraintSyntax>();
 
                 var hasReferenceTypeConstraint = typeParameterSymbol.HasReferenceTypeConstraint;
@@ -168,6 +161,29 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     newTypeParameterContraint);
 
                 typeParameterConstraintClauseSyntaxList.Add(newTypeParameterConstraintClause);
+            }
+        }
+
+        /// <summary>
+        /// Gets the Type Arguments based on the type symbol of a base class.
+        /// </summary>
+        /// <param name="baseClass">Base class to check.</param>
+        /// <returns>Collection of Tye Arguments.</returns>
+        protected static IEnumerable<TypeSyntax> GetTypeArgumentsFromTypeParameters(INamedTypeSymbol baseClass)
+        {
+            foreach (var typeParameterSymbol in baseClass.TypeArguments)
+            {
+                // this deals with nullable hiding the type we're prefixing.
+                var typeToCheckForGlobalPrefix =
+                    typeParameterSymbol is INamedTypeSymbol namedTypeSymbol &&
+                    typeParameterSymbol.Name.Equals("Nullable")
+                        ? namedTypeSymbol.TypeArguments.First()
+                        : typeParameterSymbol;
+
+                string typeName = (typeToCheckForGlobalPrefix.TypeKind != TypeKind.TypeParameter && typeToCheckForGlobalPrefix.SpecialType == SpecialType.None ? "global::" : string.Empty)
+                              + typeParameterSymbol.ToDisplayString();
+
+                yield return SyntaxFactory.ParseTypeName(typeName);
             }
         }
 
@@ -270,6 +286,14 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
         /// </summary>
         /// <returns>Type Parameter Syntax.</returns>
         protected abstract SeparatedSyntaxList<TypeParameterSyntax> GetTypeParameterSyntaxes();
+
+        private static IEnumerable<TypeParameterSyntax> GetTypeParameterSeparatedSyntaxList(INamedTypeSymbol namedTypeSymbol)
+        {
+            foreach (var typeParameterSymbol in namedTypeSymbol.TypeParameters)
+            {
+                yield return SyntaxFactory.TypeParameter(typeParameterSymbol.Name);
+            }
+        }
 
         private MemberDeclarationSyntax GetConstructorMethod(
             INamedTypeSymbol namedTypeSymbol,

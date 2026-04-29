@@ -12,10 +12,10 @@ namespace Vetuviem.Core
     /// Represents a control binding model.
     /// </summary>
     /// <typeparam name="TView">The type for the view.</typeparam>
-    /// <typeparam name="TViewModel">The type for the viewmodel.</typeparam>
-    public interface IControlBindingModel<in TView, in TViewModel>
-        where TView : class, IViewFor<TViewModel>
-        where TViewModel : class, IReactiveObject
+    /// <typeparam name="TVetuviemTargetViewModel">The type for the target viewmodel that Vetuviem will bind to.</typeparam>
+    public interface IControlBindingModel<in TView, in TVetuviemTargetViewModel>
+        where TView : class, IViewFor<TVetuviemTargetViewModel>
+        where TVetuviemTargetViewModel : class, IReactiveObject
     {
         /// <summary>
         /// Applies the binding between the view and the view model.
@@ -23,7 +23,7 @@ namespace Vetuviem.Core
         /// <param name="view">The view.</param>
         /// <param name="viewModel">The viewmodel.</param>
         /// <param name="disposeAction">The action to register disposals against.</param>
-        void ApplyBindings(TView view, TViewModel viewModel, Action<IDisposable> disposeAction);
+        void ApplyBindings(TView view, TVetuviemTargetViewModel viewModel, Action<IDisposable> disposeAction);
 
         /// <summary>
         /// Applies the binding between the view and the view model.
@@ -31,6 +31,6 @@ namespace Vetuviem.Core
         /// <param name="view">The view.</param>
         /// <param name="viewModel">The viewmodel.</param>
         /// <param name="compositeDisposable">The disposable container to register disposals against.</param>
-        void ApplyBindings(TView view, TViewModel viewModel, CompositeDisposable compositeDisposable);
+        void ApplyBindings(TView view, TVetuviemTargetViewModel viewModel, CompositeDisposable compositeDisposable);
     }
 }

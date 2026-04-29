@@ -13,22 +13,22 @@ namespace Vetuviem.Core
     /// <summary>
     /// Represents a one way View and ViewModel binding.
     /// </summary>
-    /// <typeparam name="TViewModel">The type for the ViewModel.</typeparam>
+    /// <typeparam name="TVetuviemTargetViewModel">The type for the target ViewModel that Vetuviem will bind to.</typeparam>
     /// <typeparam name="TViewProp">The type for the View.</typeparam>
-    public class OneWayBinding<TViewModel, TViewProp> : IOneWayBind<TViewModel, TViewProp>
-        where TViewModel : class
+    public class OneWayBinding<TVetuviemTargetViewModel, TViewProp> : IOneWayBind<TVetuviemTargetViewModel, TViewProp>
+        where TVetuviemTargetViewModel : class
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OneWayBinding{TViewModel,TViewProp}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
-        public OneWayBinding(Expression<Func<TViewModel, TViewProp?>> viewModelBinding)
+        public OneWayBinding(Expression<Func<TVetuviemTargetViewModel, TViewProp?>> viewModelBinding)
         {
             ViewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
         }
 
         /// <inheritdoc/>
-        public Expression<Func<TViewModel, TViewProp?>> ViewModelBinding
+        public Expression<Func<TVetuviemTargetViewModel, TViewProp?>> ViewModelBinding
         {
             get;
         }
@@ -37,9 +37,9 @@ namespace Vetuviem.Core
         public void ApplyBinding<TView>(
             Action<IDisposable> d,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
-            where TView : class, IViewFor<TViewModel>
+            where TView : class, IViewFor<TVetuviemTargetViewModel>
         {
             if (d == null)
             {
@@ -56,9 +56,9 @@ namespace Vetuviem.Core
         public void ApplyBinding<TView>(
             CompositeDisposable compositeDisposable,
             TView view,
-            TViewModel viewModel,
+            TVetuviemTargetViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
-            where TView : class, IViewFor<TViewModel>
+            where TView : class, IViewFor<TVetuviemTargetViewModel>
         {
             if (compositeDisposable == null)
             {
