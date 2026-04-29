@@ -123,9 +123,17 @@ namespace Vetuviem.SourceGenerator
 
         private static string GetSafeFileName(INamedTypeSymbol symbol)
         {
-            var name = symbol.ToString();
+            var name = symbol.ContainingNamespace.IsGlobalNamespace 
+                ? symbol.Name 
+                : $"{symbol.ContainingNamespace}.{symbol.Name}";
 
-            // Remove or replace other invalid filename characters
+            // For generic types, append _T{arity} instead of using the full generic syntax
+            if (symbol.IsGenericType && symbol.Arity > 0)
+            {
+                name = $"{name}_T{symbol.Arity}";
+            }
+
+            // Remove or replace any remaining invalid filename characters
             var invalidChars = System.IO.Path.GetInvalidFileNameChars();
             foreach (var c in invalidChars)
             {
