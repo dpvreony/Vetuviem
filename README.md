@@ -12,7 +12,7 @@ Vetuviem is a toolkit to support View to View Model binding (MVVM -> V2VM -> Ve-
 
 ## Current Status
 
-This is currently a proof of concept alpha. For understanding of the design reasoning please see https://www.dpvreony.com/articles/designing-vetuviem/
+This is currently a beta, it is stable enough for use, there are just a few things I want to clean up before an official V1. For understanding of the design reasoning please see https://www.dpvreony.com/articles/designing-vetuviem/
 
 ## Nuget Packages
 
