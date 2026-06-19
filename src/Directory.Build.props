@@ -72,7 +72,7 @@
   </ItemGroup>
   
   <ItemGroup>	
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.8.118" PrivateAssets="all" />	
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.10.85" PrivateAssets="all" />	
   </ItemGroup>
 
   <!--
