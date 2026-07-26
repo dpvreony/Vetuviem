@@ -4,8 +4,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
+using ReactiveUI.Primitives;
+using ReactiveUI.Primitives.Concurrency;
 using ReactiveUI.WPF.SampleApp.ViewModels;
 using ReactiveUI.WPF.SampleApp.Views;
 using Vetuviem.Core;
@@ -91,7 +91,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         protected override IEnumerable<IDisposable> GetSubscriptions(
             QuestionnaireView view,
             QuestionnaireViewModel viewModel,
-            IScheduler? scheduler)
+            ISequencer? sequencer)
         {
             yield return viewModel.LaunchInteraction.Subscribe(async _ => await view.ShowChildWindowInteractionAsync());
         }

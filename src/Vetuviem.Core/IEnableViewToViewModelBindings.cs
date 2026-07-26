@@ -3,9 +3,9 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
-using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
 using ReactiveUI;
+using ReactiveUI.Primitives.Concurrency;
+using ReactiveUI.Primitives.Disposables;
 
 namespace Vetuviem.Core
 {
@@ -24,24 +24,24 @@ namespace Vetuviem.Core
         /// <param name="disposeWithAction">The ReactiveUI Disposal Tracker. Used to discard binding registrations when the view is finished with them.</param>
         /// <param name="view">Instance of the view.</param>
         /// <param name="viewModel">Instance of the viewmodel.</param>
-        /// <param name="scheduler">Scheduler for subscriptions.</param>
+        /// <param name="sequencer">Sequencer for subscriptions.</param>
         void ApplyBindings(
             Action<IDisposable> disposeWithAction,
             TView view,
             TVetuviemTargetViewModel viewModel,
-            IScheduler? scheduler = null);
+            ISequencer? sequencer = null);
 
         /// <summary>
         /// Apply control bindings between a View and ViewModel.
         /// </summary>
-        /// <param name="compositeDisposable">The Composite Disposable Tracker. Used to discard binding registrations when the view is finished with them.</param>
+        /// <param name="multipleDisposable">The Composite Disposable Tracker. Used to discard binding registrations when the view is finished with them.</param>
         /// <param name="view">Instance of the view.</param>
         /// <param name="viewModel">Instance of the viewmodel.</param>
-        /// <param name="scheduler">Scheduler for subscriptions.</param>
+        /// <param name="sequencer">Sequencer for subscriptions.</param>
         void ApplyBindings(
-            CompositeDisposable compositeDisposable,
+            MultipleDisposable multipleDisposable,
             TView view,
             TVetuviemTargetViewModel viewModel,
-            IScheduler? scheduler = null);
+            ISequencer? sequencer = null);
     }
 }

@@ -4,8 +4,8 @@
 
 using System;
 using System.Linq.Expressions;
-using System.Reactive;
 using System.Threading.Tasks;
+using ReactiveUI.Primitives;
 
 namespace ReactiveUI.WPF.SampleApp.ViewModels
 {
@@ -77,7 +77,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         /// <summary>
         /// Gets the command to launch an interaction.
         /// </summary>
-        public ReactiveCommand<Unit, Unit> LaunchInteraction { get; }
+        public ReactiveCommand<RxVoid, RxVoid> LaunchInteraction { get; }
 
         /// <summary>
         /// Gets or sets the surname.
@@ -173,9 +173,9 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         /// </remarks>
         public int MaxLength => _maxLength;
 
-        private static Task<Unit> OnLaunchInteraction()
+        private static Task<RxVoid> OnLaunchInteraction()
         {
-            return Task.FromResult(Unit.Default);
+            return Task.FromResult(RxVoid.Default);
         }
 
         private ObservableAsPropertyHelper<int> GetLengthRemainingObservable(

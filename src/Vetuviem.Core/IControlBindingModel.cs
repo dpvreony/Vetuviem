@@ -3,8 +3,8 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
-using System.Reactive.Disposables;
 using ReactiveUI;
+using ReactiveUI.Primitives.Disposables;
 
 namespace Vetuviem.Core
 {
@@ -30,7 +30,7 @@ namespace Vetuviem.Core
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="viewModel">The viewmodel.</param>
-        /// <param name="compositeDisposable">The disposable container to register disposals against.</param>
-        void ApplyBindings(TView view, TVetuviemTargetViewModel viewModel, CompositeDisposable compositeDisposable);
+        /// <param name="multipleDisposable">The disposable container to register disposals against.</param>
+        void ApplyBindings(TView view, TVetuviemTargetViewModel viewModel, MultipleDisposable multipleDisposable);
     }
 }

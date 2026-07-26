@@ -205,6 +205,34 @@ namespace Vetuviem.SourceGenerator.Features.Core
         }
 
         /// <summary>
+        /// Produces syntax for creating a variable and assigning from accessing a static property on a class.
+        /// </summary>
+        /// <param name="variableName">The name of the variable to create.</param>
+        /// <param name="className">The name of the class to access.</param>
+        /// <param name="propertyName">The name of the property to access.</param>
+        /// <returns>Roslyn Syntax for carrying out the property access.</returns>
+        public static LocalDeclarationStatementSyntax GetVariableAssignmentFromStaticPropertyAccessSyntax(
+            string variableName,
+            string className,
+            string propertyName)
+        {
+            var classMemberAccess = SyntaxFactory.MemberAccessExpression(
+                SyntaxKind.SimpleMemberAccessExpression,
+                SyntaxFactory.IdentifierName(className),
+                name: SyntaxFactory.IdentifierName(propertyName));
+
+            var equalsValueClause = SyntaxFactory.EqualsValueClause(
+                SyntaxFactory.Token(SyntaxKind.EqualsToken),
+                classMemberAccess);
+
+            var variableSyntax = default(SeparatedSyntaxList<VariableDeclaratorSyntax>);
+            variableSyntax = variableSyntax.Add(SyntaxFactory.VariableDeclarator(variableName).WithInitializer(equalsValueClause));
+            var variableDeclaration =
+                SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("var")), variableSyntax);
+            return SyntaxFactory.LocalDeclarationStatement(variableDeclaration);
+        }
+
+        /// <summary>
         /// Produces a null guard check for a parameter.
         /// </summary>
         /// <param name="parameterName">parameter name.</param>
