@@ -57,7 +57,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 platformCommandType,
                 loggingImplementationMode));
 
-            members = members.Add(GetApplyBindingsWithCompositeDisposableMethod(
+            members = members.Add(GetApplyBindingsWithMultipleDisposableMethod(
                 namedTypeSymbol,
                 isDerivedType,
                 desiredCommandInterface,
@@ -341,7 +341,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return declaration;
         }
 
-        private static MemberDeclarationSyntax GetApplyBindingsWithCompositeDisposableMethod(
+        private static MemberDeclarationSyntax GetApplyBindingsWithMultipleDisposableMethod(
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string? desiredCommandInterface,
@@ -352,7 +352,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             const string methodName = "ApplyBindings";
             var returnType = SyntaxFactory.ParseTypeName("void");
 
-            var methodBody = GetApplyBindingCompositeDisposableMethodBody(
+            var methodBody = GetApplyBindingMultipleDisposableMethodBody(
                 namedTypeSymbol,
                 isDerivedType,
                 desiredCommandInterface,
@@ -364,7 +364,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             {
                 "TView view",
                 "TVetuviemTargetViewModel viewModel",
-                "global::System.Reactive.Disposables.CompositeDisposable compositeDisposable",
+                "global::ReactiveUI.Primitives.Disposables.MultipleDisposable multipleDisposable",
             });
 
             // TODO: allow overrding public \ internal
@@ -491,7 +491,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             return body.ToArray();
         }
 
-        private static StatementSyntax[] GetApplyBindingCompositeDisposableMethodBody(
+        private static StatementSyntax[] GetApplyBindingMultipleDisposableMethodBody(
             INamedTypeSymbol namedTypeSymbol,
             bool isDerivedType,
             string? desiredCommandInterface,
@@ -512,7 +512,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 {
                     "view",
                     "viewModel",
-                    "compositeDisposable",
+                    "multipleDisposable",
                 };
                 body.Add(SyntaxFactory.ExpressionStatement(RoslynGenerationHelpers.GetMethodOnVariableInvocationExpression("base", "ApplyBindings", baseInvokeArgs, false)));
             }
@@ -527,7 +527,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             {
                 var invokeArgs = new[]
                 {
-                    "compositeDisposable",
+                    "multipleDisposable",
                     "view",
                     "viewModel",
                     "VetuviemControlBindingExpression",
@@ -609,7 +609,8 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 false));
         }
 
-        private static void AddLogVariableInitialisation(List<StatementSyntax> body,
+        private static void AddLogVariableInitialisation(
+            List<StatementSyntax> body,
             LoggingImplementationMode loggingImplementationMode)
         {
             switch (loggingImplementationMode)
@@ -621,13 +622,12 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                     // this could be executed as an extension method, but the use of a using statement would get lost when skimming over the generated code.
                     // it's equivalent to:
                     // logger = this.Log();
-                    var expression = RoslynGenerationHelpers.GetStaticMethodInvocationSyntax(
-                        "Splat.LogHost",
-                        "Log",
-                        ["this"],
-                        false);
 
-                    body.Add(RoslynGenerationHelpers.GetVariableAssignmentFromStatementSyntax("logger", expression));
+                    var ex = RoslynGenerationHelpers.GetVariableAssignmentFromStaticPropertyAccessSyntax(
+                        "logger",
+                        "Splat.LogHost",
+                        "Default");
+                    body.Add(ex);
                 }
                     break;
                 default:
@@ -649,12 +649,11 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 case LoggingImplementationMode.None:
                     return;
                 case LoggingImplementationMode.SplatViaServiceLocator:
-                    LogSplatDebug(body, "() => $\"Finished Binding for: { controlBindingExpressionAsString }\"");
+                    LogSplatDebug(body, "$\"Finished Binding for: { controlBindingExpressionAsString }\"");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(loggingImplementationMode), loggingImplementationMode, null);
             }
-
         }
 
         private static void AddLoggingDetailStartOfTwoWayBinding(List<StatementSyntax> body,
@@ -665,7 +664,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 case LoggingImplementationMode.None:
                     return;
                 case LoggingImplementationMode.SplatViaServiceLocator:
-                    LogSplatDebug(body, "() => $\"Starting Two-Way Binding for: { controlBindingExpressionAsString }\"");
+                    LogSplatDebug(body, "$\"Starting Two-Way Binding for: { controlBindingExpressionAsString }\"");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(loggingImplementationMode), loggingImplementationMode, null);
@@ -680,7 +679,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 case LoggingImplementationMode.None:
                     return;
                 case LoggingImplementationMode.SplatViaServiceLocator:
-                    LogSplatDebug(body, "() => $\"Starting One-Way Binding for: { controlBindingExpressionAsString }\"");
+                    LogSplatDebug(body, "$\"Starting One-Way Binding for: { controlBindingExpressionAsString }\"");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(loggingImplementationMode), loggingImplementationMode, null);
@@ -695,7 +694,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 case LoggingImplementationMode.None:
                     return;
                 case LoggingImplementationMode.SplatViaServiceLocator:
-                    LogSplatDebug(body, "() => $\"Starting Command Binding for: { controlBindingExpressionAsString }\"");
+                    LogSplatDebug(body, "$\"Starting Command Binding for: { controlBindingExpressionAsString }\"");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(loggingImplementationMode), loggingImplementationMode, null);
@@ -710,7 +709,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
                 case LoggingImplementationMode.None:
                     return;
                 case LoggingImplementationMode.SplatViaServiceLocator:
-                    LogSplatDebug(body, "() => $\"Starting Binding for: { controlBindingExpressionAsString }\"");
+                    LogSplatDebug(body, "$\"Starting Binding for: { controlBindingExpressionAsString }\"");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(loggingImplementationMode), loggingImplementationMode, null);
@@ -723,7 +722,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
 
             var invokeArgs = new[]
             {
-                "compositeDisposable",
+                "multipleDisposable",
                 "view",
                 "viewModel",
                 $"global::Vetuviem.Core.ExpressionHelpers.GetControlPropertyExpressionFromViewExpression<TView, TControl, {propType}>(VetuviemControlBindingExpression, \"{propertySymbol.Name}\")",

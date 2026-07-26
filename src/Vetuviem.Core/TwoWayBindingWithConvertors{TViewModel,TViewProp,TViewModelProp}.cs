@@ -4,9 +4,9 @@
 
 using System;
 using System.Linq.Expressions;
-using System.Reactive.Disposables;
-using System.Reactive.Disposables.Fluent;
 using ReactiveUI;
+using ReactiveUI.Primitives;
+using ReactiveUI.Primitives.Disposables;
 
 namespace Vetuviem.Core
 {
@@ -62,15 +62,15 @@ namespace Vetuviem.Core
 
         /// <inheritdoc/>
         public void ApplyBinding<TView>(
-            CompositeDisposable compositeDisposable,
+            MultipleDisposable multipleDisposable,
             TView view,
             TVetuviemTargetViewModel viewModel,
             Expression<Func<TView, TViewProp>> viewBinding)
             where TView : class, IViewFor<TVetuviemTargetViewModel>
         {
-            if (compositeDisposable == null)
+            if (multipleDisposable == null)
             {
-                throw new ArgumentNullException(nameof(compositeDisposable));
+                throw new ArgumentNullException(nameof(multipleDisposable));
             }
 
             view.Bind(
@@ -78,7 +78,7 @@ namespace Vetuviem.Core
                 _viewModelBinding,
                 viewBinding,
                 _vmToViewConverter,
-                _viewToVmConverter).DisposeWith(compositeDisposable);
+                _viewToVmConverter).DisposeWith(multipleDisposable);
         }
     }
 }

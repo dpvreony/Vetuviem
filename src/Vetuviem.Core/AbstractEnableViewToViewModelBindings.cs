@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
 using System.Windows.Input;
 using ReactiveUI;
+using ReactiveUI.Primitives.Concurrency;
+using ReactiveUI.Primitives.Disposables;
 
 namespace Vetuviem.Core
 {
@@ -27,7 +27,7 @@ namespace Vetuviem.Core
             Action<IDisposable> disposeWithAction,
             TView view,
             TVetuviemTargetViewModel viewModel,
-            IScheduler? scheduler = null)
+            ISequencer? sequencer = null)
         {
             if (disposeWithAction == null)
             {
@@ -56,7 +56,7 @@ namespace Vetuviem.Core
             var subscriptions = GetSubscriptions(
                 view,
                 viewModel,
-                scheduler);
+                sequencer);
 
             foreach (var subscription in subscriptions)
             {
@@ -66,14 +66,14 @@ namespace Vetuviem.Core
 
         /// <inheritdoc />
         public void ApplyBindings(
-            CompositeDisposable compositeDisposable,
+            MultipleDisposable multipleDisposable   ,
             TView view,
             TVetuviemTargetViewModel viewModel,
-            IScheduler? scheduler = null)
+            ISequencer? sequencer = null)
         {
-            if (compositeDisposable == null)
+            if (multipleDisposable == null)
             {
-                throw new ArgumentNullException(nameof(compositeDisposable));
+                throw new ArgumentNullException(nameof(multipleDisposable));
             }
 
             if (view == null)
@@ -92,17 +92,17 @@ namespace Vetuviem.Core
                 viewBindingModel.ApplyBindings(
                     view,
                     viewModel,
-                    compositeDisposable);
+                    multipleDisposable);
             }
 
             var subscriptions = GetSubscriptions(
                 view,
                 viewModel,
-                scheduler);
+                sequencer);
 
             foreach (var subscription in subscriptions)
             {
-                compositeDisposable.Add(subscription);
+                multipleDisposable.Add(subscription);
             }
         }
 
@@ -117,7 +117,7 @@ namespace Vetuviem.Core
         /// </summary>
         /// <remarks>You do not need to wire up disposal logic, this is handled internally.</remarks>
         /// <returns>Collection of subscriptions.</returns>
-        protected abstract IEnumerable<IDisposable> GetSubscriptions(TView view, TVetuviemTargetViewModel viewModel, IScheduler? scheduler);
+        protected abstract IEnumerable<IDisposable> GetSubscriptions(TView view, TVetuviemTargetViewModel viewModel, ISequencer? sequencer);
 
         /// <summary>
         /// Gets an expression for a view property. This is intended to be used in the implementation of <see cref="GetBindings"/> to provide a strongly typed shorthand way of specifying the view properties to bind to.
