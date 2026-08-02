@@ -19,7 +19,7 @@
     <NoWarn>WPF0001</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ReactiveUI.WPF" Version="24.0.0" />
+    <PackageReference Include="ReactiveUI.WPF" Version="24.1.0" />
   </ItemGroup>
 
   <ItemGroup>
