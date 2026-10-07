@@ -144,7 +144,7 @@ namespace Vetuviem.SourceGenerator.Features.ControlBindingModels
             var viewConstraints = new SeparatedSyntaxList<TypeParameterConstraintSyntax>();
 #pragma warning restore SA1129 // Do not use default value type constructor
             var viewForConstraint =
-                SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("global::ReactiveUI.IViewFor<TVetuviemTargetViewModel>"));
+                SyntaxFactory.TypeConstraint(SyntaxFactory.ParseTypeName("global::ReactiveUI.Binding.IViewFor<TVetuviemTargetViewModel>"));
 
             viewConstraints = viewConstraints
                 .Add(SyntaxFactory.ClassOrStructConstraint(SyntaxKind.ClassConstraint))

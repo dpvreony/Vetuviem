@@ -32,6 +32,7 @@
     <Nullable>enable</Nullable>
     <Packable>false</Packable>
     <Packable Condition="$(IsTestProject) != 'true' and $(MSBuildProjectName.StartsWith('Vetuviem.'))">false</Packable>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup Condition="$(IsTestProject)">

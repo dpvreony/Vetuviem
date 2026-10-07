@@ -19,7 +19,7 @@ namespace Vetuviem.Core
     public class TwoWayBindingWithConvertors<TVetuviemTargetViewModel, TViewProp, TViewModelProp> : IOneOrTwoWayBind<TVetuviemTargetViewModel, TViewProp>
         where TVetuviemTargetViewModel : class
     {
-        private readonly Expression<Func<TVetuviemTargetViewModel, TViewModelProp?>> _viewModelBinding;
+        private readonly Expression<Func<TVetuviemTargetViewModel, TViewModelProp>> _viewModelBinding;
         private readonly Func<TViewModelProp?, TViewProp> _vmToViewConverter;
         private readonly Func<TViewProp, TViewModelProp> _viewToVmConverter;
 
@@ -30,7 +30,7 @@ namespace Vetuviem.Core
         /// <param name="vmToViewConverter">Function for converting the ViewModel property to the type of the View Property.</param>
         /// <param name="viewToVmConverter">Function for converting the View property to the type of the ViewModel Property.</param>
         public TwoWayBindingWithConvertors(
-            Expression<Func<TVetuviemTargetViewModel, TViewModelProp?>> viewModelBinding,
+            Expression<Func<TVetuviemTargetViewModel, TViewModelProp>> viewModelBinding,
             Func<TViewModelProp?, TViewProp> vmToViewConverter,
             Func<TViewProp, TViewModelProp> viewToVmConverter)
         {

@@ -21,7 +21,7 @@ namespace Vetuviem.Core
     {
         private readonly Expression<Func<TVetuviemTargetViewModel, TViewProp?>> _viewModelBinding;
 
-        private readonly Expression<Func<TViewProp, TOut>> _converterBinding;
+        private readonly IBindingTypeConverter _converterBinding;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBind{TViewModel, TViewProp, TOut}"/> class.
@@ -30,7 +30,7 @@ namespace Vetuviem.Core
         /// <param name="converterBinding">View Property Conversion binding expression.</param>
         public OneWayBindingOnOneOrTwoWayBind(
             Expression<Func<TVetuviemTargetViewModel, TViewProp?>> viewModelBinding,
-            Expression<Func<TViewProp, TOut>> converterBinding)
+            IBindingTypeConverter converterBinding)
         {
             _viewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
             _converterBinding = converterBinding ?? throw new ArgumentNullException(nameof(converterBinding));

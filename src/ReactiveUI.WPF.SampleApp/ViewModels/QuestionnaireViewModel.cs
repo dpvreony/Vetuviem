@@ -29,33 +29,47 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         /// </summary>
         public QuestionnaireViewModel()
         {
-            _forenameLengthRemaining = GetLengthRemainingObservable(
-                vm => vm.Forename,
-                vm => vm.ForenameLengthRemaining);
+            _forenameLengthRemaining = this.WhenChanged(vm => vm.Forename)
+                .Select(forename => _maxLength - (forename?.Length ?? 0))
+                .ToProperty(
+                    this,
+                    vw => vw.ForenameLengthRemaining);
 
-            _surnameLengthRemaining = GetLengthRemainingObservable(
-                vm => vm.Surname,
-                vm => vm.SurnameLengthRemaining);
+            _surnameLengthRemaining = this.WhenChanged(vm => vm.Surname)
+                .Select(surname => _maxLength - (surname?.Length ?? 0))
+                .ToProperty(
+                    this,
+                    vw => vw.SurnameLengthRemaining);
 
-            _answerOneLengthRemaining = GetLengthRemainingObservable(
-                vm => vm.AnswerOne,
-                vm => vm.AnswerOneLengthRemaining);
+            _answerOneLengthRemaining = this.WhenChanged(vm => vm.AnswerOne)
+                .Select(answerOne => _maxLength - (answerOne?.Length ?? 0))
+                .ToProperty(
+                    this,
+                    vw => vw.AnswerOneLengthRemaining);
 
-            _answerTwoLengthRemaining = GetLengthRemainingObservable(
-                vm => vm.AnswerTwo,
-                vm => vm.AnswerTwoLengthRemaining);
+            _answerTwoLengthRemaining = this.WhenChanged(vm => vm.AnswerTwo)
+                .Select(answerTwo => _maxLength - (answerTwo?.Length ?? 0))
+                .ToProperty(
+                    this,
+                    vw => vw.AnswerTwoLengthRemaining);
 
-            _answerThreeLengthRemaining = GetLengthRemainingObservable(
-                vm => vm.AnswerThree,
-                vm => vm.AnswerThreeLengthRemaining);
+            _answerThreeLengthRemaining = this.WhenChanged(vm => vm.AnswerThree)
+                .Select(answerThree => _maxLength - (answerThree?.Length ?? 0))
+                .ToProperty(
+                    this,
+                    vw => vw.AnswerThreeLengthRemaining);
 
-            _answerFourLengthRemaining = GetLengthRemainingObservable(
-                vm => vm.AnswerFour,
-                vm => vm.AnswerFourLengthRemaining);
+            _answerFourLengthRemaining = this.WhenChanged(vm => vm.AnswerFour)
+                .Select(answerFour => _maxLength - (answerFour?.Length ?? 0))
+                .ToProperty(
+                    this,
+                    vw => vw.AnswerFourLengthRemaining);
 
-            _answerFiveLengthRemaining = GetLengthRemainingObservable(
-                vm => vm.AnswerFive,
-                vm => vm.AnswerFiveLengthRemaining);
+            _answerFiveLengthRemaining = this.WhenChanged(vm => vm.AnswerFive)
+                .Select(answerFive => _maxLength - (answerFive?.Length ?? 0))
+                .ToProperty(
+                    this,
+                    vw => vw.AnswerFiveLengthRemaining);
 
             LaunchInteraction = ReactiveCommand.CreateFromTask(() => OnLaunchInteraction());
         }
@@ -176,19 +190,6 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         private static Task<RxVoid> OnLaunchInteraction()
         {
             return Task.FromResult(RxVoid.Default);
-        }
-
-        private ObservableAsPropertyHelper<int> GetLengthRemainingObservable(
-            Expression<Func<QuestionnaireViewModel, string?>> stringInputExpression,
-            Expression<Func<QuestionnaireViewModel, int>> targetPropertyExpression)
-        {
-            return this.WhenAnyValue(
-                    stringInputExpression,
-                    vm => vm.MaxLength,
-                    (stringChange, maxLengthChange) => maxLengthChange - (stringChange?.Length ?? 0))
-                .ToProperty(
-                    this,
-                    targetPropertyExpression);
         }
     }
 }

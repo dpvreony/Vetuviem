@@ -18,11 +18,6 @@ namespace Vetuviem.Core
         where TVetuviemTargetViewModel : class
     {
         /// <summary>
-        /// Gets the binding to apply between the ViewModel and the View.
-        /// </summary>
-        Expression<Func<TVetuviemTargetViewModel, TViewProp?>> ViewModelBinding { get; }
-
-        /// <summary>
         /// Applies a View to View Model Binding.
         /// </summary>
         /// <typeparam name="TView">The type for the view.</typeparam>

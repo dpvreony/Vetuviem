@@ -2,9 +2,9 @@
 // DPVreony and Contributors licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+
 using System;
 using System.Linq.Expressions;
-using ReactiveUI;
 using ReactiveUI.Primitives;
 using ReactiveUI.Primitives.Disposables;
 
@@ -16,19 +16,21 @@ namespace Vetuviem.Core
     /// <typeparam name="TVetuviemTargetViewModel">The type for the target ViewModel that Vetuviem will bind to.</typeparam>
     /// <typeparam name="TViewProp">The type for the View.</typeparam>
     /// <typeparam name="TOut">The type for the control binding.</typeparam>
-    public class OneWayBindingWithConversion<TVetuviemTargetViewModel, TViewProp, TOut> : IOneWayBind<TVetuviemTargetViewModel, TViewProp>
+    public class OneWayBindingWithConversion<TVetuviemTargetViewModel, TViewProp, TOut> : IOneWayBind<TVetuviemTargetViewModel, TOut>
         where TVetuviemTargetViewModel : class
     {
+        private readonly Expression<Func<TVetuviemTargetViewModel, TViewProp>> _viewModelBinding;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OneWayBindingWithConversion{TViewModel,TViewProp, TOut}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
         /// <param name="selector">Conversion selector function.</param>
         public OneWayBindingWithConversion(
-            Expression<Func<TVetuviemTargetViewModel, TViewProp?>> viewModelBinding,
+            Expression<Func<TVetuviemTargetViewModel, TViewProp>> viewModelBinding,
             Func<TViewProp, TOut> selector)
         {
-            ViewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
+            _viewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
             Selector = selector ?? throw new ArgumentNullException(nameof(selector));
         }
 
@@ -38,17 +40,11 @@ namespace Vetuviem.Core
         public Func<TViewProp, TOut> Selector { get; }
 
         /// <inheritdoc/>
-        public Expression<Func<TVetuviemTargetViewModel, TViewProp?>> ViewModelBinding
-        {
-            get;
-        }
-
-        /// <inheritdoc/>
         public void ApplyBinding<TView>(
             Action<IDisposable> d,
             TView view,
             TVetuviemTargetViewModel viewModel,
-            Expression<Func<TView, TViewProp>> viewBinding)
+            Expression<Func<TView, TOut>> viewBinding)
             where TView : class, IViewFor<TVetuviemTargetViewModel>
         {
             if (d == null)
@@ -57,10 +53,10 @@ namespace Vetuviem.Core
             }
 
             d(view.OneWayBind(
-                viewModel,
-                ViewModelBinding,
-                viewBinding,
-                Selector));
+                viewModel: viewModel,
+                viewModelProperty: _viewModelBinding,
+                viewProperty: viewBinding,
+                selector: Selector));
         }
 
         /// <inheritdoc/>
@@ -68,7 +64,7 @@ namespace Vetuviem.Core
             MultipleDisposable multipleDisposable,
             TView view,
             TVetuviemTargetViewModel viewModel,
-            Expression<Func<TView, TViewProp>> viewBinding)
+            Expression<Func<TView, TOut>> viewBinding)
             where TView : class, IViewFor<TVetuviemTargetViewModel>
         {
             if (multipleDisposable == null)
@@ -77,10 +73,10 @@ namespace Vetuviem.Core
             }
 
             view.OneWayBind(
-                viewModel,
-                ViewModelBinding,
-                viewBinding,
-                Selector).DisposeWith(multipleDisposable);
+                viewModel: viewModel,
+                viewModelProperty: _viewModelBinding,
+                viewProperty: viewBinding,
+                selector: Selector).DisposeWith(multipleDisposable);
         }
     }
 }

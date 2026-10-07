@@ -27,53 +27,42 @@ namespace Vetuviem.SourceGenerator
         where TGeneratorProcessor : AbstractGeneratorProcessor, new()
     {
         public void GenerateFromAssemblies(
-            SourceProductionContext context,
+            PreCompilationSourceProductionContext context,
             ConfigurationModel configurationModel,
             ParseOptions parseOptions,
             ImmutableArray<MetadataReference> metadataReferencesProvider,
             Compilation compilation)
         {
-            try
+            var memberDeclarationSyntax = GenerateAsync(context, configurationModel, metadataReferencesProvider, compilation, context.CancellationToken);
+
+            var nullableDirectiveTrivia = SyntaxFactory.NullableDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.EnableKeyword), true);
+            var trivia = SyntaxFactory.Trivia(nullableDirectiveTrivia);
+            var leadingSyntaxTriviaList = SyntaxFactory.TriviaList(trivia);
+
+            if (memberDeclarationSyntax == null)
             {
-                context.ReportDiagnostic(ReportDiagnosticFactory.StartingSourceGenerator());
-
-                var memberDeclarationSyntax = GenerateAsync(context, configurationModel, metadataReferencesProvider, compilation ,context.CancellationToken);
-
-                var nullableDirectiveTrivia = SyntaxFactory.NullableDirectiveTrivia(SyntaxFactory.Token(SyntaxKind.EnableKeyword), true);
-                var trivia = SyntaxFactory.Trivia(nullableDirectiveTrivia);
-                var leadingSyntaxTriviaList = SyntaxFactory.TriviaList(trivia);
-
-                if (memberDeclarationSyntax == null)
-                {
-                    return;
-                }
-
-                memberDeclarationSyntax = memberDeclarationSyntax.WithLeadingTrivia(leadingSyntaxTriviaList);
-
-                var cu = SyntaxFactory.CompilationUnit()
-                    .AddMembers(memberDeclarationSyntax)
-                    .NormalizeWhitespace();
-
-                var feature = typeof(TGeneratorProcessor).ToString();
-
-                var sourceText = SyntaxFactory.SyntaxTree(
-                        cu,
-                        parseOptions,
-                        encoding: Encoding.UTF8)
-                    .GetText();
-
-                var hintName = $"{feature}.g.cs";
-
-                context.AddSource(
-                    hintName,
-                    sourceText);
+                return;
             }
-#pragma warning disable CA1031 // Do not catch general exception types
-            catch (Exception e)
-#pragma warning restore CA1031 // Do not catch general exception types
-            {
-                context.ReportDiagnostic(ReportDiagnosticFactory.UnhandledException(e));
-            }
+
+            memberDeclarationSyntax = memberDeclarationSyntax.WithLeadingTrivia(leadingSyntaxTriviaList);
+
+            var cu = SyntaxFactory.CompilationUnit()
+                .AddMembers(memberDeclarationSyntax)
+                .NormalizeWhitespace();
+
+            var feature = typeof(TGeneratorProcessor).ToString();
+
+            var sourceText = SyntaxFactory.SyntaxTree(
+                    cu,
+                    parseOptions,
+                    encoding: Encoding.UTF8)
+                .GetText();
+
+            var hintName = $"{feature}.g.cs";
+
+            context.AddSource(
+                hintName,
+                sourceText);
         }
 
         /// <summary>
@@ -103,7 +92,7 @@ namespace Vetuviem.SourceGenerator
         protected abstract string GetNamespace(string? rootNamespace);
 
         private MemberDeclarationSyntax? GenerateAsync(
-            SourceProductionContext context,
+            PreCompilationSourceProductionContext context,
             ConfigurationModel configurationModel,
             ImmutableArray<MetadataReference> metadataReferencesProvider,
             Compilation compilation,
@@ -140,9 +129,6 @@ namespace Vetuviem.SourceGenerator
             if (referencesOfInterest.Length != assembliesOfInterest.Length)
             {
                 // not got the expected count back, drop out.
-                context.ReportDiagnostic(ReportDiagnosticFactory.ReferencesOfInterestCountMismatch(
-                    assembliesOfInterest.Length,
-                    referencesOfInterest.Length));
                 return namespaceDeclaration;
             }
 
@@ -154,7 +140,6 @@ namespace Vetuviem.SourceGenerator
 
             if (desiredBaseTypeSymbolMatch == null)
             {
-                context.ReportDiagnostic(ReportDiagnosticFactory.FailedToFindDesiredBaseTypeSymbol(desiredBaseType));
                 return namespaceDeclaration;
             }
 
@@ -168,7 +153,6 @@ namespace Vetuviem.SourceGenerator
                 case TypeKind.Class:
                     break;
                 default:
-                    context.ReportDiagnostic(ReportDiagnosticFactory.DesiredBaseTypeSymbolNotInterfaceOrClass(desiredBaseType));
                     return namespaceDeclaration;
             }
 
@@ -182,7 +166,6 @@ namespace Vetuviem.SourceGenerator
                 namespaceDeclaration,
                 referencesOfInterest,
                 compilation,
-                context.ReportDiagnostic,
                 desiredBaseType,
                 desiredBaseTypeIsInterface,
                 desiredCommandInterface,

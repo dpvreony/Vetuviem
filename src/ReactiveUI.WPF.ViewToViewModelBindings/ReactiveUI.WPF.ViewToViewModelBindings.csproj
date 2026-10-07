@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0-windows10.0.19041</TargetFramework>
-    <LangVersion>9</LangVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>True</DebugSymbols>
     <UseWPF>true</UseWPF>
