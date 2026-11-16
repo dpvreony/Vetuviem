@@ -5,6 +5,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using ReactiveUI.Binding;
 using ReactiveUI.Primitives;
 
 namespace ReactiveUI.WPF.SampleApp.ViewModels
@@ -182,11 +183,11 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
             Expression<Func<QuestionnaireViewModel, string?>> stringInputExpression,
             Expression<Func<QuestionnaireViewModel, int>> targetPropertyExpression)
         {
-            return this.WhenAnyValue(
+            return this.WhenAnyValueUnsafe(
                     stringInputExpression,
                     vm => vm.MaxLength,
                     (stringChange, maxLengthChange) => maxLengthChange - (stringChange?.Length ?? 0))
-                .ToProperty(
+                .ToPropertyUnsafe(
                     this,
                     targetPropertyExpression);
         }

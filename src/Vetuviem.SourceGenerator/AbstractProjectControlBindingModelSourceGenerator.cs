@@ -1,19 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Vetuviem.SourceGenerator.Features.Configuration;
 using Vetuviem.SourceGenerator.Features.ControlBindingModels;
 using Vetuviem.SourceGenerator.Features.Core;
 
 namespace Vetuviem.SourceGenerator
 {
+    /// <summary>
+    /// Generates binding model source for supported UI classes.
+    /// </summary>
+    /// <remarks>Derived types provide the platform name and platform resolver.</remarks>
     public abstract class AbstractProjectControlBindingModelSourceGenerator
     {
+        /// <summary>
+        /// Generates source for a class using the specified contexts, configuration, and parse options.
+        /// </summary>
+        /// <param name="productionContext">The context used to add generated source and report diagnostics.</param>
+        /// <param name="syntaxContext">The syntax context for the class being processed.</param>
+        /// <param name="configurationModel">The configuration used for source generation.</param>
+        /// <param name="parseOptions">The parse options used for source generation.</param>
         public void DoSourceGenerationForClass(
             SourceProductionContext productionContext,
             GeneratorSyntaxContext syntaxContext,
@@ -33,8 +42,16 @@ namespace Vetuviem.SourceGenerator
                 platformName);
         }
 
+        /// <summary>
+        /// Gets the platform name.
+        /// </summary>
+        /// <returns>The platform name.</returns>
         protected abstract string GetPlatformName();
 
+        /// <summary>
+        /// Gets the platform resolver.
+        /// </summary>
+        /// <returns>The platform resolver.</returns>
         protected abstract IPlatformResolver GetPlatformResolver();
 
         private static void DoSourceGenerationForClass(

@@ -5,6 +5,7 @@
 using System;
 using System.Linq.Expressions;
 using ReactiveUI;
+using ReactiveUI.Binding;
 using ReactiveUI.Primitives;
 using ReactiveUI.Primitives.Disposables;
 
@@ -42,7 +43,7 @@ namespace Vetuviem.Core
                 throw new ArgumentNullException(nameof(d));
             }
 
-            d(view.Bind(
+            d(view.BindUnsafe(
                 viewModel,
                 _viewModelBinding,
                 viewBinding));
@@ -61,7 +62,7 @@ namespace Vetuviem.Core
                 throw new ArgumentNullException(nameof(multipleDisposable));
             }
 
-            view.Bind(
+            view.BindUnsafe(
                 viewModel,
                 _viewModelBinding,
                 viewBinding).DisposeWith(multipleDisposable);

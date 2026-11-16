@@ -4,6 +4,7 @@
 
 using System;
 using ReactiveUI;
+using ReactiveUI.Binding;
 using ReactiveUI.Primitives.Disposables;
 
 namespace Vetuviem.Core
