@@ -5,6 +5,7 @@
 using System;
 using System.Linq.Expressions;
 using ReactiveUI;
+using ReactiveUI.Binding;
 using ReactiveUI.Primitives;
 using ReactiveUI.Primitives.Disposables;
 
@@ -19,28 +20,20 @@ namespace Vetuviem.Core
     public class OneWayBindingWithConversion<TVetuviemTargetViewModel, TViewProp, TOut> : IOneWayBind<TVetuviemTargetViewModel, TViewProp>
         where TVetuviemTargetViewModel : class
     {
+        private readonly Expression<Func<TVetuviemTargetViewModel, TOut>> _viewModelBinding;
+        private readonly Func<TOut, TViewProp> _selector;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OneWayBindingWithConversion{TViewModel,TViewProp, TOut}"/> class.
         /// </summary>
         /// <param name="viewModelBinding">Expression for the View Model binding.</param>
-        /// <param name="selector">Conversion selector function.</param>
+        /// <param name="selector">Conversion function from the ViewModel property to the View property.</param>
         public OneWayBindingWithConversion(
-            Expression<Func<TVetuviemTargetViewModel, TViewProp?>> viewModelBinding,
-            Func<TViewProp, TOut> selector)
+            Expression<Func<TVetuviemTargetViewModel, TOut>> viewModelBinding,
+            Func<TOut, TViewProp> selector)
         {
-            ViewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
-            Selector = selector ?? throw new ArgumentNullException(nameof(selector));
-        }
-
-        /// <summary>
-        /// Gets the conversion selector function.
-        /// </summary>
-        public Func<TViewProp, TOut> Selector { get; }
-
-        /// <inheritdoc/>
-        public Expression<Func<TVetuviemTargetViewModel, TViewProp?>> ViewModelBinding
-        {
-            get;
+            _viewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
+            _selector = selector ?? throw new ArgumentNullException(nameof(selector));
         }
 
         /// <inheritdoc/>
@@ -56,11 +49,11 @@ namespace Vetuviem.Core
                 throw new ArgumentNullException(nameof(d));
             }
 
-            d(view.OneWayBind(
+            d(view.OneWayBindUnsafe<TVetuviemTargetViewModel, TView, TOut, TViewProp>(
                 viewModel,
-                ViewModelBinding,
+                _viewModelBinding,
                 viewBinding,
-                Selector));
+                _selector));
         }
 
         /// <inheritdoc/>
@@ -76,11 +69,11 @@ namespace Vetuviem.Core
                 throw new ArgumentNullException(nameof(multipleDisposable));
             }
 
-            view.OneWayBind(
+            view.OneWayBindUnsafe<TVetuviemTargetViewModel, TView, TOut, TViewProp>(
                 viewModel,
-                ViewModelBinding,
+                _viewModelBinding,
                 viewBinding,
-                Selector).DisposeWith(multipleDisposable);
+                _selector).DisposeWith(multipleDisposable);
         }
     }
 }

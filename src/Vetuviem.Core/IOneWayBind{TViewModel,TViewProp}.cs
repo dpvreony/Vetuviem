@@ -5,6 +5,7 @@
 using System;
 using System.Linq.Expressions;
 using ReactiveUI;
+using ReactiveUI.Binding;
 using ReactiveUI.Primitives.Disposables;
 
 namespace Vetuviem.Core
@@ -17,11 +18,6 @@ namespace Vetuviem.Core
     public interface IOneWayBind<TVetuviemTargetViewModel, TViewProp>
         where TVetuviemTargetViewModel : class
     {
-        /// <summary>
-        /// Gets the binding to apply between the ViewModel and the View.
-        /// </summary>
-        Expression<Func<TVetuviemTargetViewModel, TViewProp?>> ViewModelBinding { get; }
-
         /// <summary>
         /// Applies a View to View Model Binding.
         /// </summary>

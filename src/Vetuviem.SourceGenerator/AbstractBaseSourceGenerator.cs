@@ -26,6 +26,14 @@ namespace Vetuviem.SourceGenerator
     public abstract class AbstractBaseSourceGenerator<TGeneratorProcessor>
         where TGeneratorProcessor : AbstractGeneratorProcessor, new()
     {
+        /// <summary>
+        /// Generates source code from the supplied assemblies and reports diagnostics for generation errors.
+        /// </summary>
+        /// <param name="context">The context used to report diagnostics and add generated source.</param>
+        /// <param name="configurationModel">The configuration used to generate source code.</param>
+        /// <param name="parseOptions">The parse options used to create the generated syntax tree.</param>
+        /// <param name="metadataReferencesProvider">The metadata references used during source generation.</param>
+        /// <param name="compilation">The compilation used during source generation.</param>
         public void GenerateFromAssemblies(
             SourceProductionContext context,
             ConfigurationModel configurationModel,

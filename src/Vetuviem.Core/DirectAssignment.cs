@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using ReactiveUI;
+using ReactiveUI.Binding;
 using ReactiveUI.Primitives.Disposables;
 
 namespace Vetuviem.Core

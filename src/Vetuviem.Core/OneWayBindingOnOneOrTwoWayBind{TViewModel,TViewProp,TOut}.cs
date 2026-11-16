@@ -5,6 +5,7 @@
 using System;
 using System.Linq.Expressions;
 using ReactiveUI;
+using ReactiveUI.Binding;
 using ReactiveUI.Primitives;
 using ReactiveUI.Primitives.Disposables;
 
@@ -19,9 +20,9 @@ namespace Vetuviem.Core
     public class OneWayBindingOnOneOrTwoWayBind<TVetuviemTargetViewModel, TViewProp, TOut> : IOneOrTwoWayBind<TVetuviemTargetViewModel, TOut>
         where TVetuviemTargetViewModel : class
     {
-        private readonly Expression<Func<TVetuviemTargetViewModel, TViewProp?>> _viewModelBinding;
+        private readonly Expression<Func<TVetuviemTargetViewModel, TViewProp>> _viewModelBinding;
 
-        private readonly Expression<Func<TViewProp, TOut>> _converterBinding;
+        private readonly Func<TViewProp, TOut> _converterBinding;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OneWayBindingOnOneOrTwoWayBind{TViewModel, TViewProp, TOut}"/> class.
@@ -29,8 +30,8 @@ namespace Vetuviem.Core
         /// <param name="viewModelBinding">View to ViewModel binding expression.</param>
         /// <param name="converterBinding">View Property Conversion binding expression.</param>
         public OneWayBindingOnOneOrTwoWayBind(
-            Expression<Func<TVetuviemTargetViewModel, TViewProp?>> viewModelBinding,
-            Expression<Func<TViewProp, TOut>> converterBinding)
+            Expression<Func<TVetuviemTargetViewModel, TViewProp>> viewModelBinding,
+            Func<TViewProp, TOut> converterBinding)
         {
             _viewModelBinding = viewModelBinding ?? throw new ArgumentNullException(nameof(viewModelBinding));
             _converterBinding = converterBinding ?? throw new ArgumentNullException(nameof(converterBinding));
@@ -49,7 +50,7 @@ namespace Vetuviem.Core
                 throw new ArgumentNullException(nameof(d));
             }
 
-            d(view.OneWayBind(
+            d(view.OneWayBindUnsafe<TVetuviemTargetViewModel, TView, TViewProp, TOut>(
                 viewModel,
                 _viewModelBinding,
                 viewBinding,
@@ -69,7 +70,7 @@ namespace Vetuviem.Core
                 throw new ArgumentNullException(nameof(multipleDisposable));
             }
 
-            view.OneWayBind(
+            view.OneWayBindUnsafe<TVetuviemTargetViewModel, TView, TViewProp, TOut>(
                 viewModel,
                 _viewModelBinding,
                 viewBinding,

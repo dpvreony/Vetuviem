@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using ReactiveUI.Binding;
 using ReactiveUI.Primitives.Disposables;
 
 namespace Vetuviem.Core
@@ -15,7 +16,7 @@ namespace Vetuviem.Core
     /// <typeparam name="TControl">The type for the control.</typeparam>
     public abstract class AbstractControlBindingModel<TView, TVetuviemTargetViewModel, TControl>
         : IControlBindingModel<TView, TVetuviemTargetViewModel>
-        where TView : class, ReactiveUI.IViewFor<TVetuviemTargetViewModel>
+        where TView : class, IViewFor<TVetuviemTargetViewModel>
         where TVetuviemTargetViewModel : class, ReactiveUI.IReactiveObject
     {
         /// <summary>
