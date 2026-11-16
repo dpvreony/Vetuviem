@@ -28,6 +28,17 @@ namespace ReactiveUI.WPF.SampleApp.Views
 
         private void OnWhenActivated(Action<IDisposable> disposeWithAction)
         {
+            disposeWithAction(this.Bind(
+                ViewModel,
+                viewModel => viewModel.Forename,
+                view => view.Forename.Text));
+
+            disposeWithAction(this.OneWayBind(
+                ViewModel,
+                viewModel => viewModel.MaxLength,
+                view => view.Forename.MaxLength,
+                x => x + 10));
+
             new QuestionnaireViewBindingModels().ApplyBindings(
                 disposeWithAction,
                 this,

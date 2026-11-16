@@ -21,12 +21,14 @@ namespace ReactiveUI.WPF.SampleApp.ViewBindingModels
         protected override IEnumerable<IControlBindingModel<QuestionnaireView, QuestionnaireViewModel>> GetBindings()
         {
             // launch interaction
-            yield return ForViewProperty(vw => vw.LaunchInteraction)
+            yield return ForViewProperty(static vw => vw.LaunchInteraction)
                 .GetDefaultBindingControlModel(GetCommandBinding(vm => vm.LaunchInteraction));
 
             // Forename
+#if TBC
             yield return ForViewProperty(vw => vw.Forename)
                 .GetStandardTextBoxViewModel(vm => vm.Forename);
+#endif
 
             yield return ForViewProperty(vw => vw.ForenameLengthRemaining)
                 .GetStandardLengthRemainingLabelViewBindingModel(

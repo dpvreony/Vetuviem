@@ -27,7 +27,7 @@ namespace Vetuviem.SourceGenerator
         where TGeneratorProcessor : AbstractGeneratorProcessor, new()
     {
         public void GenerateFromAssemblies(
-            PreCompilationSourceProductionContext context,
+            SourceProductionContext context,
             ConfigurationModel configurationModel,
             ParseOptions parseOptions,
             ImmutableArray<MetadataReference> metadataReferencesProvider,
@@ -92,7 +92,7 @@ namespace Vetuviem.SourceGenerator
         protected abstract string GetNamespace(string? rootNamespace);
 
         private MemberDeclarationSyntax? GenerateAsync(
-            PreCompilationSourceProductionContext context,
+            SourceProductionContext context,
             ConfigurationModel configurationModel,
             ImmutableArray<MetadataReference> metadataReferencesProvider,
             Compilation compilation,
@@ -166,6 +166,7 @@ namespace Vetuviem.SourceGenerator
                 namespaceDeclaration,
                 referencesOfInterest,
                 compilation,
+                context.ReportDiagnostic,
                 desiredBaseType,
                 desiredBaseTypeIsInterface,
                 desiredCommandInterface,
