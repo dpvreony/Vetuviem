@@ -34,7 +34,7 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
                 static vm => vm.Forename,
                 static vm => vm.ForenameLengthRemaining,
                 static (stringChange, maxLengthChange) => maxLengthChange - (stringChange?.Length ?? 0))
-                .ToProperty(this, vm => vm.ForenameLengthRemaining);
+                .ToProperty(this, static vm => vm.ForenameLengthRemaining);
 
             /*
             _forenameLengthRemaining = GetLengthRemainingObservable(
