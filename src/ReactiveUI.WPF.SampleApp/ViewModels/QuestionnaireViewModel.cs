@@ -30,9 +30,17 @@ namespace ReactiveUI.WPF.SampleApp.ViewModels
         /// </summary>
         public QuestionnaireViewModel()
         {
+            _forenameLengthRemaining = this.WhenAnyValue(
+                static vm => vm.Forename,
+                static vm => vm.ForenameLengthRemaining,
+                static (stringChange, maxLengthChange) => maxLengthChange - (stringChange?.Length ?? 0))
+                .ToProperty(this, vm => vm.ForenameLengthRemaining);
+
+            /*
             _forenameLengthRemaining = GetLengthRemainingObservable(
                 vm => vm.Forename,
                 vm => vm.ForenameLengthRemaining);
+            */
 
             _surnameLengthRemaining = GetLengthRemainingObservable(
                 vm => vm.Surname,

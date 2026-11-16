@@ -25,9 +25,11 @@ namespace ReactiveUI.WPF.SampleApp
                 .RegisterView<QuestionnaireView, QuestionnaireViewModel>()
                 .BuildApp();
 
+            var viewModel = new QuestionnaireViewModel();
+
             var view = new QuestionnaireView
             {
-                ViewModel = new QuestionnaireViewModel()
+                ViewModel = viewModel
             };
 
             MainWindow = view;
