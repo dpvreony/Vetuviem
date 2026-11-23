@@ -14,8 +14,8 @@
     <PackageReference Include="MahApps.Metro" Version="2.4.11" />
     <PackageReference Include="MahApps.Metro.SimpleChildWindow" Version="2.2.1" />
     <PackageReference Include="MudBlazor" Version="9.14.0" />
-    <PackageReference Include="ReactiveUI.Blazor" Version="27.0.1" />
-    <PackageReference Include="ReactiveUI.WPF" Version="27.0.1" />
+    <PackageReference Include="ReactiveUI.Blazor" Version="28.0.0" />
+    <PackageReference Include="ReactiveUI.WPF" Version="28.0.0" />
   </ItemGroup>
 
   <ItemGroup>
